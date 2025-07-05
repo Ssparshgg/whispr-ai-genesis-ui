@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useNavigate } from "react-router-dom";
 import { Mic, Download, Share, Pen, User, ChevronDown, Play, Lightbulb, Brain, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,10 +15,47 @@ import VoiceCard from "@/components/VoiceCard";
 import AnimatedIcon from "@/components/AnimatedIcon";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedVoice, setSelectedVoice] = useState("Luna");
   const [message, setMessage] = useState("");
   const [selectedVoiceFilter, setSelectedVoiceFilter] = useState("All");
   const [isTyping, setIsTyping] = useState(false);
+
+  // Smooth scroll function
+  const smoothScrollTo = (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  // Handle navigation clicks
+  const handleNavClick = (sectionId: string) => {
+    smoothScrollTo(sectionId);
+  };
+
+  // Handle demo click - scroll to voices section
+  const handleDemoClick = () => {
+    smoothScrollTo('voices');
+  };
+
+  // Handle start creating click - navigate to login
+  const handleStartCreating = () => {
+    navigate('/login');
+  };
+
+  // Handle login/signup navigation
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const handleSignup = () => {
+    navigate('/signup');
+  };
 
   const voices = [
     { 
@@ -91,14 +128,29 @@ const Index = () => {
             </motion.div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="hover:text-primary transition-colors">Features</a>
-              <a href="#voices" className="hover:text-primary transition-colors">Voices</a>
-              <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
+              <button 
+                onClick={() => handleNavClick('features')}
+                className="hover:text-primary transition-colors cursor-pointer"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => handleNavClick('voices')}
+                className="hover:text-primary transition-colors cursor-pointer"
+              >
+                Voices
+              </button>
+              <button 
+                onClick={() => handleNavClick('pricing')}
+                className="hover:text-primary transition-colors cursor-pointer"
+              >
+                Pricing
+              </button>
             </nav>
 
             <div className="flex items-center space-x-4">
-              <Button variant="ghost">Login</Button>
-              <Button variant="whispr-primary">Sign Up</Button>
+              <Button variant="ghost" onClick={handleLogin}>Login</Button>
+              <Button variant="whispr-primary" onClick={handleSignup}>Sign Up</Button>
             </div>
           </div>
         </div>
@@ -167,6 +219,7 @@ const Index = () => {
                   variant="whispr-primary" 
                   size="lg"
                   className="relative overflow-hidden group"
+                  onClick={handleStartCreating}
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary"
@@ -175,7 +228,12 @@ const Index = () => {
                   />
                   <span className="relative z-10">Start Creating Now</span>
                 </Button>
-                <Button variant="whispr-outline" size="lg" className="group">
+                <Button 
+                  variant="whispr-outline" 
+                  size="lg" 
+                  className="group"
+                  onClick={handleDemoClick}
+                >
                   <Play className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
                   Listen to Demos
                 </Button>
@@ -753,6 +811,7 @@ const Index = () => {
                   variant="whispr-primary" 
                   size="lg"
                   className="relative overflow-hidden group"
+                  onClick={handleStartCreating}
                 >
                   <motion.div
                     animate={{ x: [-200, 200] }}
@@ -762,7 +821,12 @@ const Index = () => {
                   <span className="relative z-10">Get Started Free</span>
                 </Button>
               </motion.div>
-              <Button variant="link" size="lg" className="text-primary hover:text-primary-hover">
+              <Button 
+                variant="link" 
+                size="lg" 
+                className="text-primary hover:text-primary-hover"
+                onClick={handleDemoClick}
+              >
                 <Play className="h-4 w-4 mr-2" />
                 Try Live Demo
               </Button>
