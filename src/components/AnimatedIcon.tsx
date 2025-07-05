@@ -1,5 +1,5 @@
 
-import { motion } from 'framer-react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { LucideIcon } from 'lucide-react';
 
