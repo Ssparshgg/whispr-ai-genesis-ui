@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Mic, Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
+import { Mic, Eye, EyeOff, ArrowLeft, User, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,8 +11,7 @@ import { Separator } from "@/components/ui/separator";
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: ""
@@ -21,17 +19,17 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!agreedToTerms) return;
-    
     setIsLoading(true);
+    
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords don't match!");
+      setIsLoading(false);
+      return;
+    }
     
     // Simulate signup process
     setTimeout(() => {
@@ -45,17 +43,9 @@ const Signup = () => {
     navigate('/');
   };
 
-  const passwordStrength = (password: string) => {
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    return strength;
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
-
-  const strength = passwordStrength(formData.password);
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -86,7 +76,7 @@ const Signup = () => {
             >
               <Mic className="h-8 w-8 text-primary" />
             </motion.div>
-            <span className="text-2xl font-bold">Whispr.AI</span>
+            <span className="text-2xl font-bold">Seducely.AI</span>
           </motion.div>
           
           <Button 
@@ -124,51 +114,34 @@ const Signup = () => {
               >
                 <Mic className="h-8 w-8 text-primary" />
               </motion.div>
-              <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+              <CardTitle className="text-2xl font-bold">Join Seducely.AI</CardTitle>
               <CardDescription>
-                Join Whispr.AI and start creating amazing voice notes today
+                Create your account and start generating captivating AI voice notes with stunning models
               </CardDescription>
             </CardHeader>
 
             <CardContent className="relative z-10 space-y-6">
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="space-y-2"
-                  >
-                    <Label htmlFor="firstName">First Name</Label>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-2"
+                >
+                  <Label htmlFor="name">Full Name</Label>
+                  <div className="relative">
                     <Input
-                      id="firstName"
+                      id="name"
                       type="text"
-                      placeholder="John"
-                      value={formData.firstName}
-                      onChange={(e) => handleInputChange('firstName', e.target.value)}
-                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors"
+                      placeholder="Enter your full name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pl-10"
                       required
                     />
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="space-y-2"
-                  >
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Doe"
-                      value={formData.lastName}
-                      onChange={(e) => handleInputChange('lastName', e.target.value)}
-                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors"
-                      required
-                    />
-                  </motion.div>
-                </div>
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  </div>
+                </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -177,15 +150,18 @@ const Signup = () => {
                   className="space-y-2"
                 >
                   <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors"
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pl-10"
+                      required
+                    />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  </div>
                 </motion.div>
 
                 <motion.div
@@ -199,12 +175,13 @@ const Signup = () => {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
+                      placeholder="Enter your password"
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pr-10"
+                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pr-10 pl-10"
                       required
                     />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Button
                       type="button"
                       variant="ghost"
@@ -219,38 +196,6 @@ const Signup = () => {
                       )}
                     </Button>
                   </div>
-                  
-                  {formData.password && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="space-y-2"
-                    >
-                      <div className="flex space-x-1">
-                        {[...Array(5)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`h-1 flex-1 rounded-full transition-colors ${
-                              i < strength 
-                                ? strength <= 2 
-                                  ? 'bg-red-500' 
-                                  : strength <= 3 
-                                    ? 'bg-yellow-500' 
-                                    : 'bg-green-500'
-                                : 'bg-muted'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Password strength: {
-                          strength <= 2 ? 'Weak' : 
-                          strength <= 3 ? 'Medium' : 
-                          'Strong'
-                        }
-                      </div>
-                    </motion.div>
-                  )}
                 </motion.div>
 
                 <motion.div
@@ -267,9 +212,10 @@ const Signup = () => {
                       placeholder="Confirm your password"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pr-10"
+                      className="bg-input/50 border-border/50 focus:border-primary/50 transition-colors pr-10 pl-10"
                       required
                     />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Button
                       type="button"
                       variant="ghost"
@@ -284,52 +230,12 @@ const Signup = () => {
                       )}
                     </Button>
                   </div>
-                  {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                    <p className="text-xs text-red-500">Passwords do not match</p>
-                  )}
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 }}
-                  className="space-y-4"
-                >
-                  <label className="flex items-start space-x-3 cursor-pointer">
-                    <div className="relative">
-                      <input 
-                        type="checkbox" 
-                        className="sr-only"
-                        checked={agreedToTerms}
-                        onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      />
-                      <div className={`w-5 h-5 rounded border-2 transition-all ${
-                        agreedToTerms 
-                          ? 'bg-primary border-primary' 
-                          : 'border-border bg-transparent'
-                      }`}>
-                        {agreedToTerms && (
-                          <Check className="w-3 h-3 text-white m-0.5" />
-                        )}
-                      </div>
-                    </div>
-                    <span className="text-sm text-muted-foreground leading-5">
-                      I agree to the{" "}
-                      <Link to="/terms" className="text-primary hover:text-primary-hover">
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link to="/privacy" className="text-primary hover:text-primary-hover">
-                        Privacy Policy
-                      </Link>
-                    </span>
-                  </label>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
+                  transition={{ delay: 0.7 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -337,7 +243,7 @@ const Signup = () => {
                     type="submit" 
                     variant="whispr-primary" 
                     className="w-full relative overflow-hidden group"
-                    disabled={isLoading || !agreedToTerms || formData.password !== formData.confirmPassword}
+                    disabled={isLoading}
                   >
                     {isLoading ? (
                       <motion.div
@@ -362,7 +268,7 @@ const Signup = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}
+                transition={{ delay: 0.8 }}
               >
                 <Separator className="my-6" />
                 <div className="text-center space-y-4">
@@ -372,7 +278,7 @@ const Signup = () => {
                       to="/login" 
                       className="text-primary hover:text-primary-hover transition-colors font-medium"
                     >
-                      Sign in here
+                      Sign in
                     </Link>
                   </p>
                 </div>

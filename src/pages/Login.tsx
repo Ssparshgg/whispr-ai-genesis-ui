@@ -61,7 +61,7 @@ const Login = () => {
             >
               <Mic className="h-8 w-8 text-primary" />
             </motion.div>
-            <span className="text-2xl font-bold">Whispr.AI</span>
+            <span className="text-2xl font-bold">Seducely.AI</span>
           </motion.div>
           
           <Button 
@@ -101,7 +101,7 @@ const Login = () => {
               </motion.div>
               <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
               <CardDescription>
-                Sign in to your Whispr.AI account to continue creating amazing voice notes
+                Sign in to your Seducely.AI account to continue creating amazing voice notes with stunning AI models
               </CardDescription>
             </CardHeader>
 
