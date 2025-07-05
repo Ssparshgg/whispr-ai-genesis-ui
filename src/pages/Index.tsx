@@ -369,7 +369,7 @@ const Index = () => {
 									with unique styles and personas.
 								</p>
 							</motion.div>
-
+							//das
 							<motion.div
 								initial={{ opacity: 0, y: 30 }}
 								animate={heroInView ? { opacity: 1, y: 0 } : {}}
@@ -409,7 +409,6 @@ const Index = () => {
 									Listen to Demos
 								</Button>
 							</motion.div>
-
 							{/* Trust Badges */}
 							<motion.div
 								initial={{ opacity: 0 }}
@@ -430,7 +429,6 @@ const Index = () => {
 									<span>Voice Notes</span>
 								</div>
 							</motion.div>
-
 							{/* Testimonial Carousel */}
 							<motion.div
 								initial={{ opacity: 0, y: 20 }}
