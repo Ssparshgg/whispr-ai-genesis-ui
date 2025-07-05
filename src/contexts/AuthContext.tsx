@@ -1,0 +1,93 @@
+import React, {
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	ReactNode,
+} from "react";
+import { auth, api } from "@/lib/api";
+
+interface User {
+	_id: string;
+	name: string;
+	email: string;
+	createdAt: string;
+}
+
+interface AuthContextType {
+	user: User | null;
+	isAuthenticated: boolean;
+	isLoading: boolean;
+	login: (token: string, user: User) => void;
+	logout: () => void;
+	checkAuth: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+	const context = useContext(AuthContext);
+	if (context === undefined) {
+		throw new Error("useAuth must be used within an AuthProvider");
+	}
+	return context;
+};
+
+interface AuthProviderProps {
+	children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+	const [user, setUser] = useState<User | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const login = (token: string, user: User) => {
+		auth.setAuth(token, user);
+		setUser(user);
+	};
+
+	const logout = () => {
+		auth.logout();
+		setUser(null);
+	};
+
+	const checkAuth = async () => {
+		try {
+			if (auth.isLoggedIn()) {
+				const currentUser = auth.getCurrentUser();
+				if (currentUser) {
+					setUser(currentUser);
+				} else {
+					// Try to get fresh user data from server
+					const response = await api.getProfile();
+					if (response.success) {
+						setUser(response.user);
+						auth.setAuth(auth.getToken()!, response.user);
+					} else {
+						logout();
+					}
+				}
+			}
+		} catch (error) {
+			console.error("Auth check error:", error);
+			logout();
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		checkAuth();
+	}, []);
+
+	const value: AuthContextType = {
+		user,
+		isAuthenticated: !!user,
+		isLoading,
+		login,
+		logout,
+		checkAuth,
+	};
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
