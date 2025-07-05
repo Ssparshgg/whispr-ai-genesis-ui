@@ -28,7 +28,7 @@ const Index = () => {
       const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      
+
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -61,37 +61,37 @@ const Index = () => {
   };
 
   const voices = [
-    { 
-      name: "Linh", 
-      type: "Sweet", 
-      description: "Sweet Asian voice with gentle, caring tone", 
+    {
+      name: "Linh",
+      type: "Sweet",
+      description: "Sweet Asian voice with gentle, caring tone",
       avatar: "L",
       quote: "Let me take care of you with my sweet voice...",
       image: "/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png",
       personality: "Sweet & Caring"
     },
-    { 
-      name: "Miara", 
-      type: "Cute", 
-      description: "Adorable Chinese voice with playful charm", 
+    {
+      name: "Miara",
+      type: "Cute",
+      description: "Adorable Chinese voice with playful charm",
       avatar: "M",
       quote: "I'll make your day brighter with my cute voice...",
       image: "/lovable-uploads/8f3d2a00-ac1a-4dc9-beaa-22ce697945f3.png",
       personality: "Cute & Playful"
     },
-    { 
-      name: "Madison", 
-      type: "Confident", 
-      description: "American voice with confident, alluring presence", 
+    {
+      name: "Madison",
+      type: "Confident",
+      description: "American voice with confident, alluring presence",
       avatar: "M",
       quote: "Ready to hear what confidence sounds like?",
       image: "/lovable-uploads/2f12a378-da34-4abd-8eab-18404ff65ac3.png",
       personality: "Confident & Alluring"
     },
-    { 
-      name: "Aria", 
-      type: "Adventurous", 
-      description: "Free-spirited voice for those who love adventure", 
+    {
+      name: "Aria",
+      type: "Adventurous",
+      description: "Free-spirited voice for those who love adventure",
       avatar: "A",
       quote: "Let's go on an adventure together...",
       image: "/lovable-uploads/53504ad3-684a-409f-a9ab-4cf6045e0388.png",
@@ -101,8 +101,8 @@ const Index = () => {
 
   const voiceFilters = ["All", "Sweet", "Cute", "Confident", "Adventurous", "Dominant"];
 
-  const filteredVoices = selectedVoiceFilter === "All" 
-    ? voices 
+  const filteredVoices = selectedVoiceFilter === "All"
+    ? voices
     : voices.filter(voice => voice.type === selectedVoiceFilter);
 
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.3, triggerOnce: true });
@@ -112,7 +112,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Top Banner */}
-      <motion.div 
+      <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="bg-gradient-purple text-white text-center py-3 px-4 relative overflow-hidden"
@@ -131,7 +131,7 @@ const Index = () => {
       <header className="border-b border-border/20 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <motion.div 
+            <motion.div
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               className="flex items-center space-x-2"
@@ -144,9 +144,9 @@ const Index = () => {
               </motion.div>
               <span className="text-2xl font-bold">Seducely.AI</span>
             </motion.div>
-            
+
             <nav className="hidden md:flex items-center space-x-8">
-              <motion.button 
+              <motion.button
                 onClick={() => handleNavClick('features')}
                 className="hover:text-primary transition-colors cursor-pointer relative group"
                 whileHover={{ scale: 1.05 }}
@@ -159,7 +159,7 @@ const Index = () => {
                   transition={{ duration: 0.3 }}
                 />
               </motion.button>
-              <motion.button 
+              <motion.button
                 onClick={() => handleNavClick('voices')}
                 className="hover:text-primary transition-colors cursor-pointer relative group"
                 whileHover={{ scale: 1.05 }}
@@ -172,7 +172,7 @@ const Index = () => {
                   transition={{ duration: 0.3 }}
                 />
               </motion.button>
-              <motion.button 
+              <motion.button
                 onClick={() => handleNavClick('pricing')}
                 className="hover:text-primary transition-colors cursor-pointer relative group"
                 whileHover={{ scale: 1.05 }}
@@ -213,7 +213,7 @@ const Index = () => {
         <div className="container mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8 }}
@@ -221,9 +221,9 @@ const Index = () => {
               >
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
                   Create Your Own{" "}
-                  <motion.span 
+                  <motion.span
                     className="text-primary relative"
-                    animate={{ 
+                    animate={{
                       textShadow: [
                         "0 0 20px rgba(139, 92, 246, 0.5)",
                         "0 0 40px rgba(139, 92, 246, 0.8)",
@@ -243,12 +243,12 @@ const Index = () => {
                   </motion.span>
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Generate captivating, ultra-realistic voice notes with stunning AI personalities. 
+                  Generate captivating, ultra-realistic voice notes with stunning AI personalities.
                   Choose from beautiful voice models with unique styles and personas.
                 </p>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={heroInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.8, duration: 0.6 }}
@@ -258,8 +258,8 @@ const Index = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button 
-                    variant="whispr-primary" 
+                  <Button
+                    variant="whispr-primary"
                     size="lg"
                     className="relative overflow-hidden group"
                     onClick={handleStartCreating}
@@ -272,9 +272,9 @@ const Index = () => {
                     <span className="relative z-10">Start Creating Now</span>
                   </Button>
                 </motion.div>
-                <Button 
-                  variant="whispr-outline" 
-                  size="lg" 
+                <Button
+                  variant="whispr-outline"
+                  size="lg"
                   className="group"
                   onClick={handleDemoClick}
                 >
@@ -284,7 +284,7 @@ const Index = () => {
               </motion.div>
 
               {/* Trust Badges */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={heroInView ? { opacity: 1 } : {}}
                 transition={{ delay: 1.2 }}
@@ -351,8 +351,8 @@ const Index = () => {
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
-                                <img 
-                                  src={voice.image} 
+                                <img
+                                  src={voice.image}
                                   alt={voice.name}
                                   className="w-full h-full object-cover"
                                 />
@@ -399,9 +399,9 @@ const Index = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Button 
-                      variant="whispr-primary" 
-                      className="w-full relative overflow-hidden group" 
+                    <Button
+                      variant="whispr-primary"
+                      className="w-full relative overflow-hidden group"
                       size="lg"
                     >
                       <motion.div
@@ -429,7 +429,7 @@ const Index = () => {
       {/* Features Section */}
       <section id="features" ref={featuresRef} className="py-20 px-4 bg-secondary/20 relative">
         <div className="container mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={featuresInView ? { opacity: 1, y: 0 } : {}}
             className="text-center mb-16"
@@ -456,7 +456,7 @@ const Index = () => {
               >
                 <Card className="bg-gradient-to-br from-card/50 to-card/30 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 h-full">
                   <CardHeader>
-                    <motion.div 
+                    <motion.div
                       className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors"
                       whileHover={{ rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.6 }}
@@ -480,7 +480,7 @@ const Index = () => {
       {/* How It Works Section */}
       <section ref={stepsRef} className="py-20 px-4">
         <div className="container mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={stepsInView ? { opacity: 1, y: 0 } : {}}
             className="text-center mb-16"
@@ -505,7 +505,7 @@ const Index = () => {
                 transition={{ delay: index * 0.2, duration: 0.6 }}
                 className="text-center space-y-4 relative"
               >
-                <motion.div 
+                <motion.div
                   className="relative mx-auto w-20 h-20"
                   whileHover={{ scale: 1.1 }}
                 >
@@ -518,7 +518,7 @@ const Index = () => {
                 </motion.div>
                 <h3 className="text-xl font-semibold">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
-                
+
                 {index < 3 && (
                   <motion.div
                     initial={{ width: 0 }}
@@ -543,7 +543,7 @@ const Index = () => {
             </p>
           </div>
 
-          <motion.div 
+          <motion.div
             className="flex flex-wrap justify-center gap-2 mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -587,20 +587,19 @@ const Index = () => {
                 whileHover={{ scale: 1.02 }}
                 className="group"
               >
-                <Card className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                  selectedVoice === voice.name ? 'border-primary ring-2 ring-primary/20' : ''
-                }`}
-                onClick={() => setSelectedVoice(voice.name)}
+                <Card className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${selectedVoice === voice.name ? 'border-primary ring-2 ring-primary/20' : ''
+                  }`}
+                  onClick={() => setSelectedVoice(voice.name)}
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100"
                     transition={{ duration: 0.3 }}
                   />
-                  
+
                   <CardHeader className="relative z-10 p-4">
                     <div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
-                      <img 
-                        src={voice.image} 
+                      <img
+                        src={voice.image}
                         alt={voice.name}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       />
@@ -618,7 +617,7 @@ const Index = () => {
                         </motion.div>
                       )}
                     </div>
-                    
+
                     <div className="text-center">
                       <CardTitle className="text-lg mb-1">👄 {voice.name}</CardTitle>
                       <p className="text-sm text-muted-foreground mb-2">🎭 {voice.personality}</p>
@@ -626,10 +625,10 @@ const Index = () => {
                       <Badge variant="outline" className="text-xs mb-3">{voice.type}</Badge>
                     </div>
                   </CardHeader>
-                  
+
                   <CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="flex-1"
                       onClick={(e) => {
@@ -639,8 +638,8 @@ const Index = () => {
                     >
                       🔊 Preview
                     </Button>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -665,14 +664,14 @@ const Index = () => {
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
         />
-        
+
         <div className="container mx-auto relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Simple, Credit-Based Pricing</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Choose the perfect plan for your voice creation needs. Pay for what you use with our flexible credit system.
             </p>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               className="mt-6 flex items-center justify-center gap-4 text-sm text-muted-foreground"
@@ -712,24 +711,24 @@ const Index = () => {
                   <ul className="space-y-3">
                     {[
                       "50 AI Voice Credits",
-                      "Access to Linh & Miara", 
+                      "Access to Linh & Miara",
                       "MP3 Downloads",
                       "Basic Voice Quality",
                       "Email Support"
                     ].map((feature, index) => (
-                      <motion.li 
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <span className="text-green-500 text-xs">✓</span>
-                        </div>
-                        {feature}
-                      </motion.li>
-                    ))}
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-center gap-2"
+                        >
+                          <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <span className="text-green-500 text-xs">✓</span>
+                          </div>
+                          {feature}
+                        </motion.li>
+                      ))}
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -758,7 +757,7 @@ const Index = () => {
                   </Badge>
                 </motion.div>
               </motion.div>
-              
+
               <Card className="bg-gradient-to-br from-card/80 to-primary/10 backdrop-blur border-primary/50 shadow-purple h-full relative overflow-hidden">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
@@ -786,24 +785,24 @@ const Index = () => {
                     {[
                       "200 AI Voice Credits",
                       "All Voice Models (Linh, Miara, Madison, Aria)",
-                      "Premium Voice Quality", 
+                      "Premium Voice Quality",
                       "MP3 & WAV Downloads",
                       "Priority Support",
                       "Early Access to New Voices"
                     ].map((feature, index) => (
-                      <motion.li 
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                          <span className="text-green-500 text-xs">✓</span>
-                        </div>
-                        {feature}
-                      </motion.li>
-                    ))}
+                        <motion.li
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-center gap-2"
+                        >
+                          <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <span className="text-green-500 text-xs">✓</span>
+                          </div>
+                          {feature}
+                        </motion.li>
+                      ))}
                   </ul>
                 </CardContent>
                 <CardFooter className="relative z-10">
@@ -811,34 +810,43 @@ const Index = () => {
                 </CardFooter>
               </Card>
             </motion.div>
+          </div>
+        </div>
+      </section>
 
-            {/* Creator Results Section */}
+      {/* Creator Success Stories Section */}
+      <section className="py-20 px-4 bg-secondary/10">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
+            <h3 className="text-3xl font-bold mb-4">Creator Success Stories</h3>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              See how creators are achieving incredible results with Seducely.AI
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              {metric: "500K+", label: "Monthly Streams", creator: "@VoiceQueen" },
+              {metric: "$12K", label: "Monthly Revenue", creator: "@AIVoicePro" },
+              {metric: "50K+", label: "New Followers", creator: "@SeductiveAI" }
+            ].map((result, index) => (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="mt-16 text-center"
+              transition={{ delay: index * 0.2 }}
+              whileHover={{ scale: 1.05 }}
+              className="bg-card/50 backdrop-blur rounded-xl p-8 border border-border/20 shadow-card hover:shadow-purple transition-all duration-300"
             >
-              <h3 className="text-2xl font-bold mb-8">Creator Success Stories</h3>
-              <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                {[
-                  { metric: "500K+", label: "Monthly Streams", creator: "@VoiceQueen" },
-                  { metric: "$12K", label: "Monthly Revenue", creator: "@AIVoicePro" },
-                  { metric: "50K+", label: "New Followers", creator: "@SeductiveAI" }
-                ].map((result, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                    className="bg-card/30 backdrop-blur rounded-lg p-6 border border-border/20"
-                  >
-                    <div className="text-3xl font-bold text-primary mb-2">{result.metric}</div>
-                    <div className="text-sm text-muted-foreground mb-1">{result.label}</div>
-                    <div className="text-xs text-primary font-medium">{result.creator}</div>
-                  </motion.div>
-                ))}
-              </div>
+              <div className="text-4xl font-bold text-primary mb-3">{result.metric}</div>
+              <div className="text-lg font-medium mb-2">{result.label}</div>
+              <div className="text-sm text-primary font-medium">{result.creator}</div>
             </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -906,7 +914,7 @@ const Index = () => {
         {/* Glassmorphism Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/20" />
         <motion.div
-          animate={{ 
+          animate={{
             background: [
               "radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
               "radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
@@ -916,7 +924,7 @@ const Index = () => {
           transition={{ duration: 8, repeat: Infinity }}
           className="absolute inset-0"
         />
-        
+
         {/* Voice Wave Animation Background */}
         <div className="absolute inset-0 flex items-center justify-center opacity-10">
           <motion.div
@@ -929,17 +937,17 @@ const Index = () => {
         </div>
 
         <div className="container mx-auto text-center relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="max-w-4xl mx-auto space-y-8 bg-card/20 backdrop-blur-lg rounded-2xl p-12 border border-border/20"
           >
-            <motion.h2 
+            <motion.h2
               className="text-4xl lg:text-5xl font-bold"
-              animate={{ 
+              animate={{
                 backgroundImage: [
                   "linear-gradient(45deg, #ffffff, #8b5cf6)",
-                  "linear-gradient(45deg, #8b5cf6, #ffffff)", 
+                  "linear-gradient(45deg, #8b5cf6, #ffffff)",
                   "linear-gradient(45deg, #ffffff, #8b5cf6)"
                 ]
               }}
@@ -951,9 +959,9 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">
               Join thousands of creators already using Seducely.AI to connect with their audience through stunning AI voice models.
             </p>
-            
+
             {/* Urgency Timer */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6"
@@ -963,9 +971,9 @@ const Index = () => {
                 <span className="font-bold">New voices dropping July 10th — Early access ends in 3 days!</span>
               </div>
             </motion.div>
-            
+
             {/* Social Proof */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               className="flex flex-wrap justify-center gap-6 text-sm"
@@ -979,20 +987,20 @@ const Index = () => {
                 <span>Seductive AI Voice Tool</span>
               </div>
             </motion.div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button 
-                  variant="whispr-primary" 
+                <Button
+                  variant="whispr-primary"
                   size="lg"
                   className="relative overflow-hidden group"
                   onClick={handleStartCreating}
                 >
                   <motion.div
-                    animate={{ 
+                    animate={{
                       boxShadow: [
                         "0 0 20px rgba(139, 92, 246, 0.5)",
                         "0 0 40px rgba(139, 92, 246, 0.8)",
@@ -1005,9 +1013,9 @@ const Index = () => {
                   <span className="relative z-10">Get Started Free</span>
                 </Button>
               </motion.div>
-              <Button 
-                variant="link" 
-                size="lg" 
+              <Button
+                variant="link"
+                size="lg"
                 className="text-primary hover:text-primary-hover"
                 onClick={handleDemoClick}
               >
@@ -1016,7 +1024,7 @@ const Index = () => {
               </Button>
             </div>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
