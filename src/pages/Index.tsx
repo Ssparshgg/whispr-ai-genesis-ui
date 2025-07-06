@@ -233,8 +233,13 @@ const Index = () => {
 							<motion.div
 								animate={{ rotate: [0, 15, -15, 0] }}
 								transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+								className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0"
 							>
-								<Mic className="h-8 w-8 text-primary" />
+								<img
+									src="/logo.jpg"
+									alt="Seducely.AI Logo"
+									className="w-full h-full object-cover"
+								/>
 							</motion.div>
 							<span className="text-xl sm:text-2xl font-bold">Seducely.AI</span>
 						</motion.div>
