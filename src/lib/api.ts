@@ -1,7 +1,4 @@
-const API_BASE_URL =
-	process.env.NODE_ENV === "production"
-		? "https://second.anshtyagi.me/api"
-		: "http://localhost:5001/api";
+const API_BASE_URL = "https://second.anshtyagi.me/api";
 
 export { API_BASE_URL };
 
