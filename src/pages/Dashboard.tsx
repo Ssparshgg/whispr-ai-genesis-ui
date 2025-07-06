@@ -44,6 +44,11 @@ const Dashboard = () => {
 					plan: response.user.is_premium ? "Premium" : "Free",
 					voicesGenerated: response.user.voices_generated || 0,
 				});
+
+				// If we're using cached data, show a subtle indicator
+				if (response.message && response.message.includes("cached")) {
+					console.warn("Using cached user data:", response.message);
+				}
 			} else {
 				console.error("Failed to fetch user profile:", response.message);
 				// If it's an authentication error, redirect to login
@@ -62,10 +67,22 @@ const Dashboard = () => {
 			if (error instanceof Error) {
 				if (
 					error.message.includes("Invalid token") ||
-					error.message.includes("User not found")
+					error.message.includes("User not found") ||
+					error.message.includes("Authentication failed")
 				) {
 					logout();
 					navigate("/login");
+				} else {
+					// For other errors, try to use cached user data
+					const cachedUser = user;
+					if (cachedUser) {
+						setStats({
+							credits: cachedUser.credits || 0,
+							plan: cachedUser.isPremium ? "Premium" : "Free",
+							voicesGenerated: 0, // We don't have this in cached data
+						});
+						console.warn("Using cached user data due to error:", error.message);
+					}
 				}
 			}
 		} finally {

@@ -40,28 +40,60 @@ export const api = {
 			throw new Error("No token found");
 		}
 
-		const response = await fetch(`${API_BASE_URL}/profile`, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${token}`,
-				"Content-Type": "application/json",
-			},
-		});
+		try {
+			const response = await fetch(`${API_BASE_URL}/profile`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 
-		const data = await response.json();
+			const data = await response.json();
 
-		// Only clear token for actual authentication errors, not network/server errors
-		if (!response.ok || !data.success) {
-			if (
-				(response.status === 401 || response.status === 403) &&
-				(data.message === "Invalid token" || data.message === "User not found")
-			) {
-				localStorage.removeItem("token");
-				localStorage.removeItem("user");
+			// Only clear token for actual authentication errors, not network/server errors
+			if (!response.ok || !data.success) {
+				if (
+					(response.status === 401 || response.status === 403) &&
+					(data.message === "Invalid token" ||
+						data.message === "User not found")
+				) {
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					throw new Error(data.message || "Authentication failed");
+				} else {
+					// For other errors (404, 500, etc.), return a success response with cached user data
+					const cachedUser = auth.getCurrentUser();
+					if (cachedUser) {
+						return {
+							success: true,
+							user: cachedUser,
+							message: "Using cached user data due to server error",
+						};
+					} else {
+						throw new Error("Server error and no cached user data available");
+					}
+				}
 			}
-		}
 
-		return data;
+			return data;
+		} catch (error) {
+			// If it's a network error or server error, try to use cached user data
+			if (
+				error instanceof Error &&
+				!error.message.includes("Authentication failed")
+			) {
+				const cachedUser = auth.getCurrentUser();
+				if (cachedUser) {
+					return {
+						success: true,
+						user: cachedUser,
+						message: "Using cached user data due to network error",
+					};
+				}
+			}
+			throw error;
+		}
 	},
 
 	// Check user credits

@@ -61,6 +61,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				if (response.success && response.user) {
 					setUser(response.user);
 					auth.setAuth(auth.getToken()!, response.user);
+
+					// If we're using cached data, show a subtle indicator
+					if (response.message && response.message.includes("cached")) {
+						console.warn("Using cached user data:", response.message);
+					}
 				} else if (
 					response.message === "Invalid token" ||
 					response.message === "User not found"
@@ -72,6 +77,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		} catch (error) {
 			console.error("Error refreshing user:", error);
 			// Don't logout on network errors, keep user logged in with cached data
+			if (
+				error instanceof Error &&
+				error.message.includes("Authentication failed")
+			) {
+				logout();
+			}
 		}
 	};
 
@@ -87,6 +98,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 						if (response.success && response.user) {
 							setUser(response.user);
 							auth.setAuth(auth.getToken()!, response.user);
+
+							// If we're using cached data, show a subtle indicator
+							if (response.message && response.message.includes("cached")) {
+								console.warn("Using cached user data:", response.message);
+							}
 						} else if (
 							response.message === "Invalid token" ||
 							response.message === "User not found"
@@ -97,7 +113,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					} catch (error) {
 						console.error("Error fetching fresh user data:", error);
 						// If we can't fetch fresh data, keep the cached user but mark as potentially stale
-						console.warn("Using cached user data - may be stale");
+						if (
+							error instanceof Error &&
+							error.message.includes("Authentication failed")
+						) {
+							logout();
+						} else {
+							console.warn("Using cached user data - may be stale");
+						}
 					}
 				} else {
 					// Try to get fresh user data from server
@@ -106,6 +129,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 						if (response.success && response.user) {
 							setUser(response.user);
 							auth.setAuth(auth.getToken()!, response.user);
+
+							// If we're using cached data, show a subtle indicator
+							if (response.message && response.message.includes("cached")) {
+								console.warn("Using cached user data:", response.message);
+							}
 						} else if (
 							response.message === "Invalid token" ||
 							response.message === "User not found"
@@ -116,6 +144,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					} catch (error) {
 						console.error("Error fetching user data:", error);
 						// Don't logout on network errors, just keep user logged in with cached data
+						if (
+							error instanceof Error &&
+							error.message.includes("Authentication failed")
+						) {
+							logout();
+						}
 					}
 				}
 			}
