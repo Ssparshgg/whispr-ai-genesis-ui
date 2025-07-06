@@ -873,8 +873,8 @@ const Index = () => {
 							</div>
 						) : (
 							<Button
-								variant="outline"
-								className="rounded-full flex items-center gap-2 opacity-60 cursor-not-allowed relative"
+								variant="whispr-primary"
+								className="rounded-full flex items-center gap-2 transition-colors bg-primary text-white hover:bg-primary/80 hover:brightness-125 relative"
 								onClick={() => smoothScrollTo("pricing")}
 							>
 								<Lock className="w-4 h-4" />
