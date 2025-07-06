@@ -43,15 +43,38 @@ const VoiceHistory = ({
 					id: item.id,
 					voiceName: item.voiceName,
 					text: item.text,
-					audioUrl: item.audioUrl,
+					audioUrl: item.audioUrl.startsWith("http")
+						? item.audioUrl
+						: `https://second.anshtyagi.me${item.audioUrl}`,
 					createdAt: new Date(item.createdAt).toLocaleString(),
 					duration: item.duration,
 					type: item.type,
 				}));
 				setHistoryItems(formattedHistory);
+			} else {
+				console.error("Failed to fetch voice history:", response.message);
+				// If it's an authentication error, we might want to redirect to login
+				if (
+					response.message === "No token provided" ||
+					response.message === "Invalid token"
+				) {
+					// Clear invalid token and redirect to login
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					window.location.href = "/login";
+				}
 			}
 		} catch (error) {
 			console.error("Error fetching voice history:", error);
+			// Check if it's a network error or authentication error
+			if (error instanceof Error) {
+				if (error.message.includes("401") || error.message.includes("403")) {
+					// Clear invalid token and redirect to login
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					window.location.href = "/login";
+				}
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -72,19 +95,48 @@ const VoiceHistory = ({
 
 		try {
 			const token = localStorage.getItem("token");
-			const audio = new Audio(audioUrl);
 
-			// Set authorization header if needed
+			// Create audio element with proper authentication
+			const audio = new Audio();
 			audio.crossOrigin = "anonymous";
+
+			// Add authorization header for the audio request
+			if (token) {
+				// For audio elements, we need to handle authentication differently
+				// We'll use a fetch request to get the audio blob first
+				const response = await fetch(audioUrl, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const blob = await response.blob();
+				const audioBlobUrl = URL.createObjectURL(blob);
+				audio.src = audioBlobUrl;
+
+				// Clean up the blob URL when audio ends
+				audio.onended = () => {
+					setPlayingId(null);
+					setCurrentAudio(null);
+					URL.revokeObjectURL(audioBlobUrl);
+				};
+			} else {
+				// Fallback to direct audio URL if no token
+				audio.src = audioUrl;
+				audio.onended = () => {
+					setPlayingId(null);
+					setCurrentAudio(null);
+				};
+			}
 
 			setCurrentAudio(audio);
 			setPlayingId(id);
 
-			audio.play();
-			audio.onended = () => {
-				setPlayingId(null);
-				setCurrentAudio(null);
-			};
+			await audio.play();
 		} catch (error) {
 			console.error("Error playing audio:", error);
 			setPlayingId(null);

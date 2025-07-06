@@ -44,9 +44,26 @@ const Dashboard = () => {
 					plan: response.user.is_premium ? "Premium" : "Free",
 					voicesGenerated: response.user.voices_generated || 0,
 				});
+			} else {
+				console.error("Failed to fetch user profile:", response.message);
+				// If it's an authentication error, redirect to login
+				if (
+					response.message === "No token provided" ||
+					response.message === "Invalid token"
+				) {
+					logout();
+					navigate("/login");
+				}
 			}
 		} catch (error) {
 			console.error("Error fetching user profile:", error);
+			// Check if it's an authentication error
+			if (error instanceof Error) {
+				if (error.message.includes("401") || error.message.includes("403")) {
+					logout();
+					navigate("/login");
+				}
+			}
 		} finally {
 			setIsLoading(false);
 		}

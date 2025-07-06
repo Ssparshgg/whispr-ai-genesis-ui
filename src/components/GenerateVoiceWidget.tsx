@@ -9,6 +9,7 @@ import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 import React, { useState, useRef, useEffect } from "react";
 import { api } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface Voice {
 	name: string;
@@ -63,10 +64,15 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	} | null>(null);
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 	const navigate = useNavigate();
+	const { toast } = useToast();
 
 	const handleGenerateVoice = async () => {
 		if (!message.trim()) {
-			alert("Please enter a message to generate voice");
+			toast({
+				title: "Message Required",
+				description: "Please enter a message to generate voice",
+				variant: "destructive",
+			});
 			return;
 		}
 
@@ -97,13 +103,28 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						const url = URL.createObjectURL(audioBlob);
 						setAudioUrl(url);
 						setGeneratedAudio(response.data);
+
+						// Show success toast
+						toast({
+							title: "Voice Generated!",
+							description: `Successfully generated voice with ${selectedVoice}`,
+						});
 					} catch (audioError) {
 						console.error("Error processing audio:", audioError);
-						alert("Error processing the generated audio. Please try again.");
+						toast({
+							title: "Audio Processing Error",
+							description:
+								"Error processing the generated audio. Please try again.",
+							variant: "destructive",
+						});
 					}
 				} else {
 					console.error("Invalid response:", response);
-					alert(`Error: ${response.message || "Failed to generate voice"}`);
+					toast({
+						title: "Generation Failed",
+						description: response.message || "Failed to generate voice",
+						variant: "destructive",
+					});
 				}
 			} else {
 				// Use the model voice generation endpoint for other voices
@@ -119,18 +140,37 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						const url = URL.createObjectURL(audioBlob);
 						setAudioUrl(url);
 						setGeneratedAudio(data.data);
+
+						// Show success toast
+						toast({
+							title: "Voice Generated!",
+							description: `Successfully generated voice with ${selectedVoice}`,
+						});
 					} catch (audioError) {
 						console.error("Error processing audio:", audioError);
-						alert("Error processing the generated audio. Please try again.");
+						toast({
+							title: "Audio Processing Error",
+							description:
+								"Error processing the generated audio. Please try again.",
+							variant: "destructive",
+						});
 					}
 				} else {
 					console.error("Invalid response:", data);
-					alert(`Error: ${data.message || "Failed to generate voice"}`);
+					toast({
+						title: "Generation Failed",
+						description: data.message || "Failed to generate voice",
+						variant: "destructive",
+					});
 				}
 			}
 		} catch (error) {
 			console.error("Error generating voice:", error);
-			alert("Failed to generate voice. Please try again.");
+			toast({
+				title: "Generation Failed",
+				description: "Failed to generate voice. Please try again.",
+				variant: "destructive",
+			});
 		} finally {
 			setIsGenerating(false);
 		}

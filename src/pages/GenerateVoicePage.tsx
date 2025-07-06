@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import GenerateVoiceWidget from "@/components/GenerateVoiceWidget";
 import VoiceHistory from "@/components/VoiceHistory";
 import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const voices = [
 	{
@@ -51,6 +52,7 @@ const GenerateVoicePage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { logout } = useAuth();
+	const { toast } = useToast();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
@@ -123,29 +125,99 @@ const GenerateVoicePage = () => {
 				if (predefinedVoices.includes(voice)) {
 					// Use the standard voice generation endpoint
 					const response = await api.generateVoice(voice, text);
-					if (response.success) {
+					if (response.success && response.data && response.data.audioBase64) {
 						// Refresh the voice history
 						setRefreshHistory((prev) => prev + 1);
-						// Show success message
-						alert("Voice generated successfully! Check your history.");
+
+						// Process the audio and play it automatically
+						try {
+							const binaryString = atob(response.data.audioBase64);
+							const bytes = new Uint8Array(binaryString.length);
+							for (let i = 0; i < binaryString.length; i++) {
+								bytes[i] = binaryString.charCodeAt(i);
+							}
+							const audioBlob = new Blob([bytes], { type: "audio/mp3" });
+							const audioUrl = URL.createObjectURL(audioBlob);
+
+							// Create and play audio automatically
+							const audio = new Audio(audioUrl);
+							audio.play().catch((error) => {
+								console.error("Error playing audio:", error);
+							});
+
+							// Show success toast
+							toast({
+								title: "Voice Generated!",
+								description: `Successfully generated voice with ${voice}. Playing now...`,
+							});
+
+							// Clean up the URL after a delay
+							setTimeout(() => {
+								URL.revokeObjectURL(audioUrl);
+							}, 10000);
+						} catch (audioError) {
+							console.error("Error processing audio:", audioError);
+						}
 					} else {
-						alert(`Error: ${response.message || "Failed to generate voice"}`);
+						console.error("Invalid response:", response);
+						toast({
+							title: "Generation Failed",
+							description: response.message || "Failed to generate voice",
+							variant: "destructive",
+						});
 					}
 				} else {
 					// Use the model voice generation endpoint for other voices
 					const data = await api.generateVoiceModel(voice, text);
-					if (data.success) {
+					if (data.success && data.data && data.data.audioBase64) {
 						// Refresh the voice history
 						setRefreshHistory((prev) => prev + 1);
-						// Show success message
-						alert("Voice generated successfully! Check your history.");
+
+						// Process the audio and play it automatically
+						try {
+							const binaryString = atob(data.data.audioBase64);
+							const bytes = new Uint8Array(binaryString.length);
+							for (let i = 0; i < binaryString.length; i++) {
+								bytes[i] = binaryString.charCodeAt(i);
+							}
+							const audioBlob = new Blob([bytes], { type: "audio/mp3" });
+							const audioUrl = URL.createObjectURL(audioBlob);
+
+							// Create and play audio automatically
+							const audio = new Audio(audioUrl);
+							audio.play().catch((error) => {
+								console.error("Error playing audio:", error);
+							});
+
+							// Show success toast
+							toast({
+								title: "Voice Generated!",
+								description: `Successfully generated voice with ${voice}. Playing now...`,
+							});
+
+							// Clean up the URL after a delay
+							setTimeout(() => {
+								URL.revokeObjectURL(audioUrl);
+							}, 10000);
+						} catch (audioError) {
+							console.error("Error processing audio:", audioError);
+						}
 					} else {
-						alert(`Error: ${data.message || "Failed to generate voice"}`);
+						console.error("Invalid response:", data);
+						toast({
+							title: "Generation Failed",
+							description: data.message || "Failed to generate voice",
+							variant: "destructive",
+						});
 					}
 				}
 			} catch (error) {
 				console.error("Error generating voice:", error);
-				alert("Failed to generate voice. Please try again.");
+				toast({
+					title: "Generation Failed",
+					description: "Failed to generate voice. Please try again.",
+					variant: "destructive",
+				});
 			} finally {
 				setIsGenerating(false);
 			}
