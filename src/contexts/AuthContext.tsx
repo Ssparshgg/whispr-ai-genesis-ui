@@ -61,13 +61,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				if (response.success && response.user) {
 					setUser(response.user);
 					auth.setAuth(auth.getToken()!, response.user);
-				} else {
+				} else if (
+					response.message === "Invalid token" ||
+					response.message === "User not found"
+				) {
+					// Only logout for actual auth errors
 					logout();
 				}
 			}
 		} catch (error) {
 			console.error("Error refreshing user:", error);
-			logout();
+			// Don't logout on network errors, keep user logged in with cached data
 		}
 	};
 
@@ -83,7 +87,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 						if (response.success && response.user) {
 							setUser(response.user);
 							auth.setAuth(auth.getToken()!, response.user);
-						} else {
+						} else if (
+							response.message === "Invalid token" ||
+							response.message === "User not found"
+						) {
+							// Only logout for actual auth errors, not network/server errors
 							logout();
 						}
 					} catch (error) {
@@ -93,18 +101,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					}
 				} else {
 					// Try to get fresh user data from server
-					const response = await api.getProfile();
-					if (response.success && response.user) {
-						setUser(response.user);
-						auth.setAuth(auth.getToken()!, response.user);
-					} else {
-						logout();
+					try {
+						const response = await api.getProfile();
+						if (response.success && response.user) {
+							setUser(response.user);
+							auth.setAuth(auth.getToken()!, response.user);
+						} else if (
+							response.message === "Invalid token" ||
+							response.message === "User not found"
+						) {
+							// Only logout for actual auth errors
+							logout();
+						}
+					} catch (error) {
+						console.error("Error fetching user data:", error);
+						// Don't logout on network errors, just keep user logged in with cached data
 					}
 				}
 			}
 		} catch (error) {
 			console.error("Auth check error:", error);
-			logout();
+			// Don't logout on general errors, only on specific auth errors
 		} finally {
 			setIsLoading(false);
 		}

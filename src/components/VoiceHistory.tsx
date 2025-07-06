@@ -71,12 +71,11 @@ const VoiceHistory = ({
 			}
 		} catch (error) {
 			console.error("Error fetching voice history:", error);
-			// Check if it's a network error or authentication error
+			// Only redirect to login for actual authentication errors, not network/server errors
 			if (error instanceof Error) {
 				if (
-					error.message.includes("401") ||
-					error.message.includes("403") ||
-					error.message.includes("404")
+					error.message.includes("Invalid token") ||
+					error.message.includes("User not found")
 				) {
 					// Clear invalid token and redirect to login
 					logout();

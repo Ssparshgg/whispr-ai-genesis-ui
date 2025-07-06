@@ -50,12 +50,11 @@ export const api = {
 
 		const data = await response.json();
 
-		// If we get a 404 or authentication error, clear the token
+		// Only clear token for actual authentication errors, not network/server errors
 		if (!response.ok || !data.success) {
 			if (
-				response.status === 404 ||
-				response.status === 401 ||
-				response.status === 403
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
 			) {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
@@ -84,9 +83,8 @@ export const api = {
 
 		if (!response.ok || !data.success) {
 			if (
-				response.status === 404 ||
-				response.status === 401 ||
-				response.status === 403
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
 			) {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
@@ -132,7 +130,10 @@ export const api = {
 
 		// Handle authentication errors
 		if (!response.ok || !data.success) {
-			if (response.status === 401 || response.status === 403) {
+			if (
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
+			) {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
 			}
@@ -167,7 +168,10 @@ export const api = {
 
 		// Handle authentication errors
 		if (!response.ok || !data.success) {
-			if (response.status === 401 || response.status === 403) {
+			if (
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
+			) {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
 			}
@@ -196,9 +200,8 @@ export const api = {
 		// Handle authentication errors
 		if (!response.ok || !data.success) {
 			if (
-				response.status === 404 ||
-				response.status === 401 ||
-				response.status === 403
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
 			) {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
