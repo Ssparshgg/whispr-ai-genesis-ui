@@ -37,8 +37,8 @@ const Login = () => {
 				// Store authentication data
 				login(data.token, data.user);
 
-				// Navigate to dashboard or home after successful login
-				navigate("/generate-voice");
+				// Navigate to dashboard after successful login
+				navigate("/dashboard");
 			} else {
 				// Show error message
 				setError(data.message || "Login failed");

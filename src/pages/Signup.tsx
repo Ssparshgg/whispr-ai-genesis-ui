@@ -54,8 +54,8 @@ const Signup = () => {
 				// Store authentication data
 				login(data.token, data.user);
 
-				// Navigate to dashboard or home after successful signup
-				navigate("/generate-voice");
+				// Navigate to dashboard after successful signup
+				navigate("/dashboard");
 			} else {
 				// Show error message
 				if (data.errors) {
