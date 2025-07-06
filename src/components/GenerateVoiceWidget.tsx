@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, Loader2 } from "lucide-react";
+import { Mic, Loader2, ChevronDown } from "lucide-react";
 import WaveAnimation from "@/components/WaveAnimation";
 import CustomAudioPlayer from "@/components/CustomAudioPlayer";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { api } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +38,11 @@ const lockedVoiceImages: Record<string, string> = {
 	Confident: "/kyly.jpg",
 	Adventurous: "/lauren.jpg",
 };
+
+const VOICE_MODEL_NAMES = Array.from(
+	{ length: 150 },
+	(_, i) => `Voice ${i + 1}`
+);
 
 const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	voices,
@@ -77,17 +82,45 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 		setAudioUrl(null);
 
 		try {
+			// Use the new endpoint for the 150 voice models
+			if (VOICE_MODEL_NAMES.includes(selectedVoice)) {
+				const response = await fetch("/api/generate-voice-model", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ modelName: selectedVoice, text: message }),
+				});
+				const data = await response.json();
+				if (data.success && data.data && data.data.audioBase64) {
+					try {
+						const binaryString = atob(data.data.audioBase64);
+						const bytes = new Uint8Array(binaryString.length);
+						for (let i = 0; i < binaryString.length; i++) {
+							bytes[i] = binaryString.charCodeAt(i);
+						}
+						const audioBlob = new Blob([bytes], { type: "audio/mp3" });
+						const url = URL.createObjectURL(audioBlob);
+						setAudioUrl(url);
+						setGeneratedAudio(data.data);
+					} catch (audioError) {
+						console.error("Error processing audio:", audioError);
+						alert("Error processing the generated audio. Please try again.");
+					}
+				} else {
+					console.error("Invalid response:", data);
+					alert(`Error: ${data.message || "Failed to generate voice"}`);
+				}
+				setIsGenerating(false);
+				return;
+			}
+			// fallback to old API for other voices (if any)
 			const response = await api.generateVoice(selectedVoice, message);
-
 			if (response.success && response.data && response.data.audioBase64) {
 				try {
-					// Convert base64 to audio URL
 					const binaryString = atob(response.data.audioBase64);
 					const bytes = new Uint8Array(binaryString.length);
 					for (let i = 0; i < binaryString.length; i++) {
 						bytes[i] = binaryString.charCodeAt(i);
 					}
-
 					const audioBlob = new Blob([bytes], { type: "audio/mp3" });
 					const url = URL.createObjectURL(audioBlob);
 					setAudioUrl(url);
@@ -177,10 +210,14 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						</div>
 
 						{/* Generate Button */}
-						<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+						<motion.div
+							whileHover={{ scale: 1.02 }}
+							whileTap={{ scale: 0.98 }}
+							className="flex items-center gap-2 relative"
+						>
 							<Button
 								variant="whispr-primary"
-								className="w-full relative overflow-hidden group"
+								className="w-full relative overflow-hidden group flex-1"
 								size="lg"
 								onClick={handleGenerateVoice}
 								disabled={isGenerating || !message.trim()}
@@ -223,7 +260,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 										generatedVoiceData={{
 											voiceName: generatedAudio.voiceName,
 											text: generatedAudio.text,
-											image: selectedVoiceData.image,
+											image: selectedVoiceData?.image,
 										}}
 									/>
 								</div>
@@ -349,6 +386,27 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 									</Button>
 								</motion.div>
 							))}
+						</div>
+						<div className="mt-4">
+							<label className="block text-sm font-medium mb-2">
+								Choose from 150 Voice Models
+							</label>
+							<select
+								className="w-full p-2 border border-border/50 rounded-lg bg-input/50 focus:border-primary/50 transition-colors"
+								value={selectedVoice}
+								onChange={(e) => setSelectedVoice(e.target.value)}
+							>
+								{VOICE_MODEL_NAMES.map((modelName, i) => {
+									const type = ["Sweet", "Cute", "Confident", "Adventurous"][
+										i % 4
+									];
+									return (
+										<option key={modelName} value={modelName}>
+											{modelName} ({type})
+										</option>
+									);
+								})}
+							</select>
 						</div>
 					</CardContent>
 				</Card>

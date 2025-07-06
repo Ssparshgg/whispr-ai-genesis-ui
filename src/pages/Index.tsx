@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +50,8 @@ const Index = () => {
 	const [selectedVoiceFilter, setSelectedVoiceFilter] = useState("All");
 	const [isTyping, setIsTyping] = useState(false);
 	const [showPremiumDropdown, setShowPremiumDropdown] = useState(false);
+	const [showVoiceDropdown, setShowVoiceDropdown] = useState(false);
+	const voiceDropdownRef = useRef<HTMLDivElement>(null);
 	const [premiumVoices] = useState([
 		{
 			name: "Sasha",
@@ -215,6 +217,47 @@ const Index = () => {
 		selectedVoiceFilter === "All"
 			? voices
 			: voices.filter((voice) => voice.type === selectedVoiceFilter);
+
+	const categories = ["Sweet", "Cute", "Confident", "Adventurous"];
+	const mockVoices = Array.from({ length: 150 }, (_, i) => {
+		const type = categories[i % categories.length];
+		// Generate deterministic letter from A-Z based on index
+		const randomLetter = String.fromCharCode(65 + (i % 26));
+		return {
+			name: `Voice ${i + 1}`,
+			type,
+			avatar: randomLetter,
+			image:
+				i % 3 === 0 ? `/lovable-uploads/mock${(i % 10) + 1}.png` : undefined, // Some have images
+			personality: `${type} Personality`,
+		};
+	});
+
+	// Group voices by category
+	const groupedMockVoices = categories.map((cat) => ({
+		category: cat,
+		voices: mockVoices.filter((v) => v.type === cat),
+	}));
+
+	// Handle click outside dropdown to close
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (
+				voiceDropdownRef.current &&
+				!voiceDropdownRef.current.contains(event.target as Node)
+			) {
+				setShowVoiceDropdown(false);
+			}
+		}
+
+		// Add event listener when dropdown is open
+		document.addEventListener("mousedown", handleClickOutside);
+
+		// Cleanup function
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [showVoiceDropdown]); // Keep dependency array
 
 	const { ref: heroRef, inView: heroInView } = useInView({
 		threshold: 0.3,
@@ -589,10 +632,11 @@ const Index = () => {
 									<motion.div
 										whileHover={{ scale: 1.02 }}
 										whileTap={{ scale: 0.98 }}
+										className="flex items-center gap-2 relative"
 									>
 										<Button
 											variant="whispr-primary"
-											className="w-full relative overflow-hidden group"
+											className="w-full relative overflow-hidden group flex-1"
 											size="lg"
 											onClick={() =>
 												handleGenerateFromWidget(selectedVoice, message)
@@ -603,7 +647,9 @@ const Index = () => {
 												transition={{ duration: 2, repeat: Infinity }}
 												className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary opacity-80"
 											/>
-											<span className="relative z-10">Generate Voice Note</span>
+											<span className="relative z-10 flex items-center gap-2">
+												Generate Voice Note
+											</span>
 											<motion.div
 												animate={{ rotate: 360 }}
 												transition={{
@@ -616,6 +662,91 @@ const Index = () => {
 												<Mic className="h-4 w-4" />
 											</motion.div>
 										</Button>
+										{/* Small dropdown button on the right */}
+										<div className="relative">
+											<Button
+												variant="outline"
+												size="icon"
+												className="ml-2 flex-shrink-0 w-10 h-10 rounded-full border-primary/30 border-2 bg-background hover:bg-primary/10 transition"
+												onClick={(e) => {
+													e.stopPropagation();
+													setShowVoiceDropdown((v) => !v);
+												}}
+												aria-label="Show all voices"
+											>
+												<ChevronDown className="w-5 h-5 text-primary" />
+											</Button>
+											{showVoiceDropdown && (
+												<div
+													ref={voiceDropdownRef}
+													className="absolute right-0 bottom-12 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl z-50 p-4"
+													style={{
+														boxShadow:
+															"0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.1)",
+													}}
+												>
+													<div className="flex gap-2 mb-4 flex-wrap">
+														{categories.map((cat) => (
+															<Button
+																key={cat}
+																variant={
+																	selectedVoiceFilter === cat
+																		? "whispr-primary"
+																		: "outline"
+																}
+																className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
+																onClick={() => setSelectedVoiceFilter(cat)}
+															>
+																{cat}
+															</Button>
+														))}
+													</div>
+													{groupedMockVoices
+														.filter(
+															(g) =>
+																selectedVoiceFilter === "All" ||
+																g.category === selectedVoiceFilter
+														)
+														.map((group) => (
+															<div key={group.category} className="mb-2">
+																<div className="font-semibold text-primary mb-1 text-sm pl-1">
+																	{group.category}
+																</div>
+																<div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
+																	{group.voices.map((voice) => (
+																		<div
+																			key={voice.name}
+																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${selectedVoice === voice.name
+																				? "border-primary bg-primary/10"
+																				: ""
+																				}`}
+																			onClick={() => {
+																				setSelectedVoice(voice.name);
+																				setShowVoiceDropdown(false);
+																			}}
+																		>
+																			{voice.image ? (
+																				<img
+																					src={voice.image}
+																					alt={voice.name}
+																					className="w-12 h-12 rounded-full object-cover mb-1 border border-primary/20"
+																				/>
+																			) : (
+																				<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20">
+																					{voice.avatar}
+																				</div>
+																			)}
+																			<span className="text-xs font-medium truncate w-full text-center">
+																				{voice.name}
+																			</span>
+																		</div>
+																	))}
+																</div>
+															</div>
+														))}
+												</div>
+											)}
+										</div>
 									</motion.div>
 								</CardContent>
 							</Card>
@@ -895,11 +1026,10 @@ const Index = () => {
 							>
 								{/* Unlocked Voice Card */}
 								<Card
-									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${
-										selectedVoice === voice.name
-											? "border-primary ring-2 ring-primary/20"
-											: ""
-									}`}
+									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${selectedVoice === voice.name
+										? "border-primary ring-2 ring-primary/20"
+										: ""
+										}`}
 									onClick={() => setSelectedVoice(voice.name)}
 								>
 									<motion.div
