@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Mic, LogOut, Home } from "lucide-react";
+import { LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GenerateVoiceWidget from "@/components/GenerateVoiceWidget";
 
@@ -111,7 +111,11 @@ const GenerateVoicePage = () => {
 								animate={{ rotate: [0, 15, -15, 0] }}
 								transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
 							>
-								<Mic className="h-8 w-8 text-primary" />
+								<img
+									src="/logo.jpg"
+									alt="Seducely.AI Logo"
+									className="h-8 w-8 rounded-full object-cover"
+								/>
 							</motion.div>
 							<span className="text-xl sm:text-2xl font-bold">Seducely.AI</span>
 						</motion.div>
