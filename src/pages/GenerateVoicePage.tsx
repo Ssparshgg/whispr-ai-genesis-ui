@@ -105,7 +105,8 @@ const GenerateVoicePage = () => {
 						<motion.div
 							initial={{ x: -50, opacity: 0 }}
 							animate={{ x: 0, opacity: 1 }}
-							className="flex items-center space-x-2"
+							className="flex items-center space-x-2 cursor-pointer"
+							onClick={handleHome}
 						>
 							<motion.div
 								animate={{ rotate: [0, 15, -15, 0] }}
@@ -113,11 +114,11 @@ const GenerateVoicePage = () => {
 							>
 								<img
 									src="/logo.jpg"
-									alt="Seducely.AI Logo"
+									alt="Seducely AI Logo"
 									className="h-8 w-8 rounded-full object-cover"
 								/>
 							</motion.div>
-							<span className="text-xl sm:text-2xl font-bold">Seducely.AI</span>
+							<span className="text-xl sm:text-2xl font-bold">Seducely AI</span>
 						</motion.div>
 
 						<div className="flex items-center space-x-2 sm:space-x-4">

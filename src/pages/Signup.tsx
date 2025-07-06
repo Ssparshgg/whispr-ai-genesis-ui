@@ -112,7 +112,7 @@ const Signup = () => {
 						>
 							<Mic className="h-8 w-8 text-primary" />
 						</motion.div>
-						<span className="text-2xl font-bold">Seducely.AI</span>
+						<span className="text-2xl font-bold">Seducely AI</span>
 					</motion.div>
 
 					<Button
@@ -151,7 +151,7 @@ const Signup = () => {
 								<Mic className="h-8 w-8 text-primary" />
 							</motion.div>
 							<CardTitle className="text-2xl font-bold">
-								Join Seducely.AI
+								Join Seducely AI
 							</CardTitle>
 							<CardDescription>
 								Create your account and start generating captivating AI voice

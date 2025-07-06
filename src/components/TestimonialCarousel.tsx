@@ -4,22 +4,25 @@ import { Star } from "lucide-react";
 
 const testimonials = [
 	{
-		name: "Sarah Chen",
+		name: "Vietbunny",
 		role: "Content Creator",
-		text: "Seducely.AI transformed how I connect with my audience. The voices are incredibly realistic!",
+		text: "Seducely AI has made every night more pleasurable for me, and I feel it's the best companion.",
 		rating: 5,
+		image: "/vietbunny.jpg",
 	},
 	{
-		name: "Marcus Rodriguez",
+		name: "Bonnieblue",
 		role: "Podcaster",
-		text: "I've tried many AI voice tools, but nothing comes close to Seducely.AI's quality.",
+		text: "I've tried many AI voice tools, but nothing comes close to Seducely AI's quality.",
 		rating: 5,
+		image: "/bonnieblue.jpg",
 	},
 	{
-		name: "Emma Thompson",
+		name: "Saurezlong",
 		role: "Marketing Director",
-		text: "Our engagement rates doubled after using Seducely.AI for our campaigns.",
+		text: "Seducely AI has been a game changer in my life it helped me relieve stress and brought immense pleasure to my ears.",
 		rating: 5,
+		image: "/saurezlong.jpg",
 	},
 ];
 
@@ -34,7 +37,7 @@ const TestimonialCarousel = () => {
 	}, []);
 
 	return (
-		<div className="relative h-24 overflow-hidden">
+		<div className="relative h-40 overflow-hidden flex flex-col items-center justify-center">
 			<AnimatePresence mode="wait">
 				<motion.div
 					key={current}
@@ -42,7 +45,7 @@ const TestimonialCarousel = () => {
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: -20 }}
 					transition={{ duration: 0.5 }}
-					className="absolute inset-0 flex flex-col items-center text-center"
+					className="absolute inset-0 flex flex-col items-center text-center justify-center"
 				>
 					<div className="flex mb-2">
 						{[...Array(testimonials[current].rating)].map((_, i) => (
@@ -52,6 +55,11 @@ const TestimonialCarousel = () => {
 							/>
 						))}
 					</div>
+					<img
+						src={testimonials[current].image}
+						alt={testimonials[current].name}
+						className="w-12 h-12 rounded-full object-cover border-2 border-primary/30 mb-2"
+					/>
 					<p className="text-sm text-muted-foreground mb-2 max-w-md">
 						"{testimonials[current].text}"
 					</p>

@@ -8,6 +8,7 @@ import WaveAnimation from "@/components/WaveAnimation";
 import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 import React, { useState, useRef } from "react";
 import { api } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
 
 interface Voice {
 	name: string;
@@ -31,6 +32,13 @@ interface GenerateVoiceWidgetProps {
 	isCompact?: boolean;
 }
 
+const lockedVoiceImages: Record<string, string> = {
+	Sweet: "/sydney.jpg",
+	Cute: "/daissy.jpg",
+	Confident: "/kyly.jpg",
+	Adventurous: "/lauren.jpg",
+};
+
 const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	voices,
 	selectedVoice,
@@ -50,6 +58,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 		text: string;
 	} | null>(null);
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	const handleGenerateVoice = async () => {
 		if (!message.trim()) {
@@ -124,10 +133,10 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	);
 
 	return (
-		<div className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mx-auto">
+		<div className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mx-auto items-stretch">
 			{/* Main Left Panel */}
-			<div className="flex-1 space-y-6">
-				<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
+			<div className="flex-1 space-y-6 flex flex-col">
+				<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden flex flex-col h-full">
 					<motion.div
 						className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
 						animate={{ opacity: [0.5, 0.8, 0.5] }}
@@ -252,15 +261,51 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 			</div>
 
 			{/* Right Panel - Voice Models */}
-			<div className="w-full lg:w-80">
-				<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden h-fit">
+			<div className="w-full lg:w-80 flex flex-col h-full">
+				<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden h-full flex flex-col">
 					<motion.div
 						className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
 						animate={{ opacity: [0.3, 0.6, 0.3] }}
 						transition={{ duration: 6, repeat: Infinity }}
 					/>
-					<CardHeader className="relative z-10">
-						<CardTitle className="text-lg">Voice Models</CardTitle>
+					<CardHeader className="relative z-10 flex flex-row items-center justify-between gap-2">
+						<CardTitle className="text-lg whitespace-nowrap">
+							Voice Models
+						</CardTitle>
+						<div className="flex items-center gap-1 ml-2">
+							{Object.entries(lockedVoiceImages).map(([type, img]) => (
+								<motion.div
+									key={type}
+									className="relative group cursor-pointer"
+									whileHover={{ scale: 1.08 }}
+									onClick={() => {
+										navigate("/");
+										setTimeout(() => {
+											const el = document.getElementById("pricing");
+											if (el) {
+												const headerOffset = 80;
+												const elementPosition = el.getBoundingClientRect().top;
+												const offsetPosition =
+													elementPosition + window.pageYOffset - headerOffset;
+												window.scrollTo({
+													top: offsetPosition,
+													behavior: "smooth",
+												});
+											}
+										}, 100);
+									}}
+								>
+									<img
+										src={img}
+										alt={`Locked ${type}`}
+										className="w-7 h-7 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
+									/>
+									<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+										Click to unlock
+									</span>
+								</motion.div>
+							))}
+						</div>
 					</CardHeader>
 					<CardContent className="space-y-4 relative z-10">
 						<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3">

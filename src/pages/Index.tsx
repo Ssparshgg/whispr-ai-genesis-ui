@@ -17,6 +17,7 @@ import {
 	Clock,
 	Star,
 	LogOut,
+	Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,11 +44,37 @@ import AnimatedIcon from "@/components/AnimatedIcon";
 
 const Index = () => {
 	const navigate = useNavigate();
-	const { isAuthenticated, logout } = useAuth();
+	const { isAuthenticated, logout, user } = useAuth();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
 	const [selectedVoiceFilter, setSelectedVoiceFilter] = useState("All");
 	const [isTyping, setIsTyping] = useState(false);
+	const [showPremiumDropdown, setShowPremiumDropdown] = useState(false);
+	const [premiumVoices] = useState([
+		{
+			name: "Sasha",
+			type: "Seductive",
+			image: "/lovable-uploads/premium1.png",
+			personality: "Seductive & Mysterious",
+			quote: "Let me whisper secrets in your ear...",
+			audioFile: "/premium1.mp3",
+		},
+		{
+			name: "Jade",
+			type: "Sultry",
+			image: "/lovable-uploads/premium2.png",
+			personality: "Sultry & Bold",
+			quote: "You can't resist my voice...",
+			audioFile: "/premium2.mp3",
+		},
+	]);
+
+	const lockedVoiceImages: Record<string, string> = {
+		Sweet: "/sydney.jpg",
+		Cute: "/daissy.jpg",
+		Confident: "/kyly.jpg",
+		Adventurous: "/lauren.jpg",
+	};
 
 	// Smooth scroll function with offset adjustment
 	const smoothScrollTo = (elementId: string) => {
@@ -237,11 +264,11 @@ const Index = () => {
 							>
 								<img
 									src="/logo.jpg"
-									alt="Seducely.AI Logo"
+									alt="Seducely AI Logo"
 									className="w-full h-full object-cover"
 								/>
 							</motion.div>
-							<span className="text-xl sm:text-2xl font-bold">Seducely.AI</span>
+							<span className="text-xl sm:text-2xl font-bold">Seducely AI</span>
 						</motion.div>
 
 						<nav className="hidden md:flex items-center space-x-8">
@@ -463,6 +490,28 @@ const Index = () => {
 											<Badge className="bg-primary/20 text-primary animate-pulse text-xs">
 												AI Powered
 											</Badge>
+											{/* Locked Voice Images Row */}
+											<div className="flex items-center gap-1 ml-2">
+												{Object.entries(lockedVoiceImages).map(
+													([type, img], idx) => (
+														<motion.div
+															key={type}
+															className="relative group cursor-pointer"
+															whileHover={{ scale: 1.08 }}
+															onClick={() => smoothScrollTo("pricing")}
+														>
+															<img
+																src={img}
+																alt={`Locked ${type}`}
+																className="w-10 h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
+															/>
+															<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+																Click to unlock
+															</span>
+														</motion.div>
+													)
+												)}
+											</div>
 										</CardTitle>
 									</div>
 								</CardHeader>
@@ -661,7 +710,7 @@ const Index = () => {
 						animate={stepsInView ? { opacity: 1, y: 0 } : {}}
 						className="text-center mb-16"
 					>
-						<h2 className="text-4xl font-bold mb-4">How Seducely.AI Works</h2>
+						<h2 className="text-4xl font-bold mb-4">How Seducely AI Works</h2>
 						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
 							Transform your creative vision into reality with our powerful
 							AI-driven workflow in just four simple steps.
@@ -747,12 +796,7 @@ const Index = () => {
 						</p>
 					</div>
 
-					<motion.div
-						className="flex flex-wrap justify-center gap-2 mb-12"
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6 }}
-					>
+					<div className="flex flex-wrap justify-center gap-2 mb-12">
 						{voiceFilters.map((filter, index) => (
 							<motion.div
 								key={filter}
@@ -787,7 +831,57 @@ const Index = () => {
 								</Button>
 							</motion.div>
 						))}
-					</motion.div>
+						{/* Premium Dropdown for Premium Users */}
+						{user?.isPremium ? (
+							<div className="relative">
+								<Button
+									variant="whispr-primary"
+									className="rounded-full flex items-center gap-2"
+									onClick={() => setShowPremiumDropdown((v) => !v)}
+								>
+									<ChevronDown className="w-4 h-4" />
+									<span>Premium Voices</span>
+								</Button>
+								{showPremiumDropdown && (
+									<div className="absolute left-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg z-50 p-4 grid grid-cols-1 gap-2">
+										{premiumVoices.map((voice) => (
+											<div
+												key={voice.name}
+												className="flex items-center gap-3 cursor-pointer hover:bg-primary/10 rounded p-2"
+												onClick={() => {
+													setSelectedVoice(voice.name);
+													setShowPremiumDropdown(false);
+												}}
+											>
+												<img
+													src={voice.image}
+													alt={voice.name}
+													className="w-10 h-10 rounded-full object-cover border-2 border-primary/20"
+												/>
+												<div className="flex-1 min-w-0">
+													<div className="font-medium text-sm truncate">
+														{voice.name}
+													</div>
+													<div className="text-xs opacity-70 truncate">
+														{voice.type}
+													</div>
+												</div>
+											</div>
+										))}
+									</div>
+								)}
+							</div>
+						) : (
+							<Button
+								variant="outline"
+								className="rounded-full flex items-center gap-2 opacity-60 cursor-not-allowed relative"
+								onClick={() => smoothScrollTo("pricing")}
+							>
+								<Lock className="w-4 h-4" />
+								<span>UNLOCK FOR ALL VOICES</span>
+							</Button>
+						)}
+					</div>
 
 					<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{filteredVoices.map((voice, index) => (
@@ -799,6 +893,7 @@ const Index = () => {
 								whileHover={{ scale: 1.02 }}
 								className="group"
 							>
+								{/* Unlocked Voice Card */}
 								<Card
 									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${
 										selectedVoice === voice.name
@@ -811,7 +906,6 @@ const Index = () => {
 										className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100"
 										transition={{ duration: 0.3 }}
 									/>
-
 									<CardHeader className="relative z-10 p-4">
 										<div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
 											<img
@@ -833,7 +927,6 @@ const Index = () => {
 												</motion.div>
 											)}
 										</div>
-
 										<div className="text-center">
 											<CardTitle className="text-lg mb-1">
 												👄 {voice.name}
@@ -849,7 +942,6 @@ const Index = () => {
 											</Badge>
 										</div>
 									</CardHeader>
-
 									<CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
 										<Button
 											variant="outline"
@@ -876,6 +968,54 @@ const Index = () => {
 								</Card>
 							</motion.div>
 						))}
+						{/* Locked Card for selected filter (not All) */}
+						{selectedVoiceFilter !== "All" &&
+							lockedVoiceImages[selectedVoiceFilter] && (
+								<motion.div
+									key="locked-card"
+									initial={{ opacity: 0, y: 30 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									transition={{ delay: 0.2 }}
+									whileHover={{ scale: 1.02 }}
+									className="group"
+								>
+									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden opacity-80 cursor-not-allowed">
+										<div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
+											<img
+												src={lockedVoiceImages[selectedVoiceFilter]}
+												alt={`Locked ${selectedVoiceFilter}`}
+												className="w-full h-full object-cover filter blur-[2px] brightness-75"
+											/>
+											<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center">
+												<Lock className="h-10 w-10 text-primary drop-shadow-lg" />
+											</div>
+										</div>
+										<div className="text-center">
+											<CardTitle className="text-lg mb-1 flex items-center justify-center gap-2">
+												<Lock className="h-4 w-4 text-primary" />
+												Locked {selectedVoiceFilter} Voice
+											</CardTitle>
+											<p className="text-sm text-muted-foreground mb-2">
+												Unlock this stunning {selectedVoiceFilter.toLowerCase()}{" "}
+												voice by upgrading your plan.
+											</p>
+											<Badge variant="outline" className="text-xs mb-3">
+												{selectedVoiceFilter}
+											</Badge>
+										</div>
+										<CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
+											<Button
+												variant="whispr-primary"
+												size="sm"
+												className="flex-1 opacity-80 cursor-not-allowed"
+												disabled
+											>
+												<Lock className="h-4 w-4 mr-2" /> Locked
+											</Button>
+										</CardFooter>
+									</Card>
+								</motion.div>
+							)}
 					</div>
 				</div>
 			</section>
@@ -1090,7 +1230,7 @@ const Index = () => {
 					>
 						<h3 className="text-3xl font-bold mb-4">Creator Success Stories</h3>
 						<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-							See how creators are achieving incredible results with Seducely.AI
+							See how creators are achieving incredible results with Seducely AI
 						</p>
 					</motion.div>
 
@@ -1141,7 +1281,7 @@ const Index = () => {
 							Frequently Asked Questions
 						</h2>
 						<p className="text-xl text-muted-foreground">
-							Find answers to common questions about Seducely.AI. If you don't
+							Find answers to common questions about Seducely AI. If you don't
 							see what you're looking for, reach out to our support team.
 						</p>
 					</div>
@@ -1150,9 +1290,9 @@ const Index = () => {
 						{[
 							{
 								icon: Lightbulb,
-								question: "What is Seducely.AI?",
+								question: "What is Seducely AI?",
 								answer:
-									"Seducely.AI is an advanced AI voice generation platform that creates ultra-realistic voice notes from text. Our technology allows you to choose from various voice personalities and styles to create engaging audio content.",
+									"Seducely AI is an advanced AI voice generation platform that creates ultra-realistic voice notes from text. Our technology allows you to choose from various voice personalities and styles to create engaging audio content.",
 							},
 							{
 								icon: Brain,
@@ -1251,7 +1391,7 @@ const Index = () => {
 							Ready to Create Your First Seductive AI Voice Note?
 						</motion.h2>
 						<p className="text-xl text-muted-foreground">
-							Join thousands of creators already using Seducely.AI to connect
+							Join thousands of creators already using Seducely AI to connect
 							with their audience through stunning AI voice models.
 						</p>
 
