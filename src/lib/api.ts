@@ -47,7 +47,57 @@ export const api = {
 				"Content-Type": "application/json",
 			},
 		});
-		return response.json();
+
+		const data = await response.json();
+
+		// If we get a 404 or authentication error, clear the token
+		if (!response.ok || !data.success) {
+			if (
+				response.status === 404 ||
+				response.status === 401 ||
+				response.status === 403
+			) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+		}
+
+		return data;
+	},
+
+	// Check user credits
+	async checkCredits() {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
+		const response = await fetch(`${API_BASE_URL}/profile`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+
+		const data = await response.json();
+
+		if (!response.ok || !data.success) {
+			if (
+				response.status === 404 ||
+				response.status === 401 ||
+				response.status === 403
+			) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+			throw new Error(data.message || "Failed to check credits");
+		}
+
+		return {
+			credits: data.user?.credits || 0,
+			user: data.user,
+		};
 	},
 
 	// Health check
@@ -63,6 +113,12 @@ export const api = {
 			throw new Error("No token found");
 		}
 
+		// Check credits before generating
+		const creditCheck = await this.checkCredits();
+		if (creditCheck.credits <= 0) {
+			throw new Error("Insufficient credits. Please upgrade your plan.");
+		}
+
 		const response = await fetch(`${API_BASE_URL}/generate-voice`, {
 			method: "POST",
 			headers: {
@@ -71,7 +127,18 @@ export const api = {
 			},
 			body: JSON.stringify({ voiceName, text }),
 		});
-		return response.json();
+
+		const data = await response.json();
+
+		// Handle authentication errors
+		if (!response.ok || !data.success) {
+			if (response.status === 401 || response.status === 403) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+		}
+
+		return data;
 	},
 
 	// Generate voice model (for 150 models)
@@ -79,6 +146,12 @@ export const api = {
 		const token = localStorage.getItem("token");
 		if (!token) {
 			throw new Error("No token found");
+		}
+
+		// Check credits before generating
+		const creditCheck = await this.checkCredits();
+		if (creditCheck.credits <= 0) {
+			throw new Error("Insufficient credits. Please upgrade your plan.");
 		}
 
 		const response = await fetch(`${API_BASE_URL}/generate-voice-model`, {
@@ -89,7 +162,18 @@ export const api = {
 			},
 			body: JSON.stringify({ modelName, text }),
 		});
-		return response.json();
+
+		const data = await response.json();
+
+		// Handle authentication errors
+		if (!response.ok || !data.success) {
+			if (response.status === 401 || response.status === 403) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+		}
+
+		return data;
 	},
 
 	// Get voice history
@@ -106,7 +190,22 @@ export const api = {
 				"Content-Type": "application/json",
 			},
 		});
-		return response.json();
+
+		const data = await response.json();
+
+		// Handle authentication errors
+		if (!response.ok || !data.success) {
+			if (
+				response.status === 404 ||
+				response.status === 401 ||
+				response.status === 403
+			) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+		}
+
+		return data;
 	},
 };
 

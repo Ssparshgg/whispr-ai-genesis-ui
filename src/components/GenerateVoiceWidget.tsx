@@ -10,6 +10,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { api } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Voice {
 	name: string;
@@ -65,12 +66,24 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 	const navigate = useNavigate();
 	const { toast } = useToast();
+	const { user } = useAuth();
 
 	const handleGenerateVoice = async () => {
 		if (!message.trim()) {
 			toast({
 				title: "Message Required",
 				description: "Please enter a message to generate voice",
+				variant: "destructive",
+			});
+			return;
+		}
+
+		// Check credits before generating
+		if (user && user.credits !== undefined && user.credits <= 0) {
+			toast({
+				title: "Insufficient Credits",
+				description:
+					"You don't have enough credits to generate voice. Please upgrade your plan.",
 				variant: "destructive",
 			});
 			return;
@@ -107,7 +120,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						// Show success toast
 						toast({
 							title: "Voice Generated!",
-							description: `Successfully generated voice with ${selectedVoice}`,
+							description: `Successfully generated voice with ${selectedVoice}. Use the player below to listen.`,
 						});
 					} catch (audioError) {
 						console.error("Error processing audio:", audioError);
@@ -144,7 +157,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						// Show success toast
 						toast({
 							title: "Voice Generated!",
-							description: `Successfully generated voice with ${selectedVoice}`,
+							description: `Successfully generated voice with ${selectedVoice}. Use the player below to listen.`,
 						});
 					} catch (audioError) {
 						console.error("Error processing audio:", audioError);
@@ -166,11 +179,42 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 			}
 		} catch (error) {
 			console.error("Error generating voice:", error);
-			toast({
-				title: "Generation Failed",
-				description: "Failed to generate voice. Please try again.",
-				variant: "destructive",
-			});
+			if (error instanceof Error) {
+				if (error.message.includes("Insufficient credits")) {
+					toast({
+						title: "Insufficient Credits",
+						description: error.message,
+						variant: "destructive",
+					});
+				} else if (
+					error.message.includes("No token found") ||
+					error.message.includes("401") ||
+					error.message.includes("403")
+				) {
+					toast({
+						title: "Authentication Error",
+						description: "Please log in again to continue.",
+						variant: "destructive",
+					});
+					// Clear auth and redirect to login
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					navigate("/login");
+				} else {
+					toast({
+						title: "Generation Failed",
+						description:
+							error.message || "Failed to generate voice. Please try again.",
+						variant: "destructive",
+					});
+				}
+			} else {
+				toast({
+					title: "Generation Failed",
+					description: "Failed to generate voice. Please try again.",
+					variant: "destructive",
+				});
+			}
 		} finally {
 			setIsGenerating(false);
 		}

@@ -10,7 +10,7 @@ import { api } from "@/lib/api";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
-	const { logout, user } = useAuth();
+	const { logout, user, refreshUser } = useAuth();
 	const [stats, setStats] = useState({
 		credits: 0,
 		plan: "Free",
@@ -49,7 +49,8 @@ const Dashboard = () => {
 				// If it's an authentication error, redirect to login
 				if (
 					response.message === "No token provided" ||
-					response.message === "Invalid token"
+					response.message === "Invalid token" ||
+					response.message === "User not found"
 				) {
 					logout();
 					navigate("/login");
@@ -59,7 +60,11 @@ const Dashboard = () => {
 			console.error("Error fetching user profile:", error);
 			// Check if it's an authentication error
 			if (error instanceof Error) {
-				if (error.message.includes("401") || error.message.includes("403")) {
+				if (
+					error.message.includes("401") ||
+					error.message.includes("403") ||
+					error.message.includes("404")
+				) {
 					logout();
 					navigate("/login");
 				}
@@ -84,6 +89,17 @@ const Dashboard = () => {
 		return () => window.removeEventListener("focus", handleFocus);
 	}, []);
 
+	// Refresh user data when user changes
+	useEffect(() => {
+		if (user) {
+			setStats({
+				credits: user.credits || 0,
+				plan: user.isPremium ? "Premium" : "Free",
+				voicesGenerated: 0, // This will be updated by fetchUserProfile
+			});
+		}
+	}, [user]);
+
 	return (
 		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
 			{/* Background Effects */}
@@ -103,24 +119,28 @@ const Dashboard = () => {
 			<header className="border-b border-border/20 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
 				<div className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
-						<motion.div
-							initial={{ x: -50, opacity: 0 }}
-							animate={{ x: 0, opacity: 1 }}
-							className="flex items-center space-x-2 cursor-pointer"
-							onClick={handleHome}
-						>
+						<div className="flex items-center space-x-4">
 							<motion.div
-								animate={{ rotate: [0, 15, -15, 0] }}
-								transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+								initial={{ x: -50, opacity: 0 }}
+								animate={{ x: 0, opacity: 1 }}
+								className="flex items-center space-x-2 cursor-pointer"
+								onClick={handleHome}
 							>
-								<img
-									src="/logo.jpg"
-									alt="Seducely AI Logo"
-									className="h-8 w-8 rounded-full object-cover"
-								/>
+								<motion.div
+									animate={{ rotate: [0, 15, -15, 0] }}
+									transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+								>
+									<img
+										src="/logo.jpg"
+										alt="Seducely AI Logo"
+										className="h-8 w-8 rounded-full object-cover"
+									/>
+								</motion.div>
+								<span className="text-xl sm:text-2xl font-bold">
+									Seducely AI
+								</span>
 							</motion.div>
-							<span className="text-xl sm:text-2xl font-bold">Seducely AI</span>
-						</motion.div>
+						</div>
 
 						<div className="flex items-center space-x-2 sm:space-x-4">
 							<Button
@@ -145,180 +165,170 @@ const Dashboard = () => {
 			</header>
 
 			{/* Main Content */}
-			<div className="relative z-10 container mx-auto px-4 py-8">
+			<main className="relative z-10 container mx-auto px-4 py-8">
+				{/* Welcome Section */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					className="max-w-4xl mx-auto"
+					className="text-center mb-8"
 				>
-					{/* Welcome Section */}
-					<div className="mb-8">
-						<motion.h1
-							initial={{ opacity: 0, y: -20 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="text-3xl sm:text-4xl font-bold mb-2"
-						>
-							Welcome back, {user?.name || "Creator"}!
-						</motion.h1>
-						<p className="text-muted-foreground text-lg">
-							Ready to create some seductive AI voices?
-						</p>
-					</div>
+					<h1 className="text-3xl sm:text-4xl font-bold mb-2">
+						Welcome back, {user?.name || "User"}!
+					</h1>
+					<p className="text-muted-foreground">
+						Your AI voice generation dashboard
+					</p>
+				</motion.div>
 
-					{/* Stats Cards */}
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-						{/* Credits Card */}
-						<motion.div
-							initial={{ opacity: 0, x: -20 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ delay: 0.1 }}
-						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
-								<motion.div
-									className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
-									animate={{ opacity: [0.3, 0.6, 0.3] }}
-									transition={{ duration: 4, repeat: Infinity }}
-								/>
-								<CardHeader className="relative z-10 pb-3">
-									<CardTitle className="flex items-center gap-2 text-lg">
-										<Zap className="h-5 w-5 text-yellow-500" />
-										Credits
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="relative z-10">
-									<div className="text-3xl font-bold text-primary mb-1">
-										{isLoading ? "..." : stats.credits}
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Available for voice generation
-									</p>
-								</CardContent>
-							</Card>
-						</motion.div>
-
-						{/* Plan Card */}
-						<motion.div
-							initial={{ opacity: 0, x: -20 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ delay: 0.2 }}
-						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
-								<motion.div
-									className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
-									animate={{ opacity: [0.3, 0.6, 0.3] }}
-									transition={{ duration: 4, repeat: Infinity }}
-								/>
-								<CardHeader className="relative z-10 pb-3">
-									<CardTitle className="flex items-center gap-2 text-lg">
-										<Crown className="h-5 w-5 text-purple-500" />
-										Plan
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="relative z-10">
-									<div className="flex items-center gap-2 mb-2">
-										<span className="text-3xl font-bold">
-											{isLoading ? "..." : stats.plan}
-										</span>
-										{stats.plan === "Premium" && (
-											<Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-												Pro
-											</Badge>
-										)}
-									</div>
-									<p className="text-sm text-muted-foreground">
-										{stats.plan === "Free"
-											? "Upgrade for more features"
-											: "All features unlocked"}
-									</p>
-								</CardContent>
-							</Card>
-						</motion.div>
-
-						{/* Voices Generated Card */}
-						<motion.div
-							initial={{ opacity: 0, x: -20 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ delay: 0.3 }}
-						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
-								<motion.div
-									className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
-									animate={{ opacity: [0.3, 0.6, 0.3] }}
-									transition={{ duration: 4, repeat: Infinity }}
-								/>
-								<CardHeader className="relative z-10 pb-3">
-									<CardTitle className="flex items-center gap-2 text-lg">
-										<History className="h-5 w-5 text-green-500" />
-										Voices Generated
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="relative z-10">
-									<div className="text-3xl font-bold text-primary mb-1">
-										{stats.voicesGenerated}
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Total voices created
-									</p>
-								</CardContent>
-							</Card>
-						</motion.div>
-					</div>
-
-					{/* Generate Voice CTA */}
+				{/* Stats Grid */}
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+					{/* Credits Card */}
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ delay: 0.4 }}
-						className="text-center"
+						transition={{ delay: 0.1 }}
 					>
-						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden max-w-md mx-auto">
+						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
 							<motion.div
-								className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/20"
-								animate={{ opacity: [0.5, 0.8, 0.5] }}
-								transition={{ duration: 3, repeat: Infinity }}
+								className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
+								animate={{ opacity: [0.3, 0.6, 0.3] }}
+								transition={{ duration: 4, repeat: Infinity }}
 							/>
-							<CardContent className="relative z-10 py-8">
-								<motion.div
-									animate={{ scale: [1, 1.1, 1] }}
-									transition={{ duration: 2, repeat: Infinity }}
-									className="mb-4"
-								>
-									<Mic className="h-12 w-12 text-primary mx-auto" />
-								</motion.div>
-								<h3 className="text-xl font-bold mb-2">Ready to Create?</h3>
-								<p className="text-muted-foreground mb-6">
-									Generate seductive AI voices with our premium models
+							<CardHeader className="relative z-10">
+								<CardTitle className="flex items-center gap-2">
+									<Zap className="h-5 w-5 text-primary" />
+									Credits Remaining
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="relative z-10">
+								<div className="text-3xl font-bold text-primary mb-2">
+									{isLoading ? "..." : stats.credits}
+								</div>
+								<p className="text-sm text-muted-foreground">
+									{stats.credits > 0
+										? "Ready to generate voices"
+										: "No credits left"}
 								</p>
-								<motion.div
-									whileHover={{ scale: 1.05 }}
-									whileTap={{ scale: 0.95 }}
-								>
-									<Button
-										variant="whispr-primary"
-										size="lg"
-										onClick={handleGenerateVoice}
-										className="w-full relative overflow-hidden group"
-									>
-										<motion.div
-											animate={{ x: [-200, 200] }}
-											transition={{
-												duration: 3,
-												repeat: Infinity,
-												ease: "linear",
-											}}
-											className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-										/>
-										<span className="relative z-10 flex items-center gap-2">
-											<Mic className="h-4 w-4" />
-											Generate Voice
-										</span>
-									</Button>
-								</motion.div>
 							</CardContent>
 						</Card>
 					</motion.div>
+
+					{/* Plan Card */}
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.2 }}
+					>
+						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
+							<motion.div
+								className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
+								animate={{ opacity: [0.3, 0.6, 0.3] }}
+								transition={{ duration: 4, repeat: Infinity }}
+							/>
+							<CardHeader className="relative z-10">
+								<CardTitle className="flex items-center gap-2">
+									<Crown className="h-5 w-5 text-primary" />
+									Current Plan
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="relative z-10">
+								<div className="flex items-center gap-2 mb-2">
+									<Badge
+										variant={stats.plan === "Premium" ? "default" : "secondary"}
+										className="text-sm"
+									>
+										{stats.plan}
+									</Badge>
+								</div>
+								<p className="text-sm text-muted-foreground">
+									{stats.plan === "Premium"
+										? "Unlimited voice generation"
+										: "Limited voice generation"}
+								</p>
+							</CardContent>
+						</Card>
+					</motion.div>
+
+					{/* Voices Generated Card */}
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.3 }}
+					>
+						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
+							<motion.div
+								className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
+								animate={{ opacity: [0.3, 0.6, 0.3] }}
+								transition={{ duration: 4, repeat: Infinity }}
+							/>
+							<CardHeader className="relative z-10">
+								<CardTitle className="flex items-center gap-2">
+									<History className="h-5 w-5 text-primary" />
+									Voices Generated
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="relative z-10">
+								<div className="text-3xl font-bold text-primary mb-2">
+									{isLoading ? "..." : stats.voicesGenerated}
+								</div>
+								<p className="text-sm text-muted-foreground">
+									Total voices created
+								</p>
+							</CardContent>
+						</Card>
+					</motion.div>
+				</div>
+
+				{/* Action Buttons */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ delay: 0.4 }}
+					className="flex flex-col sm:flex-row gap-4 justify-center"
+				>
+					<Button
+						variant="whispr-primary"
+						size="lg"
+						onClick={handleGenerateVoice}
+						className="flex items-center gap-2"
+						disabled={stats.credits <= 0}
+					>
+						<Mic className="h-5 w-5" />
+						{stats.credits > 0 ? "Generate New Voice" : "No Credits Available"}
+					</Button>
+					<Button
+						variant="outline"
+						size="lg"
+						onClick={handleHome}
+						className="flex items-center gap-2"
+					>
+						<Home className="h-5 w-5" />
+						Back to Home
+					</Button>
 				</motion.div>
-			</div>
+
+				{/* Credit Warning */}
+				{stats.credits <= 0 && (
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.5 }}
+						className="mt-6 text-center"
+					>
+						<Card className="bg-yellow-500/10 border-yellow-500/20 max-w-md mx-auto">
+							<CardContent className="pt-6">
+								<p className="text-yellow-600 dark:text-yellow-400">
+									You've run out of credits! Upgrade to Premium for unlimited
+									voice generation.
+								</p>
+								<Button variant="outline" onClick={handleHome} className="mt-4">
+									Upgrade Plan
+								</Button>
+							</CardContent>
+						</Card>
+					</motion.div>
+				)}
+			</main>
 		</div>
 	);
 };

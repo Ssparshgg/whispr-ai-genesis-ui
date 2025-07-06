@@ -13,6 +13,7 @@ interface User {
 	email: string;
 	createdAt: string;
 	isPremium?: boolean;
+	credits?: number;
 }
 
 interface AuthContextType {
@@ -22,6 +23,7 @@ interface AuthContextType {
 	login: (token: string, user: User) => void;
 	logout: () => void;
 	checkAuth: () => Promise<void>;
+	refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,16 +54,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		setUser(null);
 	};
 
+	const refreshUser = async () => {
+		try {
+			if (auth.isLoggedIn()) {
+				const response = await api.getProfile();
+				if (response.success && response.user) {
+					setUser(response.user);
+					auth.setAuth(auth.getToken()!, response.user);
+				} else {
+					logout();
+				}
+			}
+		} catch (error) {
+			console.error("Error refreshing user:", error);
+			logout();
+		}
+	};
+
 	const checkAuth = async () => {
 		try {
 			if (auth.isLoggedIn()) {
 				const currentUser = auth.getCurrentUser();
 				if (currentUser) {
 					setUser(currentUser);
+					// Also try to get fresh user data from server
+					try {
+						const response = await api.getProfile();
+						if (response.success && response.user) {
+							setUser(response.user);
+							auth.setAuth(auth.getToken()!, response.user);
+						} else {
+							logout();
+						}
+					} catch (error) {
+						console.error("Error fetching fresh user data:", error);
+						// If we can't fetch fresh data, keep the cached user but mark as potentially stale
+						console.warn("Using cached user data - may be stale");
+					}
 				} else {
 					// Try to get fresh user data from server
 					const response = await api.getProfile();
-					if (response.success) {
+					if (response.success && response.user) {
 						setUser(response.user);
 						auth.setAuth(auth.getToken()!, response.user);
 					} else {
@@ -88,6 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		login,
 		logout,
 		checkAuth,
+		refreshUser,
 	};
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

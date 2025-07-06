@@ -6,6 +6,7 @@ import { LogOut, Home, Menu, X, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GenerateVoiceWidget from "@/components/GenerateVoiceWidget";
 import VoiceHistory from "@/components/VoiceHistory";
+import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,7 +52,7 @@ const voices = [
 const GenerateVoicePage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { logout } = useAuth();
+	const { logout, user } = useAuth();
 	const { toast } = useToast();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
@@ -62,6 +63,15 @@ const GenerateVoicePage = () => {
 	const [historyOpen, setHistoryOpen] = useState(true);
 	const [refreshHistory, setRefreshHistory] = useState(0);
 	const [isGenerating, setIsGenerating] = useState(false);
+
+	// Generated audio state
+	const [generatedAudio, setGeneratedAudio] = useState<{
+		audioBase64: string;
+		filename: string;
+		voiceName: string;
+		text: string;
+	} | null>(null);
+	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
 	// Check for navigation state and pre-fill the form
 	useEffect(() => {
@@ -94,6 +104,15 @@ const GenerateVoicePage = () => {
 		return () => window.removeEventListener("resize", checkMobile);
 	}, []);
 
+	// Cleanup audio URL when component unmounts
+	useEffect(() => {
+		return () => {
+			if (audioUrl) {
+				URL.revokeObjectURL(audioUrl);
+			}
+		};
+	}, [audioUrl]);
+
 	// Handle logout
 	const handleLogout = () => {
 		logout();
@@ -115,11 +134,37 @@ const GenerateVoicePage = () => {
 		if (isMobile) setHistoryOpen((open) => !open);
 	};
 
+	// Handle download
+	const handleDownload = () => {
+		if (audioUrl) {
+			const link = document.createElement("a");
+			link.href = audioUrl;
+			link.download = generatedAudio?.filename || `${selectedVoice}_audio.mp3`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+	};
+
 	// Handle voice generation from the widget
 	const handleGenerateVoice = useCallback(
 		async (voice: string, text: string) => {
 			setIsGenerating(true);
+			setGeneratedAudio(null);
+			setAudioUrl(null);
+
 			try {
+				// Check credits before generating
+				if (user && user.credits !== undefined && user.credits <= 0) {
+					toast({
+						title: "Insufficient Credits",
+						description:
+							"You don't have enough credits to generate voice. Please upgrade your plan.",
+						variant: "destructive",
+					});
+					return;
+				}
+
 				// Check if the selected voice is one of the predefined voices
 				const predefinedVoices = voices.map((v) => v.name);
 				if (predefinedVoices.includes(voice)) {
@@ -129,7 +174,7 @@ const GenerateVoicePage = () => {
 						// Refresh the voice history
 						setRefreshHistory((prev) => prev + 1);
 
-						// Process the audio and play it automatically
+						// Process the audio and create URL for CustomAudioPlayer
 						try {
 							const binaryString = atob(response.data.audioBase64);
 							const bytes = new Uint8Array(binaryString.length);
@@ -137,26 +182,23 @@ const GenerateVoicePage = () => {
 								bytes[i] = binaryString.charCodeAt(i);
 							}
 							const audioBlob = new Blob([bytes], { type: "audio/mp3" });
-							const audioUrl = URL.createObjectURL(audioBlob);
-
-							// Create and play audio automatically
-							const audio = new Audio(audioUrl);
-							audio.play().catch((error) => {
-								console.error("Error playing audio:", error);
-							});
+							const url = URL.createObjectURL(audioBlob);
+							setAudioUrl(url);
+							setGeneratedAudio(response.data);
 
 							// Show success toast
 							toast({
 								title: "Voice Generated!",
-								description: `Successfully generated voice with ${voice}. Playing now...`,
+								description: `Successfully generated voice with ${voice}. Use the player below to listen.`,
 							});
-
-							// Clean up the URL after a delay
-							setTimeout(() => {
-								URL.revokeObjectURL(audioUrl);
-							}, 10000);
 						} catch (audioError) {
 							console.error("Error processing audio:", audioError);
+							toast({
+								title: "Audio Processing Error",
+								description:
+									"Error processing the generated audio. Please try again.",
+								variant: "destructive",
+							});
 						}
 					} else {
 						console.error("Invalid response:", response);
@@ -173,7 +215,7 @@ const GenerateVoicePage = () => {
 						// Refresh the voice history
 						setRefreshHistory((prev) => prev + 1);
 
-						// Process the audio and play it automatically
+						// Process the audio and create URL for CustomAudioPlayer
 						try {
 							const binaryString = atob(data.data.audioBase64);
 							const bytes = new Uint8Array(binaryString.length);
@@ -181,26 +223,23 @@ const GenerateVoicePage = () => {
 								bytes[i] = binaryString.charCodeAt(i);
 							}
 							const audioBlob = new Blob([bytes], { type: "audio/mp3" });
-							const audioUrl = URL.createObjectURL(audioBlob);
-
-							// Create and play audio automatically
-							const audio = new Audio(audioUrl);
-							audio.play().catch((error) => {
-								console.error("Error playing audio:", error);
-							});
+							const url = URL.createObjectURL(audioBlob);
+							setAudioUrl(url);
+							setGeneratedAudio(data.data);
 
 							// Show success toast
 							toast({
 								title: "Voice Generated!",
-								description: `Successfully generated voice with ${voice}. Playing now...`,
+								description: `Successfully generated voice with ${voice}. Use the player below to listen.`,
 							});
-
-							// Clean up the URL after a delay
-							setTimeout(() => {
-								URL.revokeObjectURL(audioUrl);
-							}, 10000);
 						} catch (audioError) {
 							console.error("Error processing audio:", audioError);
+							toast({
+								title: "Audio Processing Error",
+								description:
+									"Error processing the generated audio. Please try again.",
+								variant: "destructive",
+							});
 						}
 					} else {
 						console.error("Invalid response:", data);
@@ -213,16 +252,45 @@ const GenerateVoicePage = () => {
 				}
 			} catch (error) {
 				console.error("Error generating voice:", error);
-				toast({
-					title: "Generation Failed",
-					description: "Failed to generate voice. Please try again.",
-					variant: "destructive",
-				});
+				if (error instanceof Error) {
+					if (error.message.includes("Insufficient credits")) {
+						toast({
+							title: "Insufficient Credits",
+							description: error.message,
+							variant: "destructive",
+						});
+					} else if (
+						error.message.includes("No token found") ||
+						error.message.includes("401") ||
+						error.message.includes("403")
+					) {
+						toast({
+							title: "Authentication Error",
+							description: "Please log in again to continue.",
+							variant: "destructive",
+						});
+						logout();
+						navigate("/login");
+					} else {
+						toast({
+							title: "Generation Failed",
+							description:
+								error.message || "Failed to generate voice. Please try again.",
+							variant: "destructive",
+						});
+					}
+				} else {
+					toast({
+						title: "Generation Failed",
+						description: "Failed to generate voice. Please try again.",
+						variant: "destructive",
+					});
+				}
 			} finally {
 				setIsGenerating(false);
 			}
 		},
-		[voices]
+		[voices, user, toast, logout, navigate]
 	);
 
 	return (
@@ -339,6 +407,28 @@ const GenerateVoicePage = () => {
 							onGenerateClick={handleGenerateVoice}
 							isGenerating={isGenerating}
 						/>
+
+						{/* Generated Audio Player */}
+						{generatedAudio && audioUrl && (
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								className="mt-6"
+							>
+								<CustomAudioPlayer
+									audioUrl={audioUrl}
+									filename={generatedAudio.filename}
+									onDownload={handleDownload}
+									generatedVoiceData={{
+										voiceName: generatedAudio.voiceName,
+										text: generatedAudio.text,
+										image: voices.find(
+											(v) => v.name === generatedAudio.voiceName
+										)?.image,
+									}}
+								/>
+							</motion.div>
+						)}
 					</div>
 				</motion.div>
 
