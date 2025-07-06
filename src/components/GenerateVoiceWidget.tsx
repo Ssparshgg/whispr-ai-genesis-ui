@@ -84,12 +84,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 		try {
 			// Use the new endpoint for the 150 voice models
 			if (VOICE_MODEL_NAMES.includes(selectedVoice)) {
-				const response = await fetch("/generate-voice-model", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ modelName: selectedVoice, text: message }),
-				});
-				const data = await response.json();
+				const data = await api.generateVoiceModel(selectedVoice, message);
 				if (data.success && data.data && data.data.audioBase64) {
 					try {
 						const binaryString = atob(data.data.audioBase64);
@@ -358,10 +353,11 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 								>
 									<Button
 										variant="ghost"
-										className={`w-full h-auto p-3 rounded-xl border-2 transition-all duration-300 ${selectedVoice === voice.name
-											? "border-primary bg-primary/20 shadow-lg shadow-primary/20"
-											: "border-border/30 bg-card/30 hover:border-primary/50 hover:bg-primary/10"
-											}`}
+										className={`w-full h-auto p-3 rounded-xl border-2 transition-all duration-300 ${
+											selectedVoice === voice.name
+												? "border-primary bg-primary/20 shadow-lg shadow-primary/20"
+												: "border-border/30 bg-card/30 hover:border-primary/50 hover:bg-primary/10"
+										}`}
 										onClick={() => setSelectedVoice(voice.name)}
 									>
 										<div className="space-y-2">

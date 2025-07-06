@@ -65,6 +65,18 @@ export const api = {
 		});
 		return response.json();
 	},
+
+	// Generate voice model (for 150 models)
+	async generateVoiceModel(modelName: string, text: string) {
+		const response = await fetch(`${API_BASE_URL}/generate-voice-model`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ modelName, text }),
+		});
+		return response.json();
+	},
 };
 
 // Authentication utility functions
