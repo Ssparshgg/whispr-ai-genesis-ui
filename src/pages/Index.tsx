@@ -369,7 +369,6 @@ const Index = () => {
 									with unique styles and personas.
 								</p>
 							</motion.div>
-							//das
 							<motion.div
 								initial={{ opacity: 0, y: 30 }}
 								animate={heroInView ? { opacity: 1, y: 0 } : {}}
