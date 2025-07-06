@@ -656,7 +656,7 @@ const Index = () => {
 						animate={stepsInView ? { opacity: 1, y: 0 } : {}}
 						className="text-center mb-16"
 					>
-						<h2 className="text-4xl font-bold mb-4">How Whispr.AI Works</h2>
+						<h2 className="text-4xl font-bold mb-4">How Seducely.AI Works</h2>
 						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
 							Transform your creative vision into reality with our powerful
 							AI-driven workflow in just four simple steps.
@@ -1136,8 +1136,8 @@ const Index = () => {
 							Frequently Asked Questions
 						</h2>
 						<p className="text-xl text-muted-foreground">
-							Find answers to common questions about Whispr.AI. If you don't see
-							what you're looking for, reach out to our support team.
+							Find answers to common questions about Seducely.AI. If you don't
+							see what you're looking for, reach out to our support team.
 						</p>
 					</div>
 
@@ -1145,9 +1145,9 @@ const Index = () => {
 						{[
 							{
 								icon: Lightbulb,
-								question: "What is Whispr.AI?",
+								question: "What is Seducely.AI?",
 								answer:
-									"Whispr.AI is an advanced AI voice generation platform that creates ultra-realistic voice notes from text. Our technology allows you to choose from various voice personalities and styles to create engaging audio content.",
+									"Seducely.AI is an advanced AI voice generation platform that creates ultra-realistic voice notes from text. Our technology allows you to choose from various voice personalities and styles to create engaging audio content.",
 							},
 							{
 								icon: Brain,
