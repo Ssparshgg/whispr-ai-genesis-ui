@@ -1,5 +1,7 @@
 const API_BASE_URL = "https://second.anshtyagi.me/api";
 
+export { API_BASE_URL };
+
 // API utility functions
 export const api = {
 	// Login user
@@ -56,10 +58,16 @@ export const api = {
 
 	// Generate voice
 	async generateVoice(voiceName: string, text: string) {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
 		const response = await fetch(`${API_BASE_URL}/generate-voice`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ voiceName, text }),
 		});
@@ -68,12 +76,35 @@ export const api = {
 
 	// Generate voice model (for 150 models)
 	async generateVoiceModel(modelName: string, text: string) {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
 		const response = await fetch(`${API_BASE_URL}/generate-voice-model`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ modelName, text }),
+		});
+		return response.json();
+	},
+
+	// Get voice history
+	async getVoiceHistory() {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
+		const response = await fetch(`${API_BASE_URL}/voice-history`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
 		});
 		return response.json();
 	},

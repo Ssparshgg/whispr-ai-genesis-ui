@@ -30,6 +30,7 @@ interface GenerateVoiceWidgetProps {
 	setIsTyping: (typing: boolean) => void;
 	onGenerateClick?: (voice: string, text: string) => void;
 	isCompact?: boolean;
+	isGenerating?: boolean;
 }
 
 const lockedVoiceImages: Record<string, string> = {
@@ -38,11 +39,6 @@ const lockedVoiceImages: Record<string, string> = {
 	Confident: "/kyly.jpg",
 	Adventurous: "/lauren.jpg",
 };
-
-const VOICE_MODEL_NAMES = Array.from(
-	{ length: 150 },
-	(_, i) => `Voice ${i + 1}`
-);
 
 const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	voices,
@@ -54,8 +50,11 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	setIsTyping,
 	onGenerateClick,
 	isCompact = false,
+	isGenerating: externalIsGenerating,
 }) => {
 	const [isGenerating, setIsGenerating] = useState(false);
+	const actualIsGenerating =
+		externalIsGenerating !== undefined ? externalIsGenerating : isGenerating;
 	const [generatedAudio, setGeneratedAudio] = useState<{
 		audioBase64: string;
 		filename: string;
@@ -82,8 +81,32 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 		setAudioUrl(null);
 
 		try {
-			// Use the new endpoint for the 150 voice models
-			if (VOICE_MODEL_NAMES.includes(selectedVoice)) {
+			// Check if the selected voice is one of the predefined voices
+			const predefinedVoices = voices.map((v) => v.name);
+			if (predefinedVoices.includes(selectedVoice)) {
+				// Use the standard voice generation endpoint
+				const response = await api.generateVoice(selectedVoice, message);
+				if (response.success && response.data && response.data.audioBase64) {
+					try {
+						const binaryString = atob(response.data.audioBase64);
+						const bytes = new Uint8Array(binaryString.length);
+						for (let i = 0; i < binaryString.length; i++) {
+							bytes[i] = binaryString.charCodeAt(i);
+						}
+						const audioBlob = new Blob([bytes], { type: "audio/mp3" });
+						const url = URL.createObjectURL(audioBlob);
+						setAudioUrl(url);
+						setGeneratedAudio(response.data);
+					} catch (audioError) {
+						console.error("Error processing audio:", audioError);
+						alert("Error processing the generated audio. Please try again.");
+					}
+				} else {
+					console.error("Invalid response:", response);
+					alert(`Error: ${response.message || "Failed to generate voice"}`);
+				}
+			} else {
+				// Use the model voice generation endpoint for other voices
 				const data = await api.generateVoiceModel(selectedVoice, message);
 				if (data.success && data.data && data.data.audioBase64) {
 					try {
@@ -104,29 +127,6 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 					console.error("Invalid response:", data);
 					alert(`Error: ${data.message || "Failed to generate voice"}`);
 				}
-				setIsGenerating(false);
-				return;
-			}
-			// fallback to old API for other voices (if any)
-			const response = await api.generateVoice(selectedVoice, message);
-			if (response.success && response.data && response.data.audioBase64) {
-				try {
-					const binaryString = atob(response.data.audioBase64);
-					const bytes = new Uint8Array(binaryString.length);
-					for (let i = 0; i < binaryString.length; i++) {
-						bytes[i] = binaryString.charCodeAt(i);
-					}
-					const audioBlob = new Blob([bytes], { type: "audio/mp3" });
-					const url = URL.createObjectURL(audioBlob);
-					setAudioUrl(url);
-					setGeneratedAudio(response.data);
-				} catch (audioError) {
-					console.error("Error processing audio:", audioError);
-					alert("Error processing the generated audio. Please try again.");
-				}
-			} else {
-				console.error("Invalid response:", response);
-				alert(`Error: ${response.message || "Failed to generate voice"}`);
 			}
 		} catch (error) {
 			console.error("Error generating voice:", error);
@@ -215,7 +215,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 								className="w-full relative overflow-hidden group flex-1"
 								size="lg"
 								onClick={handleGenerateVoice}
-								disabled={isGenerating || !message.trim()}
+								disabled={actualIsGenerating || !message.trim()}
 							>
 								<motion.div
 									animate={{ scale: [1, 1.05, 1] }}
@@ -223,14 +223,14 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 									className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary opacity-80"
 								/>
 								<span className="relative z-10">
-									{isGenerating ? "Generating..." : "Generate Voice Note"}
+									{actualIsGenerating ? "Generating..." : "Generate Voice Note"}
 								</span>
 								<motion.div
-									animate={{ rotate: isGenerating ? 360 : 0 }}
+									animate={{ rotate: actualIsGenerating ? 360 : 0 }}
 									transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
 									className="ml-2 relative z-10"
 								>
-									{isGenerating ? (
+									{actualIsGenerating ? (
 										<Loader2 className="h-4 w-4 animate-spin" />
 									) : (
 										<Mic className="h-4 w-4" />
@@ -391,7 +391,8 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 								value={selectedVoice}
 								onChange={(e) => setSelectedVoice(e.target.value)}
 							>
-								{VOICE_MODEL_NAMES.map((modelName, i) => {
+								{Array.from({ length: 150 }, (_, i) => {
+									const modelName = `Voice ${i + 1}`;
 									const type = ["Sweet", "Cute", "Confident", "Adventurous"][
 										i % 4
 									];

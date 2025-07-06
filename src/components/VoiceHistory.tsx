@@ -1,9 +1,9 @@
-
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, Download, Trash2, Clock } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 interface VoiceHistoryItem {
 	id: string;
@@ -12,57 +12,107 @@ interface VoiceHistoryItem {
 	audioUrl: string;
 	createdAt: string;
 	duration: string;
+	type: "standard" | "model";
 }
 
-const VoiceHistory = () => {
-	const [historyItems] = useState<VoiceHistoryItem[]>([
-		{
-			id: "1",
-			voiceName: "Linh",
-			text: "Hey there, I've been thinking about you all day...",
-			audioUrl: "/sweet.mp3",
-			createdAt: "2 hours ago",
-			duration: "0:15",
-		},
-		{
-			id: "2",
-			voiceName: "Miara",
-			text: "You make my heart skip a beat every time...",
-			audioUrl: "/cute.mp3",
-			createdAt: "1 day ago",
-			duration: "0:12",
-		},
-		{
-			id: "3",
-			voiceName: "Madison",
-			text: "I know exactly what you're thinking right now...",
-			audioUrl: "/confident.mp3",
-			createdAt: "2 days ago",
-			duration: "0:18",
-		},
-	]);
+interface VoiceHistoryProps {
+	isMobile?: boolean;
+	refreshTrigger?: number;
+}
 
+const VoiceHistory = ({
+	isMobile = false,
+	refreshTrigger = 0,
+}: VoiceHistoryProps) => {
+	const [historyItems, setHistoryItems] = useState<VoiceHistoryItem[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 	const [playingId, setPlayingId] = useState<string | null>(null);
+	const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+		null
+	);
 
-	const handlePlay = (id: string, audioUrl: string) => {
+	useEffect(() => {
+		fetchHistory();
+	}, [refreshTrigger]);
+
+	const fetchHistory = async () => {
+		try {
+			const response = await api.getVoiceHistory();
+			if (response.success) {
+				const formattedHistory = response.history.map((item: any) => ({
+					id: item.id,
+					voiceName: item.voiceName,
+					text: item.text,
+					audioUrl: item.audioUrl,
+					createdAt: new Date(item.createdAt).toLocaleString(),
+					duration: item.duration,
+					type: item.type,
+				}));
+				setHistoryItems(formattedHistory);
+			}
+		} catch (error) {
+			console.error("Error fetching voice history:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handlePlay = async (id: string, audioUrl: string) => {
 		if (playingId === id) {
+			currentAudio?.pause();
 			setPlayingId(null);
+			setCurrentAudio(null);
 			return;
 		}
 
-		setPlayingId(id);
-		const audio = new Audio(audioUrl);
-		audio.play();
-		audio.onended = () => setPlayingId(null);
+		// Stop currently playing audio if any
+		if (currentAudio) {
+			currentAudio.pause();
+		}
+
+		try {
+			const token = localStorage.getItem("token");
+			const audio = new Audio(audioUrl);
+
+			// Set authorization header if needed
+			audio.crossOrigin = "anonymous";
+
+			setCurrentAudio(audio);
+			setPlayingId(id);
+
+			audio.play();
+			audio.onended = () => {
+				setPlayingId(null);
+				setCurrentAudio(null);
+			};
+		} catch (error) {
+			console.error("Error playing audio:", error);
+			setPlayingId(null);
+			setCurrentAudio(null);
+		}
 	};
 
-	const handleDownload = (audioUrl: string, voiceName: string) => {
-		const link = document.createElement("a");
-		link.href = audioUrl;
-		link.download = `${voiceName}_voice.mp3`;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+	const handleDownload = async (audioUrl: string, voiceName: string) => {
+		try {
+			const token = localStorage.getItem("token");
+			const response = await fetch(audioUrl, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const blob = await response.blob();
+			const url = URL.createObjectURL(blob);
+
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = `${voiceName}_voice.mp3`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch (error) {
+			console.error("Error downloading audio:", error);
+		}
 	};
 
 	return (
@@ -74,7 +124,16 @@ const VoiceHistory = () => {
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="space-y-4 max-h-[600px] overflow-y-auto">
-				{historyItems.length === 0 ? (
+				{isLoading ? (
+					<div className="text-center py-8">
+						<motion.div
+							animate={{ opacity: [0.5, 1, 0.5] }}
+							transition={{ duration: 1, repeat: Infinity }}
+						>
+							Loading history...
+						</motion.div>
+					</div>
+				) : historyItems.length === 0 ? (
 					<div className="text-center py-8">
 						<motion.div
 							animate={{ opacity: [0.5, 1, 0.5] }}
@@ -106,6 +165,9 @@ const VoiceHistory = () => {
 												<span className="text-xs text-muted-foreground">
 													{item.duration}
 												</span>
+												<span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+													{item.type}
+												</span>
 											</div>
 											<p className="text-sm text-muted-foreground line-clamp-2">
 												{item.text}
@@ -133,12 +195,11 @@ const VoiceHistory = () => {
 										<Button
 											variant="ghost"
 											size="sm"
-											onClick={() => handleDownload(item.audioUrl, item.voiceName)}
+											onClick={() =>
+												handleDownload(item.audioUrl, item.voiceName)
+											}
 										>
 											<Download className="h-4 w-4" />
-										</Button>
-										<Button variant="ghost" size="sm">
-											<Trash2 className="h-4 w-4 text-destructive" />
 										</Button>
 									</div>
 								</CardContent>

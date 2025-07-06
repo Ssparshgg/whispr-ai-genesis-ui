@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,6 +6,7 @@ import { LogOut, Home, Menu, X, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GenerateVoiceWidget from "@/components/GenerateVoiceWidget";
 import VoiceHistory from "@/components/VoiceHistory";
+import { api } from "@/lib/api";
 
 const voices = [
 	{
@@ -54,7 +54,12 @@ const GenerateVoicePage = () => {
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
-	const [sidebarOpen, setSidebarOpen] = useState(true);
+
+	// Responsive state
+	const [isMobile, setIsMobile] = useState(false);
+	const [historyOpen, setHistoryOpen] = useState(true);
+	const [refreshHistory, setRefreshHistory] = useState(0);
+	const [isGenerating, setIsGenerating] = useState(false);
 
 	// Check for navigation state and pre-fill the form
 	useEffect(() => {
@@ -75,6 +80,18 @@ const GenerateVoicePage = () => {
 		}
 	}, [location.state]);
 
+	// Responsive: detect mobile and set historyOpen accordingly
+	useEffect(() => {
+		const checkMobile = () => {
+			const mobile = window.innerWidth < 1024; // lg breakpoint
+			setIsMobile(mobile);
+			setHistoryOpen(!mobile); // open on desktop, closed on mobile
+		};
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
+	}, []);
+
 	// Handle logout
 	const handleLogout = () => {
 		logout();
@@ -91,10 +108,50 @@ const GenerateVoicePage = () => {
 		navigate("/dashboard");
 	};
 
-	// Toggle sidebar
-	const toggleSidebar = () => {
-		setSidebarOpen(!sidebarOpen);
+	// Toggle history panel (only on mobile)
+	const toggleHistory = () => {
+		if (isMobile) setHistoryOpen((open) => !open);
 	};
+
+	// Handle voice generation from the widget
+	const handleGenerateVoice = useCallback(
+		async (voice: string, text: string) => {
+			setIsGenerating(true);
+			try {
+				// Check if the selected voice is one of the predefined voices
+				const predefinedVoices = voices.map((v) => v.name);
+				if (predefinedVoices.includes(voice)) {
+					// Use the standard voice generation endpoint
+					const response = await api.generateVoice(voice, text);
+					if (response.success) {
+						// Refresh the voice history
+						setRefreshHistory((prev) => prev + 1);
+						// Show success message
+						alert("Voice generated successfully! Check your history.");
+					} else {
+						alert(`Error: ${response.message || "Failed to generate voice"}`);
+					}
+				} else {
+					// Use the model voice generation endpoint for other voices
+					const data = await api.generateVoiceModel(voice, text);
+					if (data.success) {
+						// Refresh the voice history
+						setRefreshHistory((prev) => prev + 1);
+						// Show success message
+						alert("Voice generated successfully! Check your history.");
+					} else {
+						alert(`Error: ${data.message || "Failed to generate voice"}`);
+					}
+				}
+			} catch (error) {
+				console.error("Error generating voice:", error);
+				alert("Failed to generate voice. Please try again.");
+			} finally {
+				setIsGenerating(false);
+			}
+		},
+		[voices]
+	);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -132,21 +189,25 @@ const GenerateVoicePage = () => {
 										className="h-8 w-8 rounded-full object-cover"
 									/>
 								</motion.div>
-								<span className="text-xl sm:text-2xl font-bold">Seducely AI</span>
+								<span className="text-xl sm:text-2xl font-bold">
+									Seducely AI
+								</span>
 							</motion.div>
 
-							{/* Hamburger Menu */}
-							<Button
-								variant="ghost"
-								onClick={toggleSidebar}
-								className="lg:hidden"
-							>
-								{sidebarOpen ? (
-									<X className="h-4 w-4" />
-								) : (
-									<Menu className="h-4 w-4" />
-								)}
-							</Button>
+							{/* Hamburger Menu - only on mobile */}
+							{isMobile && (
+								<Button
+									variant="ghost"
+									onClick={toggleHistory}
+									className="lg:hidden"
+								>
+									{historyOpen ? (
+										<X className="h-4 w-4" />
+									) : (
+										<Menu className="h-4 w-4" />
+									)}
+								</Button>
+							)}
 						</div>
 
 						<div className="flex items-center space-x-2 sm:space-x-4">
@@ -185,13 +246,13 @@ const GenerateVoicePage = () => {
 				<motion.div
 					initial={false}
 					animate={{
-						width: sidebarOpen ? "60%" : "0%",
-						opacity: sidebarOpen ? 1 : 0,
+						width: historyOpen ? (isMobile ? "0%" : "60%") : "100%",
+						opacity: historyOpen && isMobile ? 0 : 1,
 					}}
 					transition={{ duration: 0.3, ease: "easeInOut" }}
-					className={`${
-						sidebarOpen ? "block" : "hidden lg:block"
-					} border-r border-border/20 bg-background/50 backdrop-blur overflow-hidden`}
+					className={`border-r border-border/20 bg-background/50 backdrop-blur overflow-hidden ${
+						historyOpen && isMobile ? "hidden" : "block"
+					}`}
 				>
 					<div className="p-6 h-full overflow-y-auto">
 						<GenerateVoiceWidget
@@ -203,23 +264,31 @@ const GenerateVoicePage = () => {
 							isTyping={isTyping}
 							setIsTyping={setIsTyping}
 							isCompact={true}
+							onGenerateClick={handleGenerateVoice}
+							isGenerating={isGenerating}
 						/>
 					</div>
 				</motion.div>
 
 				{/* Right Panel - Voice History */}
-				<motion.div
-					initial={false}
-					animate={{
-						width: sidebarOpen ? "40%" : "100%",
-					}}
-					transition={{ duration: 0.3, ease: "easeInOut" }}
-					className="bg-background/30 backdrop-blur"
-				>
-					<div className="p-6 h-full">
-						<VoiceHistory />
-					</div>
-				</motion.div>
+				{historyOpen && (
+					<motion.div
+						initial={false}
+						animate={{
+							width: isMobile ? "100%" : "40%",
+							opacity: 1,
+						}}
+						transition={{ duration: 0.3, ease: "easeInOut" }}
+						className="bg-background/30 backdrop-blur"
+					>
+						<div className="p-6 h-full">
+							<VoiceHistory
+								isMobile={isMobile}
+								refreshTrigger={refreshHistory}
+							/>
+						</div>
+					</motion.div>
+				)}
 			</div>
 		</div>
 	);

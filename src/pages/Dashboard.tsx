@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -7,15 +6,17 @@ import { LogOut, Home, Mic, Crown, Zap, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { api } from "@/lib/api";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
 	const { logout, user } = useAuth();
 	const [stats, setStats] = useState({
-		credits: 150,
+		credits: 0,
 		plan: "Free",
-		voicesGenerated: 12,
+		voicesGenerated: 0,
 	});
+	const [isLoading, setIsLoading] = useState(true);
 
 	// Handle logout
 	const handleLogout = () => {
@@ -32,6 +33,39 @@ const Dashboard = () => {
 	const handleGenerateVoice = () => {
 		navigate("/generate-voice");
 	};
+
+	// Fetch user profile data function
+	const fetchUserProfile = async () => {
+		try {
+			const response = await api.getProfile();
+			if (response.success && response.user) {
+				setStats({
+					credits: response.user.credits || 0,
+					plan: response.user.is_premium ? "Premium" : "Free",
+					voicesGenerated: response.user.voices_generated || 0,
+				});
+			}
+		} catch (error) {
+			console.error("Error fetching user profile:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	// Fetch user profile data on mount
+	useEffect(() => {
+		fetchUserProfile();
+	}, []);
+
+	// Refresh user data when returning to dashboard
+	useEffect(() => {
+		const handleFocus = () => {
+			fetchUserProfile();
+		};
+
+		window.addEventListener("focus", handleFocus);
+		return () => window.removeEventListener("focus", handleFocus);
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
@@ -136,7 +170,7 @@ const Dashboard = () => {
 								</CardHeader>
 								<CardContent className="relative z-10">
 									<div className="text-3xl font-bold text-primary mb-1">
-										{stats.credits}
+										{isLoading ? "..." : stats.credits}
 									</div>
 									<p className="text-sm text-muted-foreground">
 										Available for voice generation
@@ -165,7 +199,9 @@ const Dashboard = () => {
 								</CardHeader>
 								<CardContent className="relative z-10">
 									<div className="flex items-center gap-2 mb-2">
-										<span className="text-3xl font-bold">{stats.plan}</span>
+										<span className="text-3xl font-bold">
+											{isLoading ? "..." : stats.plan}
+										</span>
 										{stats.plan === "Premium" && (
 											<Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
 												Pro
@@ -173,7 +209,9 @@ const Dashboard = () => {
 										)}
 									</div>
 									<p className="text-sm text-muted-foreground">
-										{stats.plan === "Free" ? "Upgrade for more features" : "All features unlocked"}
+										{stats.plan === "Free"
+											? "Upgrade for more features"
+											: "All features unlocked"}
 									</p>
 								</CardContent>
 							</Card>
