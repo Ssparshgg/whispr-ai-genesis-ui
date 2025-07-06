@@ -78,7 +78,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 			return;
 		}
 
-		// Check credits before generating
+		// Check credits before generating (use cached user data if available)
 		if (user && user.credits !== undefined && user.credits <= 0) {
 			toast({
 				title: "Insufficient Credits",

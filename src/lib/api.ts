@@ -1,4 +1,7 @@
-const API_BASE_URL = "https://second.anshtyagi.me/api";
+const API_BASE_URL =
+	process.env.NODE_ENV === "production"
+		? "https://second.anshtyagi.me/api"
+		: "http://localhost:5001/api";
 
 export { API_BASE_URL };
 
@@ -143,10 +146,19 @@ export const api = {
 			throw new Error("No token found");
 		}
 
-		// Check credits before generating
-		const creditCheck = await this.checkCredits();
-		if (creditCheck.credits <= 0) {
-			throw new Error("Insufficient credits. Please upgrade your plan.");
+		// Try to check credits, but don't fail if profile API is down
+		try {
+			const creditCheck = await this.checkCredits();
+			if (creditCheck.credits <= 0) {
+				throw new Error("Insufficient credits. Please upgrade your plan.");
+			}
+		} catch (error) {
+			// If credit check fails due to server issues, proceed anyway
+			// The backend will handle credit validation
+			console.warn(
+				"Credit check failed, proceeding with voice generation:",
+				error
+			);
 		}
 
 		const response = await fetch(`${API_BASE_URL}/generate-voice`, {
@@ -181,10 +193,19 @@ export const api = {
 			throw new Error("No token found");
 		}
 
-		// Check credits before generating
-		const creditCheck = await this.checkCredits();
-		if (creditCheck.credits <= 0) {
-			throw new Error("Insufficient credits. Please upgrade your plan.");
+		// Try to check credits, but don't fail if profile API is down
+		try {
+			const creditCheck = await this.checkCredits();
+			if (creditCheck.credits <= 0) {
+				throw new Error("Insufficient credits. Please upgrade your plan.");
+			}
+		} catch (error) {
+			// If credit check fails due to server issues, proceed anyway
+			// The backend will handle credit validation
+			console.warn(
+				"Credit check failed, proceeding with voice generation:",
+				error
+			);
 		}
 
 		const response = await fetch(`${API_BASE_URL}/generate-voice-model`, {
