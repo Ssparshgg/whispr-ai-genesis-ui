@@ -141,7 +141,7 @@ const Index = () => {
 			quote: "Let me take care of you with my sweet voice...",
 			image: "/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png",
 			personality: "Sweet & Caring",
-			audioFile: "/sounds/sweet.mp3",
+			audioFile: "/sweet.mp3",
 		},
 		{
 			name: "Miara",
@@ -151,7 +151,7 @@ const Index = () => {
 			quote: "I'll make your day brighter with my cute voice...",
 			image: "/lovable-uploads/8f3d2a00-ac1a-4dc9-beaa-22ce697945f3.png",
 			personality: "Cute & Playful",
-			audioFile: "/sounds/cute.mp3",
+			audioFile: "/cute.mp3",
 		},
 		{
 			name: "Madison",
@@ -161,7 +161,7 @@ const Index = () => {
 			quote: "Ready to hear what confidence sounds like?",
 			image: "/lovable-uploads/2f12a378-da34-4abd-8eab-18404ff65ac3.png",
 			personality: "Confident & Alluring",
-			audioFile: "/sounds/confident.mp3",
+			audioFile: "/confident.mp3",
 		},
 		{
 			name: "Aria",
@@ -171,7 +171,7 @@ const Index = () => {
 			quote: "Let's go on an adventure together...",
 			image: "/lovable-uploads/53504ad3-684a-409f-a9ab-4cf6045e0388.png",
 			personality: "Free & Adventurous",
-			audioFile: "/sounds/adventure.mp3",
+			audioFile: "/adventure.mp3",
 		},
 	];
 
