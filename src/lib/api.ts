@@ -260,6 +260,18 @@ export const api = {
 
 		return data;
 	},
+
+	// Join waitlist
+	async joinWaitlist(email: string) {
+		const response = await fetch(`${API_BASE_URL}/waitlist`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email }),
+		});
+		return response.json();
+	},
 };
 
 // Authentication utility functions

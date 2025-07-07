@@ -1,13 +1,20 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Bell, CheckCircle, Mail, Star, Users } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { API_BASE_URL } from "@/lib/api";
+import { api } from "@/lib/api";
 
 const Waitlist = () => {
 	const navigate = useNavigate();
@@ -21,16 +28,34 @@ const Waitlist = () => {
 		if (!email) return;
 
 		setIsLoading(true);
-		
-		// Simulate API call
-		setTimeout(() => {
-			setIsLoading(false);
-			setIsSubmitted(true);
+
+		try {
+			const data = await api.joinWaitlist(email);
+
+			if (data.success) {
+				setIsSubmitted(true);
+				toast({
+					title: "Welcome to the waitlist! 🎉",
+					description: "We'll notify you as soon as we launch!",
+				});
+			} else {
+				toast({
+					title: "Error",
+					description:
+						data.message || "Something went wrong. Please try again.",
+					variant: "destructive",
+				});
+			}
+		} catch (error) {
+			console.error("Waitlist error:", error);
 			toast({
-				title: "Welcome to the waitlist! 🎉",
-				description: "We'll notify you as soon as we launch!",
+				title: "Error",
+				description: "Failed to join waitlist. Please try again.",
+				variant: "destructive",
 			});
-		}, 1000);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	const voices = [
@@ -39,7 +64,7 @@ const Waitlist = () => {
 			image: "/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png",
 		},
 		{
-			name: "Miara", 
+			name: "Miara",
 			image: "/lovable-uploads/8f3d2a00-ac1a-4dc9-beaa-22ce697945f3.png",
 		},
 		{
@@ -141,7 +166,11 @@ const Waitlist = () => {
 									</div>
 									<motion.div
 										animate={{ scale: [1, 1.2, 1] }}
-										transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
+										transition={{
+											duration: 2,
+											repeat: Infinity,
+											delay: index * 0.5,
+										}}
 										className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full"
 									/>
 								</motion.div>
@@ -159,7 +188,9 @@ const Waitlist = () => {
 						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card">
 							<CardHeader className="text-center">
 								<CardTitle className="text-2xl">
-									{isSubmitted ? "Welcome to the Waitlist! 🎉" : "Join the Waitlist"}
+									{isSubmitted
+										? "Welcome to the Waitlist! 🎉"
+										: "Join the Waitlist"}
 								</CardTitle>
 								<CardDescription>
 									{isSubmitted
@@ -199,7 +230,9 @@ const Waitlist = () => {
 								) : (
 									<form onSubmit={handleSubmit} className="space-y-6">
 										<div className="space-y-2">
-											<label className="text-sm font-medium">Email Address</label>
+											<label className="text-sm font-medium">
+												Email Address
+											</label>
 											<div className="relative">
 												<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 												<Input
@@ -234,7 +267,11 @@ const Waitlist = () => {
 													<>
 														<motion.div
 															animate={{ rotate: 360 }}
-															transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+															transition={{
+																duration: 1,
+																repeat: Infinity,
+																ease: "linear",
+															}}
 															className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
 														/>
 														Joining Waitlist...
@@ -268,7 +305,8 @@ const Waitlist = () => {
 						{[
 							{
 								title: "Ultra-Realistic Voices",
-								description: "AI voices so realistic, they'll captivate your audience",
+								description:
+									"AI voices so realistic, they'll captivate your audience",
 								icon: "🎤",
 							},
 							{
