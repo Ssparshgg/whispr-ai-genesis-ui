@@ -434,7 +434,7 @@ const Index = () => {
 								initial={{ opacity: 0, y: 50 }}
 								animate={heroInView ? { opacity: 1, y: 0 } : {}}
 								transition={{ duration: 0.8 }}
-								className="space-y-4"
+								className="space-y-4 text-center lg:text-left"
 							>
 								<h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
 									Create Your Own{" "}
@@ -509,7 +509,7 @@ const Index = () => {
 								initial={{ opacity: 0 }}
 								animate={heroInView ? { opacity: 1 } : {}}
 								transition={{ delay: 1.2 }}
-								className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-muted-foreground"
+								className="flex flex-col items-center sm:flex-row sm:justify-start gap-4 sm:gap-6 text-sm text-muted-foreground"
 							>
 								<div className="flex items-center gap-2">
 									<span className="text-primary font-bold">
@@ -529,6 +529,7 @@ const Index = () => {
 								initial={{ opacity: 0, y: 20 }}
 								animate={heroInView ? { opacity: 1, y: 0 } : {}}
 								transition={{ delay: 1.4 }}
+								className="w-full max-w-md mx-auto lg:mx-0"
 							>
 								<TestimonialCarousel />
 							</motion.div>
@@ -548,39 +549,36 @@ const Index = () => {
 									transition={{ duration: 4, repeat: Infinity }}
 								/>
 								<CardHeader className="relative z-10">
-									<div className="flex items-center justify-between">
+									<div className="flex flex-wrap items-center justify-between gap-y-2">
 										<CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
 											Generate Voice
-											<Badge className="bg-primary/20 text-primary animate-pulse text-xs">
+											<Badge className="bg-primary/20 text-primary animate-pulse text-xs shrink-0">
 												AI Powered
 											</Badge>
-											{/* Locked Voice Images Row */}
-											<div className="flex items-center gap-1 ml-2">
-												{Object.entries(lockedVoiceImages).map(
-													([type, img], idx) => (
-														<motion.div
-															key={type}
-															className="relative group cursor-pointer"
-															whileHover={{ scale: 1.08 }}
-															onClick={() => smoothScrollTo("pricing")}
-														>
-															<img
-																src={img}
-																alt={`Locked ${type}`}
-																className="w-10 h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
-															/>
-															{/* Lock icon overlay */}
-															<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
-																<Lock className="w-3 h-3 text-primary" />
-															</span>
-															<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
-																Click to unlock
-															</span>
-														</motion.div>
-													)
-												)}
-											</div>
 										</CardTitle>
+										{/* Locked Voice Images Row */}
+										<div className="flex items-center gap-1">
+											{Object.entries(lockedVoiceImages).map(([type, img]) => (
+												<motion.div
+													key={type}
+													className="relative group cursor-pointer"
+													whileHover={{ scale: 1.08 }}
+													onClick={() => smoothScrollTo("pricing")}
+												>
+													<img
+														src={img}
+														alt={`Locked ${type}`}
+														className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
+													/>
+													<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
+														<Lock className="w-3 h-3 text-primary" />
+													</span>
+													<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+														Click to unlock
+													</span>
+												</motion.div>
+											))}
+										</div>
 									</div>
 								</CardHeader>
 								<CardContent className="space-y-6 relative z-10">
@@ -588,7 +586,7 @@ const Index = () => {
 										<label className="text-sm font-medium">
 											Select Voice Model
 										</label>
-										<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+										<div className="grid grid-cols-2 gap-3">
 											{voices.slice(0, 4).map((voice) => (
 												<motion.div
 													key={voice.name}
@@ -639,11 +637,11 @@ const Index = () => {
 												onClick={() => setShowVoiceDropdown((v) => !v)}
 											>
 												Unlock 150+ Voice Models with Premium
-												<ChevronDown className="w-5 h-5 text-primary" />
+												<ChevronDown className="w-4 h-4" />
 											</Button>
 											{showVoiceDropdown && (
 												<div
-													className="absolute right-0 top-full mt-2 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+													className="absolute right-0 top-full mt-2 w-full sm:w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
 													ref={voiceDropdownRef}
 												>
 													<div className="flex gap-2 mb-4 flex-wrap">
@@ -673,8 +671,8 @@ const Index = () => {
 																<div className="font-semibold text-primary mb-1 text-sm pl-1">
 																	{group.category}
 																</div>
-																<div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
-																	{group.voices.map((voice, idx) => (
+																<div className="grid grid-cols-4 gap-2">
+																	{group.voices.map((voice) => (
 																		<div
 																			key={voice.name}
 																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
@@ -687,10 +685,8 @@ const Index = () => {
 																				setShowVoiceDropdown(false);
 																			}}
 																		>
-																			{/* Removed image property */}
 																			<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
 																				{voice.avatar}
-																				{/* Lock icon overlay for locked voices */}
 																				<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
 																					<Lock className="w-3 h-3 text-primary" />
 																				</span>
@@ -748,7 +744,7 @@ const Index = () => {
 												transition={{ duration: 2, repeat: Infinity }}
 												className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary opacity-80"
 											/>
-											<span className="relative z-10 flex items-center gap-2">
+											<span className="relative z-10 flex items-center justify-center gap-2">
 												Generate Voice Note
 											</span>
 											<motion.div

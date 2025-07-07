@@ -1,4 +1,3 @@
-
 const API_BASE_URL = "https://second.anshtyagi.me/api";
 
 export { API_BASE_URL };
@@ -293,7 +292,7 @@ export const api = {
 			throw new Error("No admin token found");
 		}
 
-		const response = await fetch(`${API_BASE_URL}/admin/waitlist`, {
+		const response = await fetch(`${API_BASE_URL}/waitlist`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -321,7 +320,7 @@ export const api = {
 			throw new Error("No admin token found");
 		}
 
-		const response = await fetch(`${API_BASE_URL}/admin/waitlist/${userId}`, {
+		const response = await fetch(`${API_BASE_URL}/waitlist/${userId}`, {
 			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${token}`,
