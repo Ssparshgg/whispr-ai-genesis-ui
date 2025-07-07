@@ -235,7 +235,7 @@ const Index = () => {
 		category: cat,
 		voices: mockVoices.filter((v) => v.type === cat),
 	}));
-
+	// issue
 	// Handle click outside dropdown to close
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
