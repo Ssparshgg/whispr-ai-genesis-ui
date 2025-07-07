@@ -58,26 +58,22 @@ const VoiceHistory = ({
 				setHistoryItems(formattedHistory);
 			} else {
 				console.error("Failed to fetch voice history:", response.message);
-				// If it's an authentication error, we might want to redirect to login
 				if (
 					response.message === "No token provided" ||
 					response.message === "Invalid token" ||
 					response.message === "User not found"
 				) {
-					// Clear invalid token and redirect to login
 					logout();
 					navigate("/login");
 				}
 			}
 		} catch (error) {
 			console.error("Error fetching voice history:", error);
-			// Only redirect to login for actual authentication errors, not network/server errors
 			if (error instanceof Error) {
 				if (
 					error.message.includes("Invalid token") ||
 					error.message.includes("User not found")
 				) {
-					// Clear invalid token and redirect to login
 					logout();
 					navigate("/login");
 				}
@@ -89,7 +85,6 @@ const VoiceHistory = ({
 
 	const handlePlay = (item: VoiceHistoryItem) => {
 		if (playingId === item.id) {
-			// Stop current audio
 			if (currentAudio) {
 				currentAudio.pause();
 				currentAudio.currentTime = 0;
@@ -97,13 +92,11 @@ const VoiceHistory = ({
 			setPlayingId(null);
 			setCurrentAudio(null);
 		} else {
-			// Stop any currently playing audio
 			if (currentAudio) {
 				currentAudio.pause();
 				currentAudio.currentTime = 0;
 			}
 
-			// Play new audio
 			const audio = new Audio(item.audioUrl);
 			audio.addEventListener("ended", () => {
 				setPlayingId(null);
@@ -126,13 +119,34 @@ const VoiceHistory = ({
 		}
 	};
 
-	const handleDownload = (item: VoiceHistoryItem) => {
-		const link = document.createElement("a");
-		link.href = item.audioUrl;
-		link.download = `${item.voiceName}_${item.id}.mp3`;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+	const handleDownload = async (item: VoiceHistoryItem) => {
+		try {
+			const response = await fetch(item.audioUrl);
+			const blob = await response.blob();
+
+			const blobUrl = URL.createObjectURL(blob);
+
+			const link = document.createElement("a");
+			link.href = blobUrl;
+			link.download = `${item.voiceName}_${item.id}.mp3`;
+			link.style.display = "none";
+
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			URL.revokeObjectURL(blobUrl);
+		} catch (error) {
+			console.error("Error downloading audio:", error);
+			// Fallback to original method
+			const link = document.createElement("a");
+			link.href = item.audioUrl;
+			link.download = `${item.voiceName}_${item.id}.mp3`;
+			link.setAttribute("target", "_self");
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
 	};
 
 	// Cleanup audio when component unmounts

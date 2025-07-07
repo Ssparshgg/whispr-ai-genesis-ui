@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,40 +15,50 @@ interface VoiceCardProps {
   isSelected?: boolean;
   onSelect?: () => void;
   onPreview?: () => void;
+  onDownload?: () => void;
 }
 
-const VoiceCard = ({ 
-  name, 
-  type, 
-  description, 
-  avatar, 
-  quote, 
+const VoiceCard = ({
+  name,
+  type,
+  description,
+  avatar,
+  quote,
   image,
   personality,
-  isSelected = false, 
+  isSelected = false,
   onSelect,
-  onPreview 
+  onPreview,
+  onDownload
 }: VoiceCardProps) => {
+  const handleDownload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDownload) {
+      onDownload();
+    } else {
+      console.log("Download not available for this voice");
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className={`rounded-xl border transition-all duration-300 cursor-pointer relative overflow-hidden group ${
-        isSelected 
-          ? 'border-primary bg-primary/10 shadow-purple ring-2 ring-primary/20' 
-          : 'border-border/20 bg-card/50 hover:border-primary/50 hover:shadow-purple'
-      }`}
+      className={`rounded-xl border transition-all duration-300 cursor-pointer relative overflow-hidden group ${isSelected
+        ? 'border-primary bg-primary/10 shadow-purple ring-2 ring-primary/20'
+        : 'border-border/20 bg-card/50 hover:border-primary/50 hover:shadow-purple'
+        }`}
       onClick={onSelect}
     >
       <motion.div
         className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100"
         transition={{ duration: 0.3 }}
       />
-      
+
       <div className="p-6 relative z-10">
         <div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
-          <img 
-            src={image} 
+          <img
+            src={image}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
@@ -67,7 +76,7 @@ const VoiceCard = ({
             </motion.div>
           )}
         </div>
-        
+
         <div className="text-center space-y-3">
           <div>
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -76,18 +85,18 @@ const VoiceCard = ({
             </div>
             <p className="text-sm text-muted-foreground">🎭 {personality}</p>
           </div>
-          
+
           <div className="min-h-[3rem] flex items-center justify-center">
             <p className="text-sm italic text-muted-foreground text-center">"{quote}"</p>
           </div>
-          
+
           <div className="flex items-center justify-center mb-4">
             <WaveAnimation isActive={isSelected} />
           </div>
-          
+
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               className="flex-1"
               onClick={(e) => {
@@ -98,12 +107,10 @@ const VoiceCard = ({
               <Play className="h-3 w-3 mr-1" />
               🔊 Preview
             </Button>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+              onClick={handleDownload}
             >
               <Download className="h-3 w-3" />
             </Button>
