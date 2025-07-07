@@ -101,14 +101,6 @@ const Waitlist = () => {
 							</div>
 							<span className="text-xl font-bold">Seducely AI</span>
 						</motion.div>
-						<Button
-							variant="ghost"
-							onClick={() => navigate("/")}
-							className="flex items-center gap-2"
-						>
-							<ArrowLeft className="h-4 w-4" />
-							Back to Home
-						</Button>
 					</div>
 				</div>
 			</header>
