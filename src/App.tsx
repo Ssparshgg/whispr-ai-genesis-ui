@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import GenerateVoicePage from "./pages/GenerateVoicePage";
+import Waitlist from "./pages/Waitlist";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -26,6 +27,7 @@ const App = () => (
 						<Route path="/" element={<Index />} />
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
+						<Route path="/waitlist" element={<Waitlist />} />
 						<Route
 							path="/dashboard"
 							element={

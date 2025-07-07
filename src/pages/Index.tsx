@@ -520,7 +520,7 @@ const Index = () => {
 							transition={{ delay: 0.6, duration: 0.8 }}
 							className="mt-8 lg:mt-0"
 						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden">
+							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-visible">
 								<motion.div
 									className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
 									animate={{ opacity: [0.5, 0.8, 0.5] }}
@@ -679,8 +679,9 @@ const Index = () => {
 											{showVoiceDropdown && (
 												<div
 													ref={voiceDropdownRef}
-													className="absolute right-0 bottom-12 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl z-50 p-4"
+													className="absolute right-0 top-full mt-2 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4"
 													style={{
+														zIndex: 9999,
 														boxShadow:
 															"0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.1)",
 													}}
@@ -833,7 +834,7 @@ const Index = () => {
 				</div>
 			</section>
 
-			{/* How It Works Section */}
+			{/* How It Works Section - Updated with Video Style */}
 			<section ref={stepsRef} className="py-20 px-4">
 				<div className="container mx-auto">
 					<motion.div
@@ -844,72 +845,133 @@ const Index = () => {
 						<h2 className="text-4xl font-bold mb-4">How Seducely AI Works</h2>
 						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
 							Transform your creative vision into reality with our powerful
-							AI-driven workflow in just four simple steps.
+							AI-driven workflow in just three simple steps.
 						</p>
 					</motion.div>
 
-					<div className="grid md:grid-cols-4 gap-8">
-						{[
-							{
-								icon: User,
-								title: "Choose a Voice",
-								description:
-									"Select from our library of premium AI voices with different personalities and styles.",
-								number: "01",
-							},
-							{
-								icon: Pen,
-								title: "Write Your Message",
-								description:
-									"Craft your custom message or select from our pre-written templates.",
-								number: "02",
-							},
-							{
-								icon: Mic,
-								title: "Generate Audio",
-								description:
-									"Our AI transforms your text into a natural-sounding voice note in seconds.",
-								number: "03",
-							},
-							{
-								icon: Share,
-								title: "Share & Connect",
-								description:
-									"Download and share your voice notes across all your platforms.",
-								number: "04",
-							},
-						].map((step, index) => (
-							<motion.div
-								key={index}
-								initial={{ opacity: 0, y: 50, scale: 0.8 }}
-								animate={stepsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-								transition={{ delay: index * 0.2, duration: 0.6 }}
-								className="text-center space-y-4 relative"
-							>
-								<motion.div
-									className="relative mx-auto w-20 h-20"
-									whileHover={{ scale: 1.1 }}
-								>
-									<div className="w-20 h-20 rounded-full bg-gradient-purple flex items-center justify-center shadow-purple">
-										<AnimatedIcon icon={step.icon} delay={index * 0.1} />
+					<div className="space-y-20">
+						{/* Step 1 */}
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+							transition={{ delay: 0.2 }}
+							className="grid lg:grid-cols-2 gap-12 items-center"
+						>
+							<div className="space-y-6">
+								<div className="flex items-center gap-4">
+									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-lg">1</span>
 									</div>
-									<div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-										{step.number}
+									<h3 className="text-3xl font-bold">Choose Your Voice Model</h3>
+								</div>
+								<p className="text-lg text-muted-foreground">
+									Select from our stunning collection of AI voice models, each with 
+									unique personalities and captivating styles. From sweet and caring 
+									to confident and alluring, find the perfect voice for your content.
+								</p>
+								<div className="flex gap-4">
+									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+										Join Waitlist
+									</Button>
+									<Button variant="whispr-outline" onClick={() => smoothScrollTo("voices")}>
+										View Models
+									</Button>
+								</div>
+							</div>
+							<div className="relative">
+								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+									<div className="relative z-10 text-center space-y-4">
+										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<User className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-muted-foreground">Video Coming Soon</p>
 									</div>
-								</motion.div>
-								<h3 className="text-xl font-semibold">{step.title}</h3>
-								<p className="text-muted-foreground">{step.description}</p>
+								</div>
+							</div>
+						</motion.div>
 
-								{index < 3 && (
-									<motion.div
-										initial={{ width: 0 }}
-										animate={stepsInView ? { width: "100%" } : {}}
-										transition={{ delay: 1 + index * 0.3, duration: 0.8 }}
-										className="hidden md:block absolute top-10 left-full w-full h-px bg-gradient-to-r from-primary to-transparent z-0"
-									/>
-								)}
-							</motion.div>
-						))}
+						{/* Step 2 */}
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+							transition={{ delay: 0.4 }}
+							className="grid lg:grid-cols-2 gap-12 items-center"
+						>
+							<div className="lg:order-2 space-y-6">
+								<div className="flex items-center gap-4">
+									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-lg">2</span>
+									</div>
+									<h3 className="text-3xl font-bold">Create Your Message</h3>
+								</div>
+								<p className="text-lg text-muted-foreground">
+									Write your custom message or choose from our pre-written templates. 
+									Our AI will transform your text into natural-sounding, engaging 
+									voice notes that captivate your audience.
+								</p>
+								<div className="flex gap-4">
+									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+										Get Early Access
+									</Button>
+									<Button variant="whispr-outline" onClick={handleDemoClick}>
+										Try Demo
+									</Button>
+								</div>
+							</div>
+							<div className="lg:order-1 relative">
+								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+									<div className="relative z-10 text-center space-y-4">
+										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<Pen className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-muted-foreground">Video Coming Soon</p>
+									</div>
+								</div>
+							</div>
+						</motion.div>
+
+						{/* Step 3 */}
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+							transition={{ delay: 0.6 }}
+							className="grid lg:grid-cols-2 gap-12 items-center"
+						>
+							<div className="space-y-6">
+								<div className="flex items-center gap-4">
+									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-lg">3</span>
+									</div>
+									<h3 className="text-3xl font-bold">Generate & Share</h3>
+								</div>
+								<p className="text-lg text-muted-foreground">
+									Watch as our advanced AI generates your voice note in seconds. 
+									Download high-quality MP3 files and share your captivating content 
+									across all your platforms to engage and grow your audience.
+								</p>
+								<div className="flex gap-4">
+									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+										Start Creating
+									</Button>
+									<Button variant="whispr-outline" onClick={() => smoothScrollTo("pricing")}>
+										View Pricing
+									</Button>
+								</div>
+							</div>
+							<div className="relative">
+								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+									<div className="relative z-10 text-center space-y-4">
+										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<Share className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-muted-foreground">Video Coming Soon</p>
+									</div>
+								</div>
+							</div>
+						</motion.div>
 					</div>
 				</div>
 			</section>
