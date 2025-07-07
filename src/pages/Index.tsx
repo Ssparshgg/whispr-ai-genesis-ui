@@ -221,14 +221,11 @@ const Index = () => {
 	const categories = ["Sweet", "Cute", "Confident", "Adventurous"];
 	const mockVoices = Array.from({ length: 150 }, (_, i) => {
 		const type = categories[i % categories.length];
-		// Generate deterministic letter from A-Z based on index
-		const randomLetter = String.fromCharCode(65 + (i % 26));
+		const avatar = (i + 1).toString();
 		return {
 			name: `Voice ${i + 1}`,
 			type,
-			avatar: randomLetter,
-			image:
-				i % 3 === 0 ? `/lovable-uploads/mock${(i % 10) + 1}.png` : undefined, // Some have images
+			avatar,
 			personality: `${type} Personality`,
 		};
 	});
@@ -548,6 +545,10 @@ const Index = () => {
 																alt={`Locked ${type}`}
 																className="w-10 h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
 															/>
+															{/* Lock icon overlay */}
+															<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
+																<Lock className="w-3 h-3 text-primary" />
+															</span>
 															<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
 																Click to unlock
 															</span>
@@ -605,9 +606,85 @@ const Index = () => {
 												</motion.div>
 											))}
 										</div>
+
+										{/* Dropdown trigger below the four models */}
+										<div className="mt-4 relative flex items-center">
+											<Button
+												variant="whispr-primary"
+												className="w-full flex items-center justify-center gap-2"
+												onClick={() => setShowVoiceDropdown((v) => !v)}
+											>
+												Unlock 150+ Voice Models with Premium
+												<ChevronDown className="w-5 h-5 text-primary" />
+											</Button>
+											{showVoiceDropdown && (
+												<div
+													className="absolute right-0 top-full mt-2 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+													ref={voiceDropdownRef}
+												>
+													<div className="flex gap-2 mb-4 flex-wrap">
+														{categories.map((cat) => (
+															<Button
+																key={cat}
+																variant={
+																	selectedVoiceFilter === cat
+																		? "whispr-primary"
+																		: "outline"
+																}
+																className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
+																onClick={() => setSelectedVoiceFilter(cat)}
+															>
+																{cat}
+															</Button>
+														))}
+													</div>
+													{groupedMockVoices
+														.filter(
+															(g) =>
+																selectedVoiceFilter === "All" ||
+																g.category === selectedVoiceFilter
+														)
+														.map((group) => (
+															<div key={group.category} className="mb-2">
+																<div className="font-semibold text-primary mb-1 text-sm pl-1">
+																	{group.category}
+																</div>
+																<div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
+																	{group.voices.map((voice, idx) => (
+																		<div
+																			key={voice.name}
+																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
+																				selectedVoice === voice.name
+																					? "border-primary bg-primary/10"
+																					: ""
+																			}`}
+																			onClick={() => {
+																				setSelectedVoice(voice.name);
+																				setShowVoiceDropdown(false);
+																			}}
+																		>
+																			{/* Removed image property */}
+																			<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
+																				{voice.avatar}
+																				{/* Lock icon overlay for locked voices */}
+																				<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
+																					<Lock className="w-3 h-3 text-primary" />
+																				</span>
+																			</div>
+																			<span className="text-xs font-medium truncate w-full text-center">
+																				{voice.name}
+																			</span>
+																		</div>
+																	))}
+																</div>
+															</div>
+														))}
+												</div>
+											)}
+										</div>
 									</div>
 
-									<div className="space-y-3">
+									<div className="space-y-3 mt-6">
 										<label className="text-sm font-medium">Your Message</label>
 										<Textarea
 											placeholder="Type your message here..."
@@ -662,92 +739,6 @@ const Index = () => {
 												<Mic className="h-4 w-4" />
 											</motion.div>
 										</Button>
-										{/* Small dropdown button on the right */}
-										<div className="relative">
-											<Button
-												variant="outline"
-												size="icon"
-												className="ml-2 flex-shrink-0 w-10 h-10 rounded-full border-primary/30 border-2 bg-background hover:bg-primary/10 transition"
-												onClick={(e) => {
-													e.stopPropagation();
-													setShowVoiceDropdown((v) => !v);
-												}}
-												aria-label="Show all voices"
-											>
-												<ChevronDown className="w-5 h-5 text-primary" />
-											</Button>
-											{showVoiceDropdown && (
-												<div
-													ref={voiceDropdownRef}
-													className="absolute right-0 top-full mt-2 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4"
-													style={{
-														zIndex: 9999,
-														boxShadow:
-															"0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.1)",
-													}}
-												>
-													<div className="flex gap-2 mb-4 flex-wrap">
-														{categories.map((cat) => (
-															<Button
-																key={cat}
-																variant={
-																	selectedVoiceFilter === cat
-																		? "whispr-primary"
-																		: "outline"
-																}
-																className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
-																onClick={() => setSelectedVoiceFilter(cat)}
-															>
-																{cat}
-															</Button>
-														))}
-													</div>
-													{groupedMockVoices
-														.filter(
-															(g) =>
-																selectedVoiceFilter === "All" ||
-																g.category === selectedVoiceFilter
-														)
-														.map((group) => (
-															<div key={group.category} className="mb-2">
-																<div className="font-semibold text-primary mb-1 text-sm pl-1">
-																	{group.category}
-																</div>
-																<div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
-																	{group.voices.map((voice) => (
-																		<div
-																			key={voice.name}
-																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${selectedVoice === voice.name
-																				? "border-primary bg-primary/10"
-																				: ""
-																				}`}
-																			onClick={() => {
-																				setSelectedVoice(voice.name);
-																				setShowVoiceDropdown(false);
-																			}}
-																		>
-																			{voice.image ? (
-																				<img
-																					src={voice.image}
-																					alt={voice.name}
-																					className="w-12 h-12 rounded-full object-cover mb-1 border border-primary/20"
-																				/>
-																			) : (
-																				<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20">
-																					{voice.avatar}
-																				</div>
-																			)}
-																			<span className="text-xs font-medium truncate w-full text-center">
-																				{voice.name}
-																			</span>
-																		</div>
-																	))}
-																</div>
-															</div>
-														))}
-												</div>
-											)}
-										</div>
 									</motion.div>
 								</CardContent>
 							</Card>
@@ -862,18 +853,27 @@ const Index = () => {
 									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
 										<span className="text-white font-bold text-lg">1</span>
 									</div>
-									<h3 className="text-3xl font-bold">Choose Your Voice Model</h3>
+									<h3 className="text-3xl font-bold">
+										Choose Your Voice Model
+									</h3>
 								</div>
 								<p className="text-lg text-muted-foreground">
-									Select from our stunning collection of AI voice models, each with 
-									unique personalities and captivating styles. From sweet and caring 
-									to confident and alluring, find the perfect voice for your content.
+									Select from our stunning collection of AI voice models, each
+									with unique personalities and captivating styles. From sweet
+									and caring to confident and alluring, find the perfect voice
+									for your content.
 								</p>
 								<div className="flex gap-4">
-									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+									<Button
+										variant="whispr-primary"
+										onClick={() => navigate("/waitlist")}
+									>
 										Join Waitlist
 									</Button>
-									<Button variant="whispr-outline" onClick={() => smoothScrollTo("voices")}>
+									<Button
+										variant="whispr-outline"
+										onClick={() => smoothScrollTo("voices")}
+									>
 										View Models
 									</Button>
 								</div>
@@ -906,12 +906,16 @@ const Index = () => {
 									<h3 className="text-3xl font-bold">Create Your Message</h3>
 								</div>
 								<p className="text-lg text-muted-foreground">
-									Write your custom message or choose from our pre-written templates. 
-									Our AI will transform your text into natural-sounding, engaging 
-									voice notes that captivate your audience.
+									Write your custom message or choose from our pre-written
+									templates. Our AI will transform your text into
+									natural-sounding, engaging voice notes that captivate your
+									audience.
 								</p>
 								<div className="flex gap-4">
-									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+									<Button
+										variant="whispr-primary"
+										onClick={() => navigate("/waitlist")}
+									>
 										Get Early Access
 									</Button>
 									<Button variant="whispr-outline" onClick={handleDemoClick}>
@@ -947,15 +951,22 @@ const Index = () => {
 									<h3 className="text-3xl font-bold">Generate & Share</h3>
 								</div>
 								<p className="text-lg text-muted-foreground">
-									Watch as our advanced AI generates your voice note in seconds. 
-									Download high-quality MP3 files and share your captivating content 
-									across all your platforms to engage and grow your audience.
+									Watch as our advanced AI generates your voice note in seconds.
+									Download high-quality MP3 files and share your captivating
+									content across all your platforms to engage and grow your
+									audience.
 								</p>
 								<div className="flex gap-4">
-									<Button variant="whispr-primary" onClick={() => navigate("/waitlist")}>
+									<Button
+										variant="whispr-primary"
+										onClick={() => navigate("/waitlist")}
+									>
 										Start Creating
 									</Button>
-									<Button variant="whispr-outline" onClick={() => smoothScrollTo("pricing")}>
+									<Button
+										variant="whispr-outline"
+										onClick={() => smoothScrollTo("pricing")}
+									>
 										View Pricing
 									</Button>
 								</div>
@@ -1088,10 +1099,11 @@ const Index = () => {
 							>
 								{/* Unlocked Voice Card */}
 								<Card
-									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${selectedVoice === voice.name
-										? "border-primary ring-2 ring-primary/20"
-										: ""
-										}`}
+									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${
+										selectedVoice === voice.name
+											? "border-primary ring-2 ring-primary/20"
+											: ""
+									}`}
 									onClick={() => setSelectedVoice(voice.name)}
 								>
 									<motion.div
@@ -1178,8 +1190,9 @@ const Index = () => {
 												alt={`Locked ${selectedVoiceFilter}`}
 												className="w-full h-full object-cover filter blur-[2px] brightness-75"
 											/>
-											<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center">
-												<Lock className="h-10 w-10 text-primary drop-shadow-lg" />
+											{/* Lock icon overlay */}
+											<div className="absolute bottom-2 right-2 bg-background rounded-full p-1 border border-primary/30">
+												<Lock className="h-5 w-5 text-primary" />
 											</div>
 										</div>
 										<div className="text-center">
