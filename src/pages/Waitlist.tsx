@@ -15,6 +15,7 @@ import { ArrowLeft, Bell, CheckCircle, Mail, Star, Users } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE_URL } from "@/lib/api";
 import { api } from "@/lib/api";
+import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 
 const Waitlist = () => {
 	const navigate = useNavigate();
@@ -101,14 +102,6 @@ const Waitlist = () => {
 							</div>
 							<span className="text-xl font-bold">Seducely AI</span>
 						</motion.div>
-						<Button
-							variant="ghost"
-							onClick={() => navigate("/")}
-							className="flex items-center gap-2"
-						>
-							<ArrowLeft className="h-4 w-4" />
-							Back to Home
-						</Button>
 					</div>
 				</div>
 			</header>
@@ -291,6 +284,60 @@ const Waitlist = () => {
 										</p>
 									</form>
 								)}
+							</CardContent>
+						</Card>
+					</motion.div>
+
+					{/* Linh's Voice Example Section */}
+					<motion.div
+						initial={{ opacity: 0, y: 30 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.5 }}
+						className="max-w-xl mx-auto mb-16"
+					>
+						<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card">
+							<CardHeader className="flex flex-col items-center text-center">
+								<div className="w-24 h-24 rounded-full overflow-hidden border-4 border-primary/30 mb-4">
+									<img
+										src="/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png"
+										alt="Linh's Face"
+										className="w-full h-full object-cover"
+									/>
+								</div>
+								<CardTitle className="text-2xl font-bold mb-1">Linh</CardTitle>
+								<p className="text-primary font-medium mb-2">Sweet & Caring</p>
+								<p className="italic text-muted-foreground mb-2">
+									"Let me take care of you with my sweet voice..."
+								</p>
+								<Badge variant="outline" className="mb-2">
+									Sweet
+								</Badge>
+								<p className="text-sm text-muted-foreground mb-4">
+									Sweet Asian voice with gentle, caring tone
+								</p>
+							</CardHeader>
+							<CardContent>
+								<div className="flex flex-col items-center gap-4">
+									{/* Professional Audio Player */}
+									<CustomAudioPlayer
+										audioUrl="/sweet.mp3"
+										filename="linh_sweet.mp3"
+										onDownload={() => {
+											const link = document.createElement("a");
+											link.href = "/sweet.mp3";
+											link.download = "linh_sweet.mp3";
+											document.body.appendChild(link);
+											link.click();
+											document.body.removeChild(link);
+										}}
+										generatedVoiceData={{
+											voiceName: "Linh",
+											text: "Let me take care of you with my sweet voice...",
+											image:
+												"/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png",
+										}}
+									/>
+								</div>
 							</CardContent>
 						</Card>
 					</motion.div>
