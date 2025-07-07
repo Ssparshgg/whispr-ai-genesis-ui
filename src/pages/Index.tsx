@@ -18,6 +18,14 @@ import {
 	Star,
 	LogOut,
 	Lock,
+	CreditCard,
+	Heart,
+	Smartphone,
+	Shield,
+	Globe,
+	HelpCircle,
+	FileAudio,
+	Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -1574,9 +1582,93 @@ const Index = () => {
 							},
 							{
 								icon: Brain,
-								question: "How does the credit system work?",
+								question: "Are the voices real or fully AI-generated?",
 								answer:
-									"Each voice generation uses one credit. Credits reset monthly with your subscription. Unused credits don't roll over, but you can always upgrade your plan for more credits.",
+									"All voices are 100% AI-generated using advanced neural voice synthesis technology. No real human voices are used in the creation process, ensuring complete privacy and consistency in voice quality.",
+							},
+							{
+								icon: Zap,
+								question: "Can I use the generated audio for commercial purposes?",
+								answer:
+									"Yes! You have full commercial rights to use the generated voice notes for your business, content creation, marketing materials, and any other commercial applications without restrictions.",
+							},
+							{
+								icon: Heart,
+								question: "Do the voices have emotions or expressiveness?",
+								answer:
+									"Absolutely! Our AI voices are designed with natural emotional range and expressiveness. Each voice model has unique personality traits and can convey different emotions and tones based on your text content.",
+							},
+							{
+								icon: CreditCard,
+								question: "How many credits does one voice note use?",
+								answer:
+									"Each voice generation uses exactly one credit, regardless of the length of your text (up to our character limit). This makes it easy to track and budget your usage.",
+							},
+							{
+								icon: CreditCard,
+								question: "Can I purchase extra credits if I run out before the month ends?",
+								answer:
+									"Yes! You can purchase additional credit packs at any time through our flexible credit system. Credits are available in various pack sizes to suit your needs.",
+							},
+							{
+								icon: CreditCard,
+								question: "What happens if I go over my credit limit?",
+								answer:
+									"Once you've used all your monthly credits, you'll need to either wait until your next billing cycle or purchase additional credit packs to continue generating voice notes.",
+							},
+							{
+								icon: User,
+								question: "Do I get access to all voices with my plan?",
+								answer:
+									"This depends on your subscription plan. The Starter Plan includes access to select voices, while the Creator Plan unlocks our complete library of voice models including premium and exclusive voices.",
+							},
+							{
+								icon: Star,
+								question: "Are new voices added regularly?",
+								answer:
+									"Yes! We continuously develop and release new voice models with different personalities, accents, and styles. Premium subscribers get early access to new voices before general release.",
+							},
+							{
+								icon: FileAudio,
+								question: "Can I save or download the audio files? In what formats?",
+								answer:
+									"Absolutely! All generated voice notes can be instantly downloaded. We provide high-quality MP3 files as standard, with WAV format available for Creator Plan subscribers.",
+							},
+							{
+								icon: Smartphone,
+								question: "Can I use Seducely AI on mobile devices?",
+								answer:
+									"Yes! Our platform is fully responsive and works seamlessly on all mobile devices including smartphones and tablets through your web browser.",
+							},
+							{
+								icon: Globe,
+								question: "Is there an app or just a web version?",
+								answer:
+									"Currently, we offer a powerful web-based platform that works across all devices. A dedicated mobile app is in development and will be available soon for even better mobile experience.",
+							},
+							{
+								icon: Globe,
+								question: "Does it support different languages or only English?",
+								answer:
+									"Our current voice models primarily support English with various accents and styles. We're actively developing multilingual capabilities and plan to add more languages in future updates.",
+							},
+							{
+								icon: Shield,
+								question: "Is my text input private and secure?",
+								answer:
+									"Absolutely! We take privacy seriously. All your text inputs are encrypted and processed securely. We never share your content with third parties and you maintain full ownership of your creations.",
+							},
+							{
+								icon: Shield,
+								question: "Do you store or use my voice notes for training?",
+								answer:
+									"No, we do not use your generated voice notes or text inputs for AI training purposes. Your content remains completely private and is only used to generate your requested audio files.",
+							},
+							{
+								icon: HelpCircle,
+								question: "What if I face an issue — is support available?",
+								answer:
+									"Yes! We provide comprehensive support through email for all users. Creator Plan subscribers receive priority support with faster response times. We also have an active Discord community for tips and assistance.",
 							},
 						].map((faq, index) => (
 							<motion.div
