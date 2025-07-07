@@ -1,7 +1,7 @@
 const API_BASE_URL = "https://second.anshtyagi.me/api";
 
 export { API_BASE_URL };
-
+// private
 // API utility functions
 export const api = {
 	// Login user
