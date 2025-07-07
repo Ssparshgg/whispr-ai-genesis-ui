@@ -1,3 +1,4 @@
+
 const API_BASE_URL = "https://second.anshtyagi.me/api";
 
 export { API_BASE_URL };
@@ -272,6 +273,74 @@ export const api = {
 		});
 		return response.json();
 	},
+
+	// Admin Login
+	async adminLogin(email: string, password: string) {
+		const response = await fetch(`${API_BASE_URL}/admin/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email, password }),
+		});
+		return response.json();
+	},
+
+	// Get waitlist users (admin only)
+	async getWaitlistUsers() {
+		const token = localStorage.getItem("adminToken");
+		if (!token) {
+			throw new Error("No admin token found");
+		}
+
+		const response = await fetch(`${API_BASE_URL}/admin/waitlist`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+
+		const data = await response.json();
+
+		if (!response.ok || !data.success) {
+			if (response.status === 401 || response.status === 403) {
+				localStorage.removeItem("adminToken");
+				localStorage.removeItem("adminUser");
+			}
+			throw new Error(data.message || "Failed to fetch waitlist users");
+		}
+
+		return data;
+	},
+
+	// Delete waitlist user (admin only)
+	async deleteWaitlistUser(userId: string) {
+		const token = localStorage.getItem("adminToken");
+		if (!token) {
+			throw new Error("No admin token found");
+		}
+
+		const response = await fetch(`${API_BASE_URL}/admin/waitlist/${userId}`, {
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+
+		const data = await response.json();
+
+		if (!response.ok || !data.success) {
+			if (response.status === 401 || response.status === 403) {
+				localStorage.removeItem("adminToken");
+				localStorage.removeItem("adminUser");
+			}
+			throw new Error(data.message || "Failed to delete user");
+		}
+
+		return data;
+	},
 };
 
 // Authentication utility functions
@@ -302,5 +371,16 @@ export const auth = {
 	setAuth(token: string, user: any) {
 		localStorage.setItem("token", token);
 		localStorage.setItem("user", JSON.stringify(user));
+	},
+
+	// Check if admin is logged in
+	isAdminLoggedIn(): boolean {
+		return !!localStorage.getItem("adminToken");
+	},
+
+	// Admin logout
+	adminLogout() {
+		localStorage.removeItem("adminToken");
+		localStorage.removeItem("adminUser");
 	},
 };

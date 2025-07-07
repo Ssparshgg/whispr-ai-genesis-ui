@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import GenerateVoicePage from "./pages/GenerateVoicePage";
 import Waitlist from "./pages/Waitlist";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -23,10 +26,12 @@ const App = () => (
 				<Sonner />
 				<BrowserRouter>
 					<Routes>
-						<Route path="/" element={<Waitlist />} />
+						<Route path="/" element={<Index />} />
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
-						<Route path="/waitlist" element={<Index />} />
+						<Route path="/waitlist" element={<Waitlist />} />
+						<Route path="/admin/login" element={<AdminLogin />} />
+						<Route path="/admin/dashboard" element={<AdminDashboard />} />
 						<Route
 							path="/dashboard"
 							element={

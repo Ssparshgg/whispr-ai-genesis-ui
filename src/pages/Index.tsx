@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -36,6 +37,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import WaveAnimation from "@/components/WaveAnimation";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
@@ -235,7 +237,7 @@ const Index = () => {
 		category: cat,
 		voices: mockVoices.filter((v) => v.type === cat),
 	}));
-	// issue
+
 	// Handle click outside dropdown to close
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -351,6 +353,29 @@ const Index = () => {
 									transition={{ duration: 0.3 }}
 								/>
 							</motion.button>
+							{/* Discord Link */}
+							<motion.a
+								href="https://discord.gg/VkeyBCjE"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-primary transition-colors cursor-pointer relative group"
+								whileHover={{ scale: 1.05 }}
+							>
+								<svg
+									className="w-5 h-5"
+									fill="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/>
+								</svg>
+								<motion.div
+									className="absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left"
+									initial={{ scaleX: 0 }}
+									whileHover={{ scaleX: 1 }}
+									transition={{ duration: 0.3 }}
+								/>
+							</motion.a>
 						</nav>
 
 						<div className="flex items-center space-x-2 sm:space-x-4">
@@ -389,7 +414,7 @@ const Index = () => {
 			</header>
 
 			{/* Hero Section with Background */}
-			<section ref={heroRef} className="py-20 px-4 relative overflow-hidden">
+			<section ref={heroRef} className="py-12 sm:py-20 px-4 relative overflow-hidden">
 				{/* Animated Background */}
 				<div className="absolute inset-0 bg-gradient-to-br from-whispr-purple/10 via-transparent to-whispr-purple-dark/10" />
 				<motion.div
@@ -412,7 +437,7 @@ const Index = () => {
 								transition={{ duration: 0.8 }}
 								className="space-y-4"
 							>
-								<h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
+								<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
 									Create Your Own{" "}
 									<motion.span
 										className="text-primary relative"
@@ -435,7 +460,7 @@ const Index = () => {
 										AI Voice Notes
 									</motion.span>
 								</h1>
-								<p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
+								<p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
 									Generate captivating, ultra-realistic voice notes with
 									stunning AI personalities. Choose from beautiful voice models
 									with unique styles and personas.
@@ -510,7 +535,7 @@ const Index = () => {
 							</motion.div>
 						</div>
 
-						{/* Enhanced Voice Generation Widget */}
+						{/* Enhanced Voice Generation Widget - Made More Mobile Friendly */}
 						<motion.div
 							initial={{ opacity: 0, x: 50 }}
 							animate={heroInView ? { opacity: 1, x: 0 } : {}}
@@ -523,48 +548,22 @@ const Index = () => {
 									animate={{ opacity: [0.5, 0.8, 0.5] }}
 									transition={{ duration: 4, repeat: Infinity }}
 								/>
-								<CardHeader className="relative z-10">
+								<CardHeader className="relative z-10 p-3 sm:p-6">
 									<div className="flex items-center justify-between">
-										<CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+										<CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl">
 											Generate Voice
 											<Badge className="bg-primary/20 text-primary animate-pulse text-xs">
 												AI Powered
 											</Badge>
-											{/* Locked Voice Images Row */}
-											<div className="flex items-center gap-1 ml-2">
-												{Object.entries(lockedVoiceImages).map(
-													([type, img], idx) => (
-														<motion.div
-															key={type}
-															className="relative group cursor-pointer"
-															whileHover={{ scale: 1.08 }}
-															onClick={() => smoothScrollTo("pricing")}
-														>
-															<img
-																src={img}
-																alt={`Locked ${type}`}
-																className="w-10 h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
-															/>
-															{/* Lock icon overlay */}
-															<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
-																<Lock className="w-3 h-3 text-primary" />
-															</span>
-															<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
-																Click to unlock
-															</span>
-														</motion.div>
-													)
-												)}
-											</div>
 										</CardTitle>
 									</div>
 								</CardHeader>
-								<CardContent className="space-y-6 relative z-10">
+								<CardContent className="space-y-4 sm:space-y-6 relative z-10 p-3 sm:p-6">
 									<div className="space-y-3">
 										<label className="text-sm font-medium">
 											Select Voice Model
 										</label>
-										<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+										<div className="grid grid-cols-2 gap-2 sm:gap-3">
 											{voices.slice(0, 4).map((voice) => (
 												<motion.div
 													key={voice.name}
@@ -577,11 +576,11 @@ const Index = () => {
 																? "whispr-primary"
 																: "outline"
 														}
-														className="w-full h-auto p-3 justify-start relative overflow-hidden"
+														className="w-full h-auto p-2 sm:p-3 justify-start relative overflow-hidden text-xs sm:text-sm"
 														onClick={() => setSelectedVoice(voice.name)}
 													>
-														<div className="flex items-center gap-3 w-full">
-															<div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0">
+														<div className="flex items-center gap-2 sm:gap-3 w-full">
+															<div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0">
 																<img
 																	src={voice.image}
 																	alt={voice.name}
@@ -598,7 +597,7 @@ const Index = () => {
 															</div>
 														</div>
 														{selectedVoice === voice.name && (
-															<div className="absolute right-2">
+															<div className="absolute right-1 sm:right-2">
 																<WaveAnimation isActive={true} />
 															</div>
 														)}
@@ -611,18 +610,18 @@ const Index = () => {
 										<div className="mt-4 relative flex items-center">
 											<Button
 												variant="whispr-primary"
-												className="w-full flex items-center justify-center gap-2"
+												className="w-full flex items-center justify-center gap-2 text-xs sm:text-sm p-2 sm:p-3"
 												onClick={() => setShowVoiceDropdown((v) => !v)}
 											>
-												Unlock 150+ Voice Models with Premium
-												<ChevronDown className="w-5 h-5 text-primary" />
+												Try these 150+ voices for premium users
+												<ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
 											</Button>
 											{showVoiceDropdown && (
 												<div
-													className="absolute right-0 top-full mt-2 w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+													className="absolute right-0 top-full mt-2 w-full sm:w-96 max-h-60 sm:max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-3 sm:p-4 z-50"
 													ref={voiceDropdownRef}
 												>
-													<div className="flex gap-2 mb-4 flex-wrap">
+													<div className="flex gap-1 sm:gap-2 mb-3 sm:mb-4 flex-wrap">
 														{categories.map((cat) => (
 															<Button
 																key={cat}
@@ -631,7 +630,7 @@ const Index = () => {
 																		? "whispr-primary"
 																		: "outline"
 																}
-																className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
+																className="rounded-full text-xs px-2 py-1 sm:px-3 sm:py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
 																onClick={() => setSelectedVoiceFilter(cat)}
 															>
 																{cat}
@@ -649,11 +648,11 @@ const Index = () => {
 																<div className="font-semibold text-primary mb-1 text-sm pl-1">
 																	{group.category}
 																</div>
-																<div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
+																<div className="grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-2">
 																	{group.voices.map((voice, idx) => (
 																		<div
 																			key={voice.name}
-																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
+																			className={`flex flex-col items-center p-1 sm:p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
 																				selectedVoice === voice.name
 																					? "border-primary bg-primary/10"
 																					: ""
@@ -663,13 +662,8 @@ const Index = () => {
 																				setShowVoiceDropdown(false);
 																			}}
 																		>
-																			{/* Removed image property */}
-																			<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
+																			<div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-primary/20 flex items-center justify-center text-sm sm:text-lg font-bold text-primary mb-1 border border-primary/20 relative">
 																				{voice.avatar}
-																				{/* Lock icon overlay for locked voices */}
-																				<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
-																					<Lock className="w-3 h-3 text-primary" />
-																				</span>
 																			</div>
 																			<span className="text-xs font-medium truncate w-full text-center">
 																				{voice.name}
@@ -684,7 +678,7 @@ const Index = () => {
 										</div>
 									</div>
 
-									<div className="space-y-3 mt-6">
+									<div className="space-y-3 mt-4 sm:mt-6">
 										<label className="text-sm font-medium">Your Message</label>
 										<Textarea
 											placeholder="Type your message here..."
@@ -693,7 +687,7 @@ const Index = () => {
 												setMessage(e.target.value);
 												setIsTyping(e.target.value.length > 0);
 											}}
-											className="min-h-[100px] bg-input/50 border-border/50 focus:border-primary/50 transition-colors"
+											className="min-h-[80px] sm:min-h-[100px] bg-input/50 border-border/50 focus:border-primary/50 transition-colors text-sm"
 										/>
 										{isTyping && (
 											<motion.div
@@ -713,7 +707,7 @@ const Index = () => {
 									>
 										<Button
 											variant="whispr-primary"
-											className="w-full relative overflow-hidden group flex-1"
+											className="w-full relative overflow-hidden group flex-1 text-sm p-2 sm:p-3"
 											size="lg"
 											onClick={() =>
 												handleGenerateFromWidget(selectedVoice, message)
@@ -751,24 +745,24 @@ const Index = () => {
 			<section
 				id="features"
 				ref={featuresRef}
-				className="py-20 px-4 bg-secondary/20 relative"
+				className="py-12 sm:py-20 px-4 bg-secondary/20 relative"
 			>
 				<div className="container mx-auto">
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-						className="text-center mb-16"
+						className="text-center mb-12 sm:mb-16"
 					>
-						<h2 className="text-4xl font-bold mb-4">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
 							Everything You Need For Perfect Voice Notes
 						</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
 							Our platform offers all the tools you need to create engaging,
 							realistic voice content with stunning AI personalities.
 						</p>
 					</motion.div>
 
-					<div className="grid md:grid-cols-3 gap-8">
+					<div className="grid md:grid-cols-3 gap-6 sm:gap-8">
 						{[
 							{
 								icon: Mic,
@@ -809,12 +803,12 @@ const Index = () => {
 										>
 											<feature.icon className="h-6 w-6 text-primary" />
 										</motion.div>
-										<CardTitle className="group-hover:text-primary transition-colors">
+										<CardTitle className="group-hover:text-primary transition-colors text-base sm:text-lg">
 											{feature.title}
 										</CardTitle>
 									</CardHeader>
 									<CardContent>
-										<p className="text-muted-foreground">
+										<p className="text-muted-foreground text-sm sm:text-base">
 											{feature.description}
 										</p>
 									</CardContent>
@@ -826,53 +820,55 @@ const Index = () => {
 			</section>
 
 			{/* How It Works Section - Updated with Video Style */}
-			<section ref={stepsRef} className="py-20 px-4">
+			<section ref={stepsRef} className="py-12 sm:py-20 px-4">
 				<div className="container mx-auto">
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-						className="text-center mb-16"
+						className="text-center mb-12 sm:mb-16"
 					>
-						<h2 className="text-4xl font-bold mb-4">How Seducely AI Works</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">How Seducely AI Works</h2>
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
 							Transform your creative vision into reality with our powerful
 							AI-driven workflow in just three simple steps.
 						</p>
 					</motion.div>
 
-					<div className="space-y-20">
+					<div className="space-y-12 sm:space-y-20">
 						{/* Step 1 */}
 						<motion.div
 							initial={{ opacity: 0, y: 50 }}
 							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
 							transition={{ delay: 0.2 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
+							className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center"
 						>
-							<div className="space-y-6">
+							<div className="space-y-4 sm:space-y-6">
 								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">1</span>
+									<div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-base sm:text-lg">1</span>
 									</div>
-									<h3 className="text-3xl font-bold">
+									<h3 className="text-xl sm:text-2xl md:text-3xl font-bold">
 										Choose Your Voice Model
 									</h3>
 								</div>
-								<p className="text-lg text-muted-foreground">
+								<p className="text-sm sm:text-base md:text-lg text-muted-foreground">
 									Select from our stunning collection of AI voice models, each
 									with unique personalities and captivating styles. From sweet
 									and caring to confident and alluring, find the perfect voice
 									for your content.
 								</p>
-								<div className="flex gap-4">
+								<div className="flex flex-col sm:flex-row gap-4">
 									<Button
 										variant="whispr-primary"
 										onClick={() => navigate("/waitlist")}
+										className="text-sm"
 									>
 										Join Waitlist
 									</Button>
 									<Button
 										variant="whispr-outline"
 										onClick={() => smoothScrollTo("voices")}
+										className="text-sm"
 									>
 										View Models
 									</Button>
@@ -882,10 +878,10 @@ const Index = () => {
 								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
 									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<User className="h-8 w-8 text-primary" />
+										<div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<User className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
 										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+										<p className="text-muted-foreground text-sm sm:text-base">Video Coming Soon</p>
 									</div>
 								</div>
 							</div>
@@ -896,29 +892,30 @@ const Index = () => {
 							initial={{ opacity: 0, y: 50 }}
 							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
 							transition={{ delay: 0.4 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
+							className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center"
 						>
-							<div className="lg:order-2 space-y-6">
+							<div className="lg:order-2 space-y-4 sm:space-y-6">
 								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">2</span>
+									<div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-base sm:text-lg">2</span>
 									</div>
-									<h3 className="text-3xl font-bold">Create Your Message</h3>
+									<h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Create Your Message</h3>
 								</div>
-								<p className="text-lg text-muted-foreground">
+								<p className="text-sm sm:text-base md:text-lg text-muted-foreground">
 									Write your custom message or choose from our pre-written
 									templates. Our AI will transform your text into
 									natural-sounding, engaging voice notes that captivate your
 									audience.
 								</p>
-								<div className="flex gap-4">
+								<div className="flex flex-col sm:flex-row gap-4">
 									<Button
 										variant="whispr-primary"
 										onClick={() => navigate("/waitlist")}
+										className="text-sm"
 									>
 										Get Early Access
 									</Button>
-									<Button variant="whispr-outline" onClick={handleDemoClick}>
+									<Button variant="whispr-outline" onClick={handleDemoClick} className="text-sm">
 										Try Demo
 									</Button>
 								</div>
@@ -927,10 +924,10 @@ const Index = () => {
 								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
 									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<Pen className="h-8 w-8 text-primary" />
+										<div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<Pen className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
 										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+										<p className="text-muted-foreground text-sm sm:text-base">Video Coming Soon</p>
 									</div>
 								</div>
 							</div>
@@ -941,31 +938,33 @@ const Index = () => {
 							initial={{ opacity: 0, y: 50 }}
 							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
 							transition={{ delay: 0.6 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
+							className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center"
 						>
-							<div className="space-y-6">
+							<div className="space-y-4 sm:space-y-6">
 								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">3</span>
+									<div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+										<span className="text-white font-bold text-base sm:text-lg">3</span>
 									</div>
-									<h3 className="text-3xl font-bold">Generate & Share</h3>
+									<h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Generate & Share</h3>
 								</div>
-								<p className="text-lg text-muted-foreground">
+								<p className="text-sm sm:text-base md:text-lg text-muted-foreground">
 									Watch as our advanced AI generates your voice note in seconds.
 									Download high-quality MP3 files and share your captivating
 									content across all your platforms to engage and grow your
 									audience.
 								</p>
-								<div className="flex gap-4">
+								<div className="flex flex-col sm:flex-row gap-4">
 									<Button
 										variant="whispr-primary"
 										onClick={() => navigate("/waitlist")}
+										className="text-sm"
 									>
 										Start Creating
 									</Button>
 									<Button
 										variant="whispr-outline"
 										onClick={() => smoothScrollTo("pricing")}
+										className="text-sm"
 									>
 										View Pricing
 									</Button>
@@ -975,10 +974,10 @@ const Index = () => {
 								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
 									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<Share className="h-8 w-8 text-primary" />
+										<div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+											<Share className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
 										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+										<p className="text-muted-foreground text-sm sm:text-base">Video Coming Soon</p>
 									</div>
 								</div>
 							</div>
@@ -988,19 +987,19 @@ const Index = () => {
 			</section>
 
 			{/* Premium Voices Section */}
-			<section id="voices" className="py-20 px-4 bg-secondary/20">
+			<section id="voices" className="py-12 sm:py-20 px-4 bg-secondary/20">
 				<div className="container mx-auto">
-					<div className="text-center mb-16">
-						<h2 className="text-4xl font-bold mb-4">
+					<div className="text-center mb-12 sm:mb-16">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
 							Discover Our Premium Voice Models
 						</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
 							Meet our stunning AI voice models. Each with unique personalities,
 							styles, and captivating voices designed to enchant your audience.
 						</p>
 					</div>
 
-					<div className="flex flex-wrap justify-center gap-2 mb-12">
+					<div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-12">
 						{voiceFilters.map((filter, index) => (
 							<motion.div
 								key={filter}
@@ -1017,7 +1016,7 @@ const Index = () => {
 											: "outline"
 									}
 									onClick={() => setSelectedVoiceFilter(filter)}
-									className="rounded-full relative overflow-hidden"
+									className="rounded-full relative overflow-hidden text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
 								>
 									{selectedVoiceFilter === filter && (
 										<motion.div
@@ -1035,59 +1034,9 @@ const Index = () => {
 								</Button>
 							</motion.div>
 						))}
-						{/* Premium Dropdown for Premium Users */}
-						{user?.isPremium ? (
-							<div className="relative">
-								<Button
-									variant="whispr-primary"
-									className="rounded-full flex items-center gap-2"
-									onClick={() => setShowPremiumDropdown((v) => !v)}
-								>
-									<ChevronDown className="w-4 h-4" />
-									<span>Premium Voices</span>
-								</Button>
-								{showPremiumDropdown && (
-									<div className="absolute left-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg z-50 p-4 grid grid-cols-1 gap-2">
-										{premiumVoices.map((voice) => (
-											<div
-												key={voice.name}
-												className="flex items-center gap-3 cursor-pointer hover:bg-primary/10 rounded p-2"
-												onClick={() => {
-													setSelectedVoice(voice.name);
-													setShowPremiumDropdown(false);
-												}}
-											>
-												<img
-													src={voice.image}
-													alt={voice.name}
-													className="w-10 h-10 rounded-full object-cover border-2 border-primary/20"
-												/>
-												<div className="flex-1 min-w-0">
-													<div className="font-medium text-sm truncate">
-														{voice.name}
-													</div>
-													<div className="text-xs opacity-70 truncate">
-														{voice.type}
-													</div>
-												</div>
-											</div>
-										))}
-									</div>
-								)}
-							</div>
-						) : (
-							<Button
-								variant="whispr-primary"
-								className="rounded-full flex items-center gap-2 transition-colors bg-primary text-white hover:bg-primary/80 hover:brightness-125 relative"
-								onClick={() => smoothScrollTo("pricing")}
-							>
-								<Lock className="w-4 h-4" />
-								<span>UNLOCK FOR ALL VOICES</span>
-							</Button>
-						)}
 					</div>
 
-					<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 						{filteredVoices.map((voice, index) => (
 							<motion.div
 								key={voice.name}
@@ -1110,8 +1059,8 @@ const Index = () => {
 										className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100"
 										transition={{ duration: 0.3 }}
 									/>
-									<CardHeader className="relative z-10 p-4">
-										<div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
+									<CardHeader className="relative z-10 p-3 sm:p-4">
+										<div className="aspect-square rounded-xl overflow-hidden mb-3 sm:mb-4 relative">
 											<img
 												src={voice.image}
 												alt={voice.name}
@@ -1125,32 +1074,32 @@ const Index = () => {
 												<motion.div
 													initial={{ scale: 0 }}
 													animate={{ scale: 1 }}
-													className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center"
+													className="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center"
 												>
-													<Star className="h-3 w-3 text-white" />
+													<Star className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
 												</motion.div>
 											)}
 										</div>
 										<div className="text-center">
-											<CardTitle className="text-lg mb-1">
+											<CardTitle className="text-sm sm:text-lg mb-1">
 												👄 {voice.name}
 											</CardTitle>
-											<p className="text-sm text-muted-foreground mb-2">
+											<p className="text-xs sm:text-sm text-muted-foreground mb-2">
 												🎭 {voice.personality}
 											</p>
-											<p className="text-xs italic text-muted-foreground mb-3">
+											<p className="text-xs italic text-muted-foreground mb-2 sm:mb-3">
 												"{voice.quote}"
 											</p>
-											<Badge variant="outline" className="text-xs mb-3">
+											<Badge variant="outline" className="text-xs mb-2 sm:mb-3">
 												{voice.type}
 											</Badge>
 										</div>
 									</CardHeader>
-									<CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
+									<CardFooter className="relative z-10 p-3 sm:p-4 pt-0 flex gap-2">
 										<Button
 											variant="outline"
 											size="sm"
-											className="flex-1"
+											className="flex-1 text-xs"
 											onClick={(e) => {
 												e.stopPropagation();
 												handlePreview(voice);
@@ -1161,6 +1110,7 @@ const Index = () => {
 										<Button
 											variant="ghost"
 											size="sm"
+											className="text-xs"
 											onClick={(e) => {
 												e.stopPropagation();
 												handleDownload(voice);
@@ -1172,61 +1122,12 @@ const Index = () => {
 								</Card>
 							</motion.div>
 						))}
-						{/* Locked Card for selected filter (not All) */}
-						{selectedVoiceFilter !== "All" &&
-							lockedVoiceImages[selectedVoiceFilter] && (
-								<motion.div
-									key="locked-card"
-									initial={{ opacity: 0, y: 30 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									transition={{ delay: 0.2 }}
-									whileHover={{ scale: 1.02 }}
-									className="group"
-								>
-									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden opacity-80 cursor-not-allowed">
-										<div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
-											<img
-												src={lockedVoiceImages[selectedVoiceFilter]}
-												alt={`Locked ${selectedVoiceFilter}`}
-												className="w-full h-full object-cover filter blur-[2px] brightness-75"
-											/>
-											{/* Lock icon overlay */}
-											<div className="absolute bottom-2 right-2 bg-background rounded-full p-1 border border-primary/30">
-												<Lock className="h-5 w-5 text-primary" />
-											</div>
-										</div>
-										<div className="text-center">
-											<CardTitle className="text-lg mb-1 flex items-center justify-center gap-2">
-												<Lock className="h-4 w-4 text-primary" />
-												Locked {selectedVoiceFilter} Voice
-											</CardTitle>
-											<p className="text-sm text-muted-foreground mb-2">
-												Unlock this stunning {selectedVoiceFilter.toLowerCase()}{" "}
-												voice by upgrading your plan.
-											</p>
-											<Badge variant="outline" className="text-xs mb-3">
-												{selectedVoiceFilter}
-											</Badge>
-										</div>
-										<CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
-											<Button
-												variant="whispr-primary"
-												size="sm"
-												className="flex-1 opacity-80 cursor-not-allowed"
-												disabled
-											>
-												<Lock className="h-4 w-4 mr-2" /> Locked
-											</Button>
-										</CardFooter>
-									</Card>
-								</motion.div>
-							)}
 					</div>
 				</div>
 			</section>
 
-			{/* Enhanced Pricing Section */}
-			<section id="pricing" className="py-20 px-4 relative overflow-hidden">
+			{/* Enhanced Pricing Section with Tabs */}
+			<section id="pricing" className="py-12 sm:py-20 px-4 relative overflow-hidden">
 				{/* Background Effects */}
 				<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
 				<motion.div
@@ -1236,11 +1137,11 @@ const Index = () => {
 				/>
 
 				<div className="container mx-auto relative z-10">
-					<div className="text-center mb-16">
-						<h2 className="text-4xl font-bold mb-4">
+					<div className="text-center mb-12 sm:mb-16">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
 							Simple, Credit-Based Pricing
 						</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
 							Choose the perfect plan for your voice creation needs. Pay for
 							what you use with our flexible credit system.
 						</p>
@@ -1257,189 +1158,240 @@ const Index = () => {
 						</motion.div>
 					</div>
 
-					<div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-						<motion.div
-							initial={{ opacity: 0, x: -30 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							whileHover={{ scale: 1.02 }}
-						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full relative">
-								<CardHeader>
-									<CardTitle className="text-2xl">Starter Plan</CardTitle>
-									<CardDescription>Perfect for getting started</CardDescription>
-									<div className="text-4xl font-bold">
-										$19
-										<span className="text-lg text-muted-foreground">
-											/month
-										</span>
-									</div>
-									<div className="text-sm text-primary font-medium">
-										50 Voice Credits Included
-									</div>
-								</CardHeader>
-								<CardContent className="space-y-4">
-									<div className="flex items-center gap-2 mb-4">
-										<span className="text-sm text-muted-foreground">
-											Includes voices:
-										</span>
-										<div className="flex -space-x-2">
-											{voices.slice(0, 2).map((voice, index) => (
-												<div
-													key={index}
-													className="w-6 h-6 rounded-full border-2 border-background overflow-hidden"
-												>
-													<img
-														src={voice.image}
-														alt={voice.name}
-														className="w-full h-full object-cover"
-													/>
-												</div>
-											))}
-										</div>
-									</div>
-									<ul className="space-y-3">
-										{[
-											"50 AI Voice Credits",
-											"Access to Linh & Miara",
-											"MP3 Downloads",
-											"Basic Voice Quality",
-											"Email Support",
-										].map((feature, index) => (
-											<motion.li
-												key={index}
-												initial={{ opacity: 0, x: -20 }}
-												whileInView={{ opacity: 1, x: 0 }}
-												transition={{ delay: index * 0.1 }}
-												className="flex items-center gap-2"
-											>
-												<div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-													<span className="text-green-500 text-xs">✓</span>
-												</div>
-												{feature}
-											</motion.li>
-										))}
-									</ul>
-								</CardContent>
-								<CardFooter>
-									<Button variant="outline" className="w-full">
-										Get Started
-									</Button>
-								</CardFooter>
-							</Card>
-						</motion.div>
+					<Tabs defaultValue="monthly" className="w-full max-w-6xl mx-auto">
+						<TabsList className="grid w-full grid-cols-2 mb-8 sm:mb-12 max-w-md mx-auto">
+							<TabsTrigger value="monthly">Monthly Plans</TabsTrigger>
+							<TabsTrigger value="credits">Buy Credits</TabsTrigger>
+						</TabsList>
 
-						<motion.div
-							initial={{ opacity: 0, x: 30 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							whileHover={{ scale: 1.05 }}
-							className="relative"
-						>
-							<motion.div
-								initial={{ y: -20, opacity: 0 }}
-								whileInView={{ y: 0, opacity: 1 }}
-								className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20"
-							>
+						<TabsContent value="monthly">
+							<div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
 								<motion.div
-									animate={{ rotate: [0, 5, -5, 0] }}
-									transition={{ duration: 2, repeat: Infinity }}
+									initial={{ opacity: 0, x: -30 }}
+									whileInView={{ opacity: 1, x: 0 }}
+									whileHover={{ scale: 1.02 }}
 								>
-									<Badge className="bg-primary px-4 py-2 text-white font-bold animate-pulse shadow-lg">
-										🔥 Most Popular
-									</Badge>
+									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full relative">
+										<CardHeader>
+											<CardTitle className="text-xl sm:text-2xl">Starter Plan</CardTitle>
+											<CardDescription>Perfect for getting started</CardDescription>
+											<div className="text-3xl sm:text-4xl font-bold">
+												$19
+												<span className="text-base sm:text-lg text-muted-foreground">
+													/month
+												</span>
+											</div>
+											<div className="text-sm text-primary font-medium">
+												50 Voice Credits Included
+											</div>
+										</CardHeader>
+										<CardContent className="space-y-4">
+											<div className="flex items-center gap-2 mb-4">
+												<span className="text-sm text-muted-foreground">
+													Includes voices:
+												</span>
+												<div className="flex -space-x-2">
+													{voices.slice(0, 2).map((voice, index) => (
+														<div
+															key={index}
+															className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-background overflow-hidden"
+														>
+															<img
+																src={voice.image}
+																alt={voice.name}
+																className="w-full h-full object-cover"
+															/>
+														</div>
+													))}
+												</div>
+											</div>
+											<ul className="space-y-3">
+												{[
+													"50 AI Voice Credits",
+													"Access to Linh & Miara",
+													"MP3 Downloads",
+													"Basic Voice Quality",
+													"Email Support",
+												].map((feature, index) => (
+													<motion.li
+														key={index}
+														initial={{ opacity: 0, x: -20 }}
+														whileInView={{ opacity: 1, x: 0 }}
+														transition={{ delay: index * 0.1 }}
+														className="flex items-center gap-2"
+													>
+														<div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+															<span className="text-green-500 text-xs">✓</span>
+														</div>
+														<span className="text-sm sm:text-base">{feature}</span>
+													</motion.li>
+												))}
+											</ul>
+										</CardContent>
+										<CardFooter>
+											<Button variant="outline" className="w-full">
+												Get Started
+											</Button>
+										</CardFooter>
+									</Card>
 								</motion.div>
-							</motion.div>
 
-							<Card className="bg-gradient-to-br from-card/80 to-primary/10 backdrop-blur border-primary/50 shadow-purple h-full relative overflow-hidden">
 								<motion.div
-									animate={{ scale: [1, 1.1, 1] }}
-									transition={{ duration: 3, repeat: Infinity }}
-									className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"
-								/>
-								<CardHeader className="relative z-10">
-									<CardTitle className="text-2xl">Creator Plan</CardTitle>
-									<CardDescription>
-										Most popular for content creators
-									</CardDescription>
-									<div className="text-4xl font-bold">
-										$49
-										<span className="text-lg text-muted-foreground">
-											/month
-										</span>
-									</div>
-									<div className="text-sm text-primary font-medium">
-										200 Voice Credits Included
-									</div>
-								</CardHeader>
-								<CardContent className="space-y-4 relative z-10">
-									<div className="flex items-center gap-2 mb-4">
-										<span className="text-sm text-muted-foreground">
-											All voice models:
-										</span>
-										<div className="flex -space-x-2">
-											{voices.map((voice, index) => (
-												<div
-													key={index}
-													className="w-6 h-6 rounded-full border-2 border-background overflow-hidden"
-												>
-													<img
-														src={voice.image}
-														alt={voice.name}
-														className="w-full h-full object-cover"
-													/>
+									initial={{ opacity: 0, x: 30 }}
+									whileInView={{ opacity: 1, x: 0 }}
+									whileHover={{ scale: 1.05 }}
+									className="relative"
+								>
+									<motion.div
+										initial={{ y: -20, opacity: 0 }}
+										whileInView={{ y: 0, opacity: 1 }}
+										className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20"
+									>
+										<motion.div
+											animate={{ rotate: [0, 5, -5, 0] }}
+											transition={{ duration: 2, repeat: Infinity }}
+										>
+											<Badge className="bg-primary px-3 sm:px-4 py-1 sm:py-2 text-white font-bold animate-pulse shadow-lg text-xs sm:text-sm">
+												🔥 Most Popular
+											</Badge>
+										</motion.div>
+									</motion.div>
+
+									<Card className="bg-gradient-to-br from-card/80 to-primary/10 backdrop-blur border-primary/50 shadow-purple h-full relative overflow-hidden">
+										<motion.div
+											animate={{ scale: [1, 1.1, 1] }}
+											transition={{ duration: 3, repeat: Infinity }}
+											className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"
+										/>
+										<CardHeader className="relative z-10">
+											<CardTitle className="text-xl sm:text-2xl">Creator Plan</CardTitle>
+											<CardDescription>
+												Most popular for content creators
+											</CardDescription>
+											<div className="text-3xl sm:text-4xl font-bold">
+												$49
+												<span className="text-base sm:text-lg text-muted-foreground">
+													/month
+												</span>
+											</div>
+											<div className="text-sm text-primary font-medium">
+												200 Voice Credits Included
+											</div>
+										</CardHeader>
+										<CardContent className="space-y-4 relative z-10">
+											<div className="flex items-center gap-2 mb-4">
+												<span className="text-sm text-muted-foreground">
+													All voice models:
+												</span>
+												<div className="flex -space-x-2">
+													{voices.map((voice, index) => (
+														<div
+															key={index}
+															className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-background overflow-hidden"
+														>
+															<img
+																src={voice.image}
+																alt={voice.name}
+																className="w-full h-full object-cover"
+															/>
+														</div>
+													))}
 												</div>
-											))}
-										</div>
-									</div>
-									<ul className="space-y-3">
-										{[
-											"200 AI Voice Credits",
-											"All Voice Models (Linh, Miara, Madison, Aria)",
-											"Premium Voice Quality",
-											"MP3 & WAV Downloads",
-											"Priority Support",
-											"Early Access to New Voices",
-										].map((feature, index) => (
-											<motion.li
-												key={index}
-												initial={{ opacity: 0, x: -20 }}
-												whileInView={{ opacity: 1, x: 0 }}
-												transition={{ delay: index * 0.1 }}
-												className="flex items-center gap-2"
-											>
-												<div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-													<span className="text-green-500 text-xs">✓</span>
+											</div>
+											<ul className="space-y-3">
+												{[
+													"200 AI Voice Credits",
+													"All Voice Models (Linh, Miara, Madison, Aria)",
+													"Premium Voice Quality",
+													"MP3 & WAV Downloads",
+													"Priority Support",
+													"Early Access to New Voices",
+												].map((feature, index) => (
+													<motion.li
+														key={index}
+														initial={{ opacity: 0, x: -20 }}
+														whileInView={{ opacity: 1, x: 0 }}
+														transition={{ delay: index * 0.1 }}
+														className="flex items-center gap-2"
+													>
+														<div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+															<span className="text-green-500 text-xs">✓</span>
+														</div>
+														<span className="text-sm sm:text-base">{feature}</span>
+													</motion.li>
+												))}
+											</ul>
+										</CardContent>
+										<CardFooter className="relative z-10">
+											<Button variant="whispr-primary" className="w-full">
+												Subscribe Now
+											</Button>
+										</CardFooter>
+									</Card>
+								</motion.div>
+							</div>
+						</TabsContent>
+
+						<TabsContent value="credits">
+							<div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+								{[
+									{ credits: 5, price: 5 },
+									{ credits: 10, price: 9 },
+									{ credits: 50, price: 39 },
+									{ credits: 100, price: 69 },
+									{ credits: 500, price: 299 },
+									{ credits: 1000, price: 549 },
+								].map((pack, index) => (
+									<motion.div
+										key={pack.credits}
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										transition={{ delay: index * 0.1 }}
+										whileHover={{ scale: 1.05 }}
+									>
+										<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 aspect-square flex flex-col justify-between p-3 sm:p-4">
+											<CardHeader className="p-0 pb-2 sm:pb-4">
+												<CardTitle className="text-lg sm:text-xl text-center">
+													{pack.credits} Credits
+												</CardTitle>
+												<div className="text-2xl sm:text-3xl font-bold text-center text-primary">
+													${pack.price}
 												</div>
-												{feature}
-											</motion.li>
-										))}
-									</ul>
-								</CardContent>
-								<CardFooter className="relative z-10">
-									<Button variant="whispr-primary" className="w-full">
-										Subscribe Now
-									</Button>
-								</CardFooter>
-							</Card>
-						</motion.div>
-					</div>
+											</CardHeader>
+											<CardContent className="p-0 text-center">
+												<p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-4">
+													Perfect for {pack.credits < 50 ? "testing" : pack.credits < 500 ? "regular use" : "power users"}
+												</p>
+											</CardContent>
+											<CardFooter className="p-0">
+												<Button variant="whispr-primary" className="w-full text-xs sm:text-sm">
+													Buy Now
+												</Button>
+											</CardFooter>
+										</Card>
+									</motion.div>
+								))}
+							</div>
+						</TabsContent>
+					</Tabs>
 				</div>
 			</section>
 
 			{/* Creator Success Stories Section */}
-			<section className="py-20 px-4 bg-secondary/10">
+			<section className="py-12 sm:py-20 px-4 bg-secondary/10">
 				<div className="container mx-auto">
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						whileInView={{ opacity: 1, y: 0 }}
-						className="text-center mb-12"
+						className="text-center mb-8 sm:mb-12"
 					>
-						<h3 className="text-3xl font-bold mb-4">Creator Success Stories</h3>
-						<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+						<h3 className="text-2xl sm:text-3xl font-bold mb-4">Creator Success Stories</h3>
+						<p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
 							See how creators are achieving incredible results with Seducely AI
 						</p>
 					</motion.div>
 
-					<div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+					<div className="grid md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
 						{[
 							{
 								metric: "500K+",
@@ -1463,12 +1415,12 @@ const Index = () => {
 								whileInView={{ opacity: 1, y: 0 }}
 								transition={{ delay: index * 0.2 }}
 								whileHover={{ scale: 1.05 }}
-								className="bg-card/50 backdrop-blur rounded-xl p-8 border border-border/20 shadow-card hover:shadow-purple transition-all duration-300"
+								className="bg-card/50 backdrop-blur rounded-xl p-6 sm:p-8 border border-border/20 shadow-card hover:shadow-purple transition-all duration-300"
 							>
-								<div className="text-4xl font-bold text-primary mb-3">
+								<div className="text-3xl sm:text-4xl font-bold text-primary mb-3">
 									{result.metric}
 								</div>
-								<div className="text-lg font-medium mb-2">{result.label}</div>
+								<div className="text-base sm:text-lg font-medium mb-2">{result.label}</div>
 								<div className="text-sm text-primary font-medium">
 									{result.creator}
 								</div>
@@ -1479,13 +1431,13 @@ const Index = () => {
 			</section>
 
 			{/* FAQ Section */}
-			<section className="py-20 px-4 bg-secondary/20">
+			<section className="py-12 sm:py-20 px-4 bg-secondary/20">
 				<div className="container mx-auto max-w-4xl">
-					<div className="text-center mb-16">
-						<h2 className="text-4xl font-bold mb-4">
+					<div className="text-center mb-12 sm:mb-16">
+						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
 							Frequently Asked Questions
 						</h2>
-						<p className="text-xl text-muted-foreground">
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground">
 							Find answers to common questions about Seducely AI. If you don't
 							see what you're looking for, reach out to our support team.
 						</p>
@@ -1514,25 +1466,26 @@ const Index = () => {
 							>
 								<AccordionItem
 									value={`item-${index + 1}`}
-									className="bg-card/50 backdrop-blur border border-border/20 rounded-lg px-6"
+									className="bg-card/50 backdrop-blur border border-border/20 rounded-lg px-4 sm:px-6"
 								>
 									<AccordionTrigger className="text-left hover:no-underline group">
 										<div className="flex items-center gap-3">
 											<motion.div
 												whileHover={{ rotate: 360, scale: 1.1 }}
 												transition={{ duration: 0.5 }}
-												className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30"
+												className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30"
 											>
-												<faq.icon className="h-4 w-4 text-primary" />
+												<faq.icon className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
 											</motion.div>
-											<span>{faq.question}</span>
+											<span className="text-sm sm:text-base">{faq.question}</span>
 										</div>
 									</AccordionTrigger>
-									<AccordionContent className="text-muted-foreground pl-11">
+									<AccordionContent className="text-muted-foreground pl-8 sm:pl-11">
 										<motion.div
 											initial={{ opacity: 0 }}
 											animate={{ opacity: 1 }}
 											transition={{ duration: 0.3 }}
+											className="text-sm sm:text-base"
 										>
 											{faq.answer}
 										</motion.div>
@@ -1545,7 +1498,7 @@ const Index = () => {
 			</section>
 
 			{/* Enhanced Final CTA Section */}
-			<section className="py-20 px-4 relative overflow-hidden">
+			<section className="py-12 sm:py-20 px-4 relative overflow-hidden">
 				{/* Glassmorphism Background */}
 				<div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/20" />
 				<motion.div
@@ -1575,10 +1528,10 @@ const Index = () => {
 					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						whileInView={{ opacity: 1, y: 0 }}
-						className="max-w-4xl mx-auto space-y-8 bg-card/20 backdrop-blur-lg rounded-2xl p-12 border border-border/20"
+						className="max-w-4xl mx-auto space-y-6 sm:space-y-8 bg-card/20 backdrop-blur-lg rounded-2xl p-8 sm:p-12 border border-border/20"
 					>
 						<motion.h2
-							className="text-4xl lg:text-5xl font-bold"
+							className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold"
 							animate={{
 								backgroundImage: [
 									"linear-gradient(45deg, #ffffff, #8b5cf6)",
@@ -1595,7 +1548,7 @@ const Index = () => {
 						>
 							Ready to Create Your First Seductive AI Voice Note?
 						</motion.h2>
-						<p className="text-xl text-muted-foreground">
+						<p className="text-base sm:text-lg md:text-xl text-muted-foreground">
 							Join thousands of creators already using Seducely AI to connect
 							with their audience through stunning AI voice models.
 						</p>
@@ -1606,8 +1559,8 @@ const Index = () => {
 							whileInView={{ opacity: 1, scale: 1 }}
 							className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6"
 						>
-							<div className="flex items-center justify-center gap-2 text-primary">
-								<Clock className="h-5 w-5" />
+							<div className="flex items-center justify-center gap-2 text-primary text-sm sm:text-base">
+								<Clock className="h-4 w-4 sm:h-5 sm:w-5" />
 								<span className="font-bold">
 									New voices dropping July 10th — Early access ends in 3 days!
 								</span>
@@ -1618,15 +1571,15 @@ const Index = () => {
 						<motion.div
 							initial={{ opacity: 0, scale: 0.8 }}
 							whileInView={{ opacity: 1, scale: 1 }}
-							className="flex flex-wrap justify-center gap-6 text-sm"
+							className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm"
 						>
-							<div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
-								<Bell className="h-4 w-4 text-primary" />
+							<div className="flex items-center gap-2 bg-primary/10 px-3 sm:px-4 py-2 rounded-full">
+								<Bell className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
 								<span>
 									Loved by <AnimatedCounter end={15000} suffix="+" /> creators
 								</span>
 							</div>
-							<div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
+							<div className="flex items-center gap-2 bg-primary/10 px-3 sm:px-4 py-2 rounded-full">
 								<span className="text-primary">#1</span>
 								<span>Seductive AI Voice Tool</span>
 							</div>
@@ -1640,7 +1593,7 @@ const Index = () => {
 								<Button
 									variant="whispr-primary"
 									size="lg"
-									className="relative overflow-hidden group"
+									className="relative overflow-hidden group w-full sm:w-auto"
 									onClick={handleStartCreating}
 								>
 									<motion.div
@@ -1660,7 +1613,7 @@ const Index = () => {
 							<Button
 								variant="link"
 								size="lg"
-								className="text-primary hover:text-primary-hover"
+								className="text-primary hover:text-primary-hover w-full sm:w-auto"
 								onClick={handleDemoClick}
 							>
 								<Play className="h-4 w-4 mr-2" />
@@ -1677,6 +1630,40 @@ const Index = () => {
 							No credit card required to start • Cancel anytime • Free tier
 							available
 						</motion.p>
+
+						{/* Discord CTA */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							transition={{ delay: 0.8 }}
+							className="pt-4 border-t border-border/20"
+						>
+							<p className="text-sm text-muted-foreground mb-4">
+								Join our community for updates and exclusive content
+							</p>
+							<Button
+								variant="whispr-outline"
+								asChild
+								className="group"
+							>
+								<a
+									href="https://discord.gg/VkeyBCjE"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2"
+								>
+									<svg
+										className="w-5 h-5 text-primary group-hover:scale-110 transition-transform"
+										fill="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/>
+									</svg>
+									Join Discord Community
+								</a>
+							</Button>
+						</motion.div>
 					</motion.div>
 				</div>
 			</section>
