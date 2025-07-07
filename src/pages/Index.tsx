@@ -675,10 +675,11 @@ const Index = () => {
 																	{group.voices.map((voice) => (
 																		<div
 																			key={voice.name}
-																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${selectedVoice === voice.name
+																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
+																				selectedVoice === voice.name
 																					? "border-primary bg-primary/10"
 																					: ""
-																				}`}
+																			}`}
 																			onClick={() => {
 																				setSelectedVoice(voice.name);
 																				setShowVoiceDropdown(false);
@@ -1118,10 +1119,11 @@ const Index = () => {
 							>
 								{/* Unlocked Voice Card */}
 								<Card
-									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${selectedVoice === voice.name
+									className={`bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 cursor-pointer relative overflow-hidden ${
+										selectedVoice === voice.name
 											? "border-primary ring-2 ring-primary/20"
 											: ""
-										}`}
+									}`}
 									onClick={() => setSelectedVoice(voice.name)}
 								>
 									<motion.div
@@ -1483,8 +1485,8 @@ const Index = () => {
 													{pack.credits < 50
 														? "testing"
 														: pack.credits < 500
-															? "regular use"
-															: "power users"}
+														? "regular use"
+														: "power users"}
 												</p>
 											</CardContent>
 											<CardFooter className="p-0">
@@ -1521,19 +1523,14 @@ const Index = () => {
 					<div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
 						{[
 							{
-								metric: "500K+",
-								label: "Monthly Streams",
-								creator: "@VoiceQueen",
-							},
-							{
 								metric: "$12K",
 								label: "Monthly Revenue",
-								creator: "@AIVoicePro",
+								creator: "@Bonnieblue",
 							},
 							{
 								metric: "50K+",
-								label: "New Followers",
-								creator: "@SeductiveAI",
+								label: "New Subscribers",
+								creator: "@Vietbunny,",
 							},
 						].map((result, index) => (
 							<motion.div
