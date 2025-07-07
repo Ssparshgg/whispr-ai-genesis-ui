@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -375,6 +376,52 @@ const Index = () => {
 									xmlns="http://www.w3.org/2000/svg"
 								>
 									<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z" />
+								</svg>
+								<motion.div
+									className="absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left"
+									initial={{ scaleX: 0 }}
+									whileHover={{ scaleX: 1 }}
+									transition={{ duration: 0.3 }}
+								/>
+							</motion.a>
+							{/* Instagram Link */}
+							<motion.a
+								href="https://instagram.com"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-primary transition-colors cursor-pointer relative group"
+								whileHover={{ scale: 1.05 }}
+							>
+								<svg
+									className="w-5 h-5"
+									fill="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+								</svg>
+								<motion.div
+									className="absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left"
+									initial={{ scaleX: 0 }}
+									whileHover={{ scaleX: 1 }}
+									transition={{ duration: 0.3 }}
+								/>
+							</motion.a>
+							{/* Facebook Link */}
+							<motion.a
+								href="https://facebook.com"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-primary transition-colors cursor-pointer relative group"
+								whileHover={{ scale: 1.05 }}
+							>
+								<svg
+									className="w-5 h-5"
+									fill="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
 								</svg>
 								<motion.div
 									className="absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left"
@@ -852,7 +899,7 @@ const Index = () => {
 				</div>
 			</section>
 
-			{/* How It Works Section - Updated with Video Style */}
+			{/* How It Works Section - Updated with Connected Steps */}
 			<section ref={stepsRef} className="py-20 px-4">
 				<div className="container mx-auto">
 					<motion.div
@@ -867,149 +914,178 @@ const Index = () => {
 						</p>
 					</motion.div>
 
-					<div className="space-y-20">
-						{/* Step 1 */}
-						<motion.div
-							initial={{ opacity: 0, y: 50 }}
-							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-							transition={{ delay: 0.2 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
-						>
-							<div className="space-y-6">
-								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">1</span>
+					<div className="relative">
+						{/* Connecting dashed line */}
+						<div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/30 via-primary/50 to-primary/30 transform -translate-x-1/2 hidden lg:block">
+							<div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/30 to-primary/50 animate-pulse" style={{
+								backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(139, 92, 246, 0.5) 10px, rgba(139, 92, 246, 0.5) 20px)',
+							}}></div>
+						</div>
+
+						<div className="space-y-32">
+							{/* Step 1 */}
+							<motion.div
+								initial={{ opacity: 0, y: 50 }}
+								animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+								transition={{ delay: 0.2 }}
+								className="grid lg:grid-cols-2 gap-12 items-center relative"
+							>
+								{/* Step number circle */}
+								<div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-purple rounded-full flex items-center justify-center shadow-purple z-10 hidden lg:flex">
+									<span className="text-white font-bold text-xl">1</span>
+								</div>
+								
+								<div className="space-y-6">
+									<div className="flex items-center gap-4 lg:hidden">
+										<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+											<span className="text-white font-bold text-lg">1</span>
+										</div>
+										<h3 className="text-3xl font-bold">
+											Choose Your Voice Model
+										</h3>
 									</div>
-									<h3 className="text-3xl font-bold">
+									<h3 className="text-3xl font-bold hidden lg:block">
 										Choose Your Voice Model
 									</h3>
-								</div>
-								<p className="text-lg text-muted-foreground">
-									Select from our stunning collection of AI voice models, each
-									with unique personalities and captivating styles. From sweet
-									and caring to confident and alluring, find the perfect voice
-									for your content.
-								</p>
-								<div className="flex gap-4">
-									<Button
-										variant="whispr-primary"
-										onClick={() => navigate("/waitlist")}
-									>
-										Join Waitlist
-									</Button>
-									<Button
-										variant="whispr-outline"
-										onClick={() => smoothScrollTo("voices")}
-									>
-										View Models
-									</Button>
-								</div>
-							</div>
-							<div className="relative">
-								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
-									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<User className="h-8 w-8 text-primary" />
-										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+									<p className="text-lg text-muted-foreground">
+										Select from our stunning collection of AI voice models, each
+										with unique personalities and captivating styles. From sweet
+										and caring to confident and alluring, find the perfect voice
+										for your content.
+									</p>
+									<div className="flex gap-4">
+										<Button
+											variant="whispr-primary"
+											onClick={() => navigate("/waitlist")}
+										>
+											Join Waitlist
+										</Button>
+										<Button
+											variant="whispr-outline"
+											onClick={() => smoothScrollTo("voices")}
+										>
+											View Models
+										</Button>
 									</div>
 								</div>
-							</div>
-						</motion.div>
+								<div className="relative">
+									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+										<div className="relative z-10 text-center space-y-4">
+											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+												<User className="h-8 w-8 text-primary" />
+											</div>
+											<p className="text-muted-foreground">Video Coming Soon</p>
+										</div>
+									</div>
+								</div>
+							</motion.div>
 
-						{/* Step 2 */}
-						<motion.div
-							initial={{ opacity: 0, y: 50 }}
-							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-							transition={{ delay: 0.4 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
-						>
-							<div className="lg:order-2 space-y-6">
-								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">2</span>
-									</div>
-									<h3 className="text-3xl font-bold">Create Your Message</h3>
+							{/* Step 2 */}
+							<motion.div
+								initial={{ opacity: 0, y: 50 }}
+								animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+								transition={{ delay: 0.4 }}
+								className="grid lg:grid-cols-2 gap-12 items-center relative"
+							>
+								{/* Step number circle */}
+								<div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-purple rounded-full flex items-center justify-center shadow-purple z-10 hidden lg:flex">
+									<span className="text-white font-bold text-xl">2</span>
 								</div>
-								<p className="text-lg text-muted-foreground">
-									Write your custom message or choose from our pre-written
-									templates. Our AI will transform your text into
-									natural-sounding, engaging voice notes that captivate your
-									audience.
-								</p>
-								<div className="flex gap-4">
-									<Button
-										variant="whispr-primary"
-										onClick={() => navigate("/waitlist")}
-									>
-										Get Early Access
-									</Button>
-									<Button variant="whispr-outline" onClick={handleDemoClick}>
-										Try Demo
-									</Button>
-								</div>
-							</div>
-							<div className="lg:order-1 relative">
-								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
-									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<Pen className="h-8 w-8 text-primary" />
+								
+								<div className="lg:order-2 space-y-6">
+									<div className="flex items-center gap-4 lg:hidden">
+										<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+											<span className="text-white font-bold text-lg">2</span>
 										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+										<h3 className="text-3xl font-bold">Create Your Message</h3>
+									</div>
+									<h3 className="text-3xl font-bold hidden lg:block">Create Your Message</h3>
+									<p className="text-lg text-muted-foreground">
+										Write your custom message or choose from our pre-written
+										templates. Our AI will transform your text into
+										natural-sounding, engaging voice notes that captivate your
+										audience.
+									</p>
+									<div className="flex gap-4">
+										<Button
+											variant="whispr-primary"
+											onClick={() => navigate("/waitlist")}
+										>
+											Get Early Access
+										</Button>
+										<Button variant="whispr-outline" onClick={handleDemoClick}>
+											Try Demo
+										</Button>
 									</div>
 								</div>
-							</div>
-						</motion.div>
+								<div className="lg:order-1 relative">
+									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+										<div className="relative z-10 text-center space-y-4">
+											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+												<Pen className="h-8 w-8 text-primary" />
+											</div>
+											<p className="text-muted-foreground">Video Coming Soon</p>
+										</div>
+									</div>
+								</div>
+							</motion.div>
 
-						{/* Step 3 */}
-						<motion.div
-							initial={{ opacity: 0, y: 50 }}
-							animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-							transition={{ delay: 0.6 }}
-							className="grid lg:grid-cols-2 gap-12 items-center"
-						>
-							<div className="space-y-6">
-								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
-										<span className="text-white font-bold text-lg">3</span>
-									</div>
-									<h3 className="text-3xl font-bold">Generate & Share</h3>
+							{/* Step 3 */}
+							<motion.div
+								initial={{ opacity: 0, y: 50 }}
+								animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+								transition={{ delay: 0.6 }}
+								className="grid lg:grid-cols-2 gap-12 items-center relative"
+							>
+								{/* Step number circle */}
+								<div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-purple rounded-full flex items-center justify-center shadow-purple z-10 hidden lg:flex">
+									<span className="text-white font-bold text-xl">3</span>
 								</div>
-								<p className="text-lg text-muted-foreground">
-									Watch as our advanced AI generates your voice note in seconds.
-									Download high-quality MP3 files and share your captivating
-									content across all your platforms to engage and grow your
-									audience.
-								</p>
-								<div className="flex gap-4">
-									<Button
-										variant="whispr-primary"
-										onClick={() => navigate("/waitlist")}
-									>
-										Start Creating
-									</Button>
-									<Button
-										variant="whispr-outline"
-										onClick={() => smoothScrollTo("pricing")}
-									>
-										View Pricing
-									</Button>
-								</div>
-							</div>
-							<div className="relative">
-								<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
-									<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-									<div className="relative z-10 text-center space-y-4">
-										<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-											<Share className="h-8 w-8 text-primary" />
+								
+								<div className="space-y-6">
+									<div className="flex items-center gap-4 lg:hidden">
+										<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
+											<span className="text-white font-bold text-lg">3</span>
 										</div>
-										<p className="text-muted-foreground">Video Coming Soon</p>
+										<h3 className="text-3xl font-bold">Generate & Share</h3>
+									</div>
+									<h3 className="text-3xl font-bold hidden lg:block">Generate & Share</h3>
+									<p className="text-lg text-muted-foreground">
+										Watch as our advanced AI generates your voice note in seconds.
+										Download high-quality MP3 files and share your captivating
+										content across all your platforms to engage and grow your
+										audience.
+									</p>
+									<div className="flex gap-4">
+										<Button
+											variant="whispr-primary"
+											onClick={() => navigate("/waitlist")}
+										>
+											Start Creating
+										</Button>
+										<Button
+											variant="whispr-outline"
+											onClick={() => smoothScrollTo("pricing")}
+										>
+											View Pricing
+										</Button>
 									</div>
 								</div>
-							</div>
-						</motion.div>
+								<div className="relative">
+									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+										<div className="relative z-10 text-center space-y-4">
+											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+												<Share className="h-8 w-8 text-primary" />
+											</div>
+											<p className="text-muted-foreground">Video Coming Soon</p>
+										</div>
+									</div>
+								</div>
+							</motion.div>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -1251,7 +1327,7 @@ const Index = () => {
 				</div>
 			</section>
 
-			{/* Enhanced Pricing Section with Tabs */}
+			{/* Enhanced Pricing Section with New Plans and Tabs */}
 			<section id="pricing" className="py-20 px-4 relative overflow-hidden">
 				{/* Background Effects */}
 				<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
@@ -1290,7 +1366,8 @@ const Index = () => {
 						</TabsList>
 
 						<TabsContent value="monthly">
-							<div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+							<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+								{/* Creator Plan */}
 								<motion.div
 									initial={{ opacity: 0, x: -30 }}
 									whileInView={{ opacity: 1, x: 0 }}
@@ -1298,18 +1375,18 @@ const Index = () => {
 								>
 									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full relative">
 										<CardHeader>
-											<CardTitle className="text-2xl">Starter Plan</CardTitle>
+											<CardTitle className="text-2xl">Creator</CardTitle>
 											<CardDescription>
-												Perfect for getting started
+												Perfect for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$19
+												$29
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
 											</div>
 											<div className="text-sm text-primary font-medium">
-												50 Voice Credits Included
+												400 Voice Credits Included
 											</div>
 										</CardHeader>
 										<CardContent className="space-y-4">
@@ -1334,7 +1411,7 @@ const Index = () => {
 											</div>
 											<ul className="space-y-3">
 												{[
-													"50 AI Voice Credits",
+													"400 AI Voice Credits",
 													"Access to Linh & Miara",
 													"MP3 Downloads",
 													"Basic Voice Quality",
@@ -1363,8 +1440,9 @@ const Index = () => {
 									</Card>
 								</motion.div>
 
+								{/* Pro Creator Plan */}
 								<motion.div
-									initial={{ opacity: 0, x: 30 }}
+									initial={{ opacity: 0, x: 0 }}
 									whileInView={{ opacity: 1, x: 0 }}
 									whileHover={{ scale: 1.05 }}
 									className="relative"
@@ -1391,18 +1469,18 @@ const Index = () => {
 											className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"
 										/>
 										<CardHeader className="relative z-10">
-											<CardTitle className="text-2xl">Creator Plan</CardTitle>
+											<CardTitle className="text-2xl">Pro Creator</CardTitle>
 											<CardDescription>
 												Most popular for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$49
+												$69
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
 											</div>
 											<div className="text-sm text-primary font-medium">
-												200 Voice Credits Included
+												1000 Voice Credits Included
 											</div>
 										</CardHeader>
 										<CardContent className="space-y-4 relative z-10">
@@ -1427,7 +1505,7 @@ const Index = () => {
 											</div>
 											<ul className="space-y-3">
 												{[
-													"200 AI Voice Credits",
+													"1000 AI Voice Credits",
 													"All Voice Models (Linh, Miara, Madison, Aria)",
 													"Premium Voice Quality",
 													"MP3 & WAV Downloads",
@@ -1456,21 +1534,95 @@ const Index = () => {
 										</CardFooter>
 									</Card>
 								</motion.div>
+
+								{/* Agency Plan */}
+								<motion.div
+									initial={{ opacity: 0, x: 30 }}
+									whileInView={{ opacity: 1, x: 0 }}
+									whileHover={{ scale: 1.02 }}
+								>
+									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full relative">
+										<CardHeader>
+											<CardTitle className="text-2xl">Agency</CardTitle>
+											<CardDescription>
+												Perfect for agencies and teams
+											</CardDescription>
+											<div className="text-4xl font-bold">
+												$149
+												<span className="text-lg text-muted-foreground">
+													/month
+												</span>
+											</div>
+											<div className="text-sm text-primary font-medium">
+												2500 Voice Credits Included
+											</div>
+										</CardHeader>
+										<CardContent className="space-y-4">
+											<div className="flex items-center gap-2 mb-4">
+												<span className="text-sm text-muted-foreground">
+													All premium features:
+												</span>
+												<div className="flex -space-x-2">
+													{voices.map((voice, index) => (
+														<div
+															key={index}
+															className="w-6 h-6 rounded-full border-2 border-background overflow-hidden"
+														>
+															<img
+																src={voice.image}
+																alt={voice.name}
+																className="w-full h-full object-cover"
+															/>
+														</div>
+													))}
+												</div>
+											</div>
+											<ul className="space-y-3">
+												{[
+													"2500 AI Voice Credits",
+													"All Voice Models & Premium Voices",
+													"Ultra High Quality",
+													"Priority Generation Queue",
+													"Team Collaboration",
+													"Dedicated Support",
+												].map((feature, index) => (
+													<motion.li
+														key={index}
+														initial={{ opacity: 0, x: -20 }}
+														whileInView={{ opacity: 1, x: 0 }}
+														transition={{ delay: index * 0.1 }}
+														className="flex items-center gap-2"
+													>
+														<div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+															<span className="text-green-500 text-xs">✓</span>
+														</div>
+														{feature}
+													</motion.li>
+												))}
+											</ul>
+										</CardContent>
+										<CardFooter>
+											<Button variant="outline" className="w-full">
+												Contact Sales
+											</Button>
+										</CardFooter>
+									</Card>
+								</motion.div>
 							</div>
 						</TabsContent>
 
 						<TabsContent value="credits">
 							<div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 								{[
-									{ credits: 5, price: 5 },
-									{ credits: 10, price: 9 },
-									{ credits: 50, price: 39 },
-									{ credits: 100, price: 69 },
-									{ credits: 500, price: 299 },
-									{ credits: 1000, price: 549 },
+									{ name: "Starter Pack", credits: 35, price: 5 },
+									{ name: "Basic Pack", credits: 75, price: 10 },
+									{ name: "Standard Pack", credits: 175, price: 20 },
+									{ name: "Plus Pack", credits: 500, price: 50 },
+									{ name: "Pro Pack", credits: 1200, price: 100 },
+									{ name: "Elite Pack", credits: 2700, price: 200 },
 								].map((pack, index) => (
 									<motion.div
-										key={pack.credits}
+										key={pack.name}
 										initial={{ opacity: 0, y: 20 }}
 										whileInView={{ opacity: 1, y: 0 }}
 										transition={{ delay: index * 0.1 }}
@@ -1478,19 +1630,22 @@ const Index = () => {
 									>
 										<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card hover:shadow-purple transition-all duration-300 aspect-square flex flex-col justify-between p-4">
 											<CardHeader className="p-0 pb-4">
-												<CardTitle className="text-xl text-center">
-													{pack.credits} Credits
+												<CardTitle className="text-lg text-center">
+													{pack.name}
 												</CardTitle>
 												<div className="text-3xl font-bold text-center text-primary">
 													${pack.price}
+												</div>
+												<div className="text-sm text-center text-muted-foreground">
+													{pack.credits} Credits
 												</div>
 											</CardHeader>
 											<CardContent className="p-0 text-center">
 												<p className="text-sm text-muted-foreground mb-4">
 													Perfect for{" "}
-													{pack.credits < 50
+													{pack.credits < 100
 														? "testing"
-														: pack.credits < 500
+														: pack.credits < 1000
 															? "regular use"
 															: "power users"}
 												</p>
@@ -1620,7 +1775,7 @@ const Index = () => {
 								icon: User,
 								question: "Do I get access to all voices with my plan?",
 								answer:
-									"This depends on your subscription plan. The Starter Plan includes access to select voices, while the Creator Plan unlocks our complete library of voice models including premium and exclusive voices.",
+									"This depends on your subscription plan. The Creator Plan includes access to select voices, while the Pro Creator Plan unlocks our complete library of voice models including premium and exclusive voices.",
 							},
 							{
 								icon: Star,
@@ -1632,7 +1787,7 @@ const Index = () => {
 								icon: FileAudio,
 								question: "Can I save or download the audio files? In what formats?",
 								answer:
-									"Absolutely! All generated voice notes can be instantly downloaded. We provide high-quality MP3 files as standard, with WAV format available for Creator Plan subscribers.",
+									"Absolutely! All generated voice notes can be instantly downloaded. We provide high-quality MP3 files as standard, with WAV format available for Pro Creator Plan subscribers.",
 							},
 							{
 								icon: Smartphone,
@@ -1668,7 +1823,7 @@ const Index = () => {
 								icon: HelpCircle,
 								question: "What if I face an issue — is support available?",
 								answer:
-									"Yes! We provide comprehensive support through email for all users. Creator Plan subscribers receive priority support with faster response times. We also have an active Discord community for tips and assistance.",
+									"Yes! We provide comprehensive support through email for all users. Pro Creator Plan subscribers receive priority support with faster response times. We also have an active Discord community for tips and assistance.",
 							},
 						].map((faq, index) => (
 							<motion.div
@@ -1843,7 +1998,7 @@ const Index = () => {
 							available
 						</motion.p>
 
-						{/* Discord CTA */}
+						{/* Social Links */}
 						<motion.div
 							initial={{ opacity: 0, y: 20 }}
 							whileInView={{ opacity: 1, y: 0 }}
@@ -1853,28 +2008,104 @@ const Index = () => {
 							<p className="text-sm text-muted-foreground mb-4">
 								Join our community for updates and exclusive content
 							</p>
-							<Button variant="whispr-outline" asChild className="group">
-								<a
-									href="https://discord.gg/VkeyBCjE"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-2"
-								>
-									<svg
-										className="w-5 h-5 text-primary group-hover:scale-110 transition-transform"
-										fill="currentColor"
-										viewBox="0 0 24 24"
-										xmlns="http://www.w3.org/2000/svg"
+							<div className="flex justify-center gap-4">
+								<Button variant="whispr-outline" asChild className="group">
+									<a
+										href="https://discord.gg/VkeyBCjE"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center gap-2"
 									>
-										<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z" />
-									</svg>
-									Join Discord Community
-								</a>
-							</Button>
+										<svg
+											className="w-5 h-5 text-primary group-hover:scale-110 transition-transform"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z" />
+										</svg>
+										Discord
+									</a>
+								</Button>
+								<Button variant="whispr-outline" asChild className="group">
+									<a
+										href="https://instagram.com"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center gap-2"
+									>
+										<svg
+											className="w-5 h-5 text-primary group-hover:scale-110 transition-transform"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+										</svg>
+										Instagram
+									</a>
+								</Button>
+								<Button variant="whispr-outline" asChild className="group">
+									<a
+										href="https://facebook.com"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center gap-2"
+									>
+										<svg
+											className="w-5 h-5 text-primary group-hover:scale-110 transition-transform"
+											fill="currentColor"
+											viewBox="0 0 24 24"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+										</svg>
+										Facebook
+									</a>
+								</Button>
+							</div>
 						</motion.div>
 					</motion.div>
 				</div>
 			</section>
+
+			{/* Footer */}
+			<footer className="border-t border-border/20 bg-background/95 backdrop-blur-sm py-8 px-4">
+				<div className="container mx-auto">
+					<div className="flex flex-col md:flex-row justify-between items-center gap-4">
+						<div className="flex items-center space-x-2">
+							<div className="w-6 h-6 rounded-full overflow-hidden border border-primary/20">
+								<img
+									src="/logo.jpg"
+									alt="Seducely AI Logo"
+									className="w-full h-full object-cover"
+								/>
+							</div>
+							<span className="font-bold">© 2024 Seducely AI</span>
+						</div>
+						<div className="flex items-center gap-6 text-sm">
+							<button 
+								onClick={() => navigate("/terms")}
+								className="hover:text-primary transition-colors"
+							>
+								Terms of Service
+							</button>
+							<button 
+								onClick={() => navigate("/privacy")}
+								className="hover:text-primary transition-colors"
+							>
+								Privacy Policy
+							</button>
+							<a
+								href="mailto:support@seducely.ai"
+								className="hover:text-primary transition-colors"
+							>
+								Support
+							</a>
+						</div>
+					</div>
+				</div>
+			</footer>
 		</div>
 	);
 };
