@@ -1426,7 +1426,7 @@ const Index = () => {
 												variant="outline"
 												className="w-full"
 												onClick={() =>
-													handleStripeCheckout({ price: 29, plan: "Creator" })
+													handleStripeCheckout({ price: 1, plan: "Creator" })
 												}
 											>
 												Get Started
@@ -1528,7 +1528,7 @@ const Index = () => {
 												className="w-full"
 												onClick={() =>
 													handleStripeCheckout({
-														price: 69,
+														price: 1,
 														plan: "Pro Creator",
 													})
 												}
@@ -1610,7 +1610,7 @@ const Index = () => {
 												variant="outline"
 												className="w-full"
 												onClick={() =>
-													handleStripeCheckout({ price: 149, plan: "Agency" })
+													handleStripeCheckout({ price: 1, plan: "Agency" })
 												}
 											>
 												Contact Sales
