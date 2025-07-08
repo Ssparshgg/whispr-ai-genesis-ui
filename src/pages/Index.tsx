@@ -50,6 +50,15 @@ import WaveAnimation from "@/components/WaveAnimation";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
 import VoiceCard from "@/components/VoiceCard";
 import AnimatedIcon from "@/components/AnimatedIcon";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import { api } from "@/lib/api";
 
 const Index = () => {
 	const navigate = useNavigate();
@@ -79,6 +88,7 @@ const Index = () => {
 			audioFile: "/premium2.mp3",
 		},
 	]);
+	const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
 	const lockedVoiceImages: Record<string, string> = {
 		Sweet: "/sydney.jpg",
@@ -277,6 +287,25 @@ const Index = () => {
 		threshold: 0.3,
 		triggerOnce: true,
 	});
+
+	// Add this function inside the Index component
+	const handleStripeCheckout = async (options: {
+		price: number;
+		credits?: number;
+		plan?: string;
+	}) => {
+		if (!isAuthenticated || !user) {
+			setLoginDialogOpen(true);
+			return;
+		}
+		const data = await api.createCheckoutSession({
+			...options,
+			email: user.email,
+		});
+		if (data.url) {
+			window.location = data.url;
+		}
+	};
 
 	return (
 		<div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -1340,7 +1369,7 @@ const Index = () => {
 												Perfect for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$29
+												$1
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
@@ -1393,7 +1422,13 @@ const Index = () => {
 											</ul>
 										</CardContent>
 										<CardFooter>
-											<Button variant="outline" className="w-full">
+											<Button
+												variant="outline"
+												className="w-full"
+												onClick={() =>
+													handleStripeCheckout({ price: 29, plan: "Creator" })
+												}
+											>
 												Get Started
 											</Button>
 										</CardFooter>
@@ -1434,7 +1469,7 @@ const Index = () => {
 												Most popular for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$69
+												$1
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
@@ -1488,7 +1523,16 @@ const Index = () => {
 											</ul>
 										</CardContent>
 										<CardFooter className="relative z-10">
-											<Button variant="whispr-primary" className="w-full">
+											<Button
+												variant="whispr-primary"
+												className="w-full"
+												onClick={() =>
+													handleStripeCheckout({
+														price: 69,
+														plan: "Pro Creator",
+													})
+												}
+											>
 												Subscribe Now
 											</Button>
 										</CardFooter>
@@ -1508,7 +1552,7 @@ const Index = () => {
 												Perfect for agencies and teams
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$149
+												$1
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
@@ -1562,7 +1606,13 @@ const Index = () => {
 											</ul>
 										</CardContent>
 										<CardFooter>
-											<Button variant="outline" className="w-full">
+											<Button
+												variant="outline"
+												className="w-full"
+												onClick={() =>
+													handleStripeCheckout({ price: 149, plan: "Agency" })
+												}
+											>
 												Contact Sales
 											</Button>
 										</CardFooter>
@@ -1574,12 +1624,12 @@ const Index = () => {
 						<TabsContent value="credits">
 							<div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 								{[
-									{ name: "Starter Pack", credits: 35, price: 5 },
-									{ name: "Basic Pack", credits: 75, price: 10 },
-									{ name: "Standard Pack", credits: 175, price: 20 },
-									{ name: "Plus Pack", credits: 500, price: 50 },
-									{ name: "Pro Pack", credits: 1200, price: 100 },
-									{ name: "Elite Pack", credits: 2700, price: 200 },
+									{ name: "Starter Pack", credits: 35, price: 1 },
+									{ name: "Basic Pack", credits: 75, price: 1 },
+									{ name: "Standard Pack", credits: 175, price: 1 },
+									{ name: "Plus Pack", credits: 500, price: 1 },
+									{ name: "Pro Pack", credits: 1200, price: 1 },
+									{ name: "Elite Pack", credits: 2700, price: 1 },
 								].map((pack, index) => (
 									<motion.div
 										key={pack.name}
@@ -1614,6 +1664,13 @@ const Index = () => {
 												<Button
 													variant="whispr-primary"
 													className="w-full text-sm"
+													onClick={() =>
+														handleStripeCheckout({
+															price: pack.price,
+															credits: pack.credits,
+															plan: pack.name,
+														})
+													}
 												>
 													Buy Now
 												</Button>
@@ -2045,7 +2102,7 @@ const Index = () => {
 									className="w-full h-full object-cover"
 								/>
 							</div>
-							<span className="font-bold">© 2024 Seducely AI</span>
+							<span className="font-bold">© 2025 Seducely AI</span>
 						</div>
 						<div className="flex items-center gap-6 text-sm">
 							<button
@@ -2070,6 +2127,37 @@ const Index = () => {
 					</div>
 				</div>
 			</footer>
+
+			<Dialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Login Required</DialogTitle>
+						<DialogDescription>
+							You must be logged in to purchase credits or subscribe. Please log
+							in or sign up to continue.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button
+							onClick={() => {
+								setLoginDialogOpen(false);
+								navigate("/login");
+							}}
+						>
+							Login
+						</Button>
+						<Button
+							variant="outline"
+							onClick={() => {
+								setLoginDialogOpen(false);
+								navigate("/signup");
+							}}
+						>
+							Sign Up
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };

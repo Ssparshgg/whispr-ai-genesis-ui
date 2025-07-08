@@ -340,6 +340,16 @@ export const api = {
 
 		return data;
 	},
+
+	// Create Stripe checkout session
+	async createCheckoutSession(payload: any) {
+		const response = await fetch(`${API_BASE_URL}/create-checkout-session`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
+		});
+		return response.json();
+	},
 };
 
 // Authentication utility functions

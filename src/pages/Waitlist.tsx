@@ -13,7 +13,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Bell, CheckCircle, Mail, Star, Users } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { API_BASE_URL } from "@/lib/api";
 import { api } from "@/lib/api";
 import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 
