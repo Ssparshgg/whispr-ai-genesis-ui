@@ -472,9 +472,10 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 							</label>
 							<select
 								className="w-full p-2 border border-border/50 rounded-lg bg-input/50 focus:border-primary/50 transition-colors"
-								value={selectedVoice}
+								value={selectedVoice || ""}
 								onChange={(e) => setSelectedVoice(e.target.value)}
 							>
+								<option value="">-- Select a Voice Model --</option>
 								<optgroup label="Classic & Soft">
 									<option value="Emily">Emily </option>
 									<option value="Sarah">Sarah </option>
