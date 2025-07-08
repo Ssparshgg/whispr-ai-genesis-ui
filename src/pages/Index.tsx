@@ -59,6 +59,7 @@ import {
 	DialogFooter,
 } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
 	const navigate = useNavigate();
@@ -89,6 +90,7 @@ const Index = () => {
 		},
 	]);
 	const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+	const { toast } = useToast();
 
 	const lockedVoiceImages: Record<string, string> = {
 		Sweet: "/sydney.jpg",
@@ -304,6 +306,15 @@ const Index = () => {
 		});
 		if (data.url) {
 			window.location = data.url;
+		} else if (
+			data.message &&
+			data.message.includes("Only premium users can buy credits")
+		) {
+			toast({
+				title: "Premium Required",
+				description: "To purchase credits, please become a premium user first.",
+				variant: "destructive",
+			});
 		}
 	};
 
