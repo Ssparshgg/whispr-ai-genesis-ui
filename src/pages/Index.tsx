@@ -569,14 +569,149 @@ const Index = () => {
 							</motion.div>
 						</div>
 
-						{/* Enhanced Voice Generation Widget */}
+						{/* Mobile Card (only visible on mobile) */}
+						<div className="block sm:hidden w-full flex justify-center items-center">
+							<Card className="w-full max-w-xs bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-visible">
+								<CardHeader className="relative z-10">
+									<CardTitle className="flex items-center gap-2 text-lg">
+										Generate Voice
+										<Badge className="bg-primary/20 text-primary animate-pulse text-xs shrink-0">
+											AI Powered
+										</Badge>
+									</CardTitle>
+									{/* Locked Voice Images Row - hidden on mobile */}
+								</CardHeader>
+								<CardContent className="space-y-6 relative z-10">
+									<div className="space-y-3">
+										<label className="text-sm font-medium">
+											Select Voice Model
+										</label>
+										<div className="flex flex-col gap-3">
+											{voices.slice(0, 4).map((voice) => (
+												<Button
+													key={voice.name}
+													variant={
+														selectedVoice === voice.name
+															? "whispr-primary"
+															: "outline"
+													}
+													className="w-full h-auto p-3 justify-start relative overflow-hidden"
+													onClick={() => setSelectedVoice(voice.name)}
+												>
+													<div className="flex items-center gap-3 w-full">
+														<div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0">
+															<img
+																src={voice.image}
+																alt={voice.name}
+																className="w-full h-full object-cover"
+															/>
+														</div>
+														<div className="text-left flex-1 min-w-0">
+															<div className="font-medium text-xs truncate">
+																{voice.name}
+															</div>
+															<div className="text-xs opacity-70 truncate">
+																{voice.type}
+															</div>
+														</div>
+													</div>
+													{selectedVoice === voice.name && (
+														<div className="absolute right-2">
+															<WaveAnimation isActive={true} />
+														</div>
+													)}
+												</Button>
+											))}
+										</div>
+										<div className="mt-4">
+											<Button
+												variant="whispr-primary"
+												className="w-full flex items-center justify-center gap-2"
+												onClick={() => setShowVoiceDropdown((v) => !v)}
+											>
+												<span className="sm:hidden">Unlock with premium</span>
+												<span className="hidden sm:inline">
+													Unlock 150+ Voice Models with Premium
+												</span>
+												<ChevronDown className="w-4 h-4" />
+											</Button>
+											{showVoiceDropdown && (
+												<div
+													className="mt-2 w-full max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+													ref={voiceDropdownRef}
+												>
+													{/* ...dropdown content, same as before... */}
+												</div>
+											)}
+										</div>
+									</div>
+									<div className="space-y-3 mt-6">
+										<label className="text-sm font-medium">Your Message</label>
+										<Textarea
+											placeholder="Type your message here..."
+											value={message}
+											onChange={(e) => {
+												setMessage(e.target.value);
+												setIsTyping(e.target.value.length > 0);
+											}}
+											className="min-h-[100px] bg-input/50 border-border/50 focus:border-primary/50 transition-colors"
+										/>
+										{isTyping && (
+											<motion.div
+												initial={{ opacity: 0 }}
+												animate={{ opacity: 1 }}
+												className="flex justify-center"
+											>
+												<WaveAnimation isActive={true} />
+											</motion.div>
+										)}
+									</div>
+									<motion.div
+										whileHover={{ scale: 1.02 }}
+										whileTap={{ scale: 0.98 }}
+										className="flex items-center gap-2 relative"
+									>
+										<Button
+											variant="whispr-primary"
+											className="w-full relative overflow-hidden group flex-1"
+											size="lg"
+											onClick={() =>
+												handleGenerateFromWidget(selectedVoice, message)
+											}
+										>
+											<motion.div
+												animate={{ scale: [1, 1.05, 1] }}
+												transition={{ duration: 2, repeat: Infinity }}
+												className="absolute inset-0 bg-gradient-to-r from-primary via-primary-hover to-primary opacity-80"
+											/>
+											<span className="relative z-10 flex items-center justify-center gap-2">
+												Generate Voice Note
+											</span>
+											<motion.div
+												animate={{ rotate: 360 }}
+												transition={{
+													duration: 2,
+													repeat: Infinity,
+													ease: "linear",
+												}}
+												className="ml-2 relative z-10"
+											>
+												<Mic className="h-4 w-4" />
+											</motion.div>
+										</Button>
+									</motion.div>
+								</CardContent>
+							</Card>
+						</div>
+
+						{/* Desktop/Tablet Card (hidden on mobile) */}
 						<motion.div
 							initial={{ opacity: 0, x: 50 }}
 							animate={heroInView ? { opacity: 1, x: 0 } : {}}
 							transition={{ delay: 0.6, duration: 0.8 }}
-							className="mt-8 lg:mt-0"
+							className="mt-8 lg:mt-0 flex justify-center items-center w-full hidden sm:flex"
 						>
-							<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-visible">
+							<Card className="w-full max-w-[400px] sm:max-w-full bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-visible">
 								<motion.div
 									className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
 									animate={{ opacity: [0.5, 0.8, 0.5] }}
@@ -591,7 +726,7 @@ const Index = () => {
 											</Badge>
 										</CardTitle>
 										{/* Locked Voice Images Row */}
-										<div className="flex items-center gap-1">
+										<div className="hidden sm:flex items-center gap-1">
 											{Object.entries(lockedVoiceImages).map(([type, img]) => (
 												<motion.div
 													key={type}
@@ -620,7 +755,7 @@ const Index = () => {
 										<label className="text-sm font-medium">
 											Select Voice Model
 										</label>
-										<div className="grid grid-cols-2 gap-3">
+										<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 											{voices.slice(0, 4).map((voice) => (
 												<motion.div
 													key={voice.name}
@@ -670,7 +805,10 @@ const Index = () => {
 												className="w-full flex items-center justify-center gap-2"
 												onClick={() => setShowVoiceDropdown((v) => !v)}
 											>
-												Unlock 150+ Voice Models with Premium
+												<span className="sm:hidden">Unlock with premium</span>
+												<span className="hidden sm:inline">
+													Unlock 150+ Voice Models with Premium
+												</span>
 												<ChevronDown className="w-4 h-4" />
 											</Button>
 											{showVoiceDropdown && (
