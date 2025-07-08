@@ -2167,7 +2167,7 @@ const Index = () => {
 							<p className="text-sm text-muted-foreground mb-4">
 								Join our community for updates and exclusive content
 							</p>
-							<div className="flex justify-center gap-4">
+							<div className="flex flex-col sm:flex-row justify-center gap-4">
 								<Button variant="whispr-outline" asChild className="group">
 									<a
 										href="https://discord.gg/VkeyBCjE"
