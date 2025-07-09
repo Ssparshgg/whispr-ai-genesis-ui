@@ -333,7 +333,7 @@ const Index = () => {
 				/>
 				<p className="text-sm font-medium relative z-10">
 					NEW Ultra-Realistic AI Voices with Visual Profiles - Early Access Ends
-					July 10th!
+					July 15th!
 				</p>
 			</motion.div>
 
@@ -2101,7 +2101,7 @@ const Index = () => {
 							<div className="flex items-center justify-center gap-2 text-primary">
 								<Clock className="h-5 w-5" />
 								<span className="font-bold">
-									New voices dropping July 10th — Early access ends in 3 days!
+									New voices dropping July 15th — Early access ends in 3 days!
 								</span>
 							</div>
 						</motion.div>
