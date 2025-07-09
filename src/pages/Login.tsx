@@ -202,12 +202,6 @@ const Login = () => {
 										<input type="checkbox" className="rounded border-border" />
 										<span>Remember me</span>
 									</label>
-									<Link
-										to="/forgot-password"
-										className="text-primary hover:text-primary-hover transition-colors"
-									>
-										Forgot password?
-									</Link>
 								</motion.div>
 
 								<motion.div
