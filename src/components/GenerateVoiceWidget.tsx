@@ -34,6 +34,7 @@ interface GenerateVoiceWidgetProps {
 	isCompact?: boolean;
 	isGenerating?: boolean;
 	user?: any;
+	onVoiceChanged?: () => void; // <--- add this
 }
 
 const lockedVoiceImages: Record<string, string> = {
@@ -41,6 +42,37 @@ const lockedVoiceImages: Record<string, string> = {
 	Cute: "/daissy.jpg",
 	Confident: "/kyly.jpg",
 	Adventurous: "/lauren.jpg",
+};
+
+// Voice name to ID mapping for voice changer
+const VOICE_ID_MAP: Record<string, string> = {
+	Amaya: "BFvr34n3gOoz0BAf9Rwn",
+	Jamie: "hDCQ0elACClokHYB6RkC",
+	Kelly: "sScFwemjGrAkDDiTXWMH",
+	maya: "arTQWyIIUuAm6uJW7TDn",
+	olivia: "GsjQ0ydx7QzhDLqInGtT",
+	dasha: "8HSRAwEWAAa6wv9cdi5S",
+	beth: "y3UNfL9XC5Bb5htg8B0q",
+	mahi: "69nXRvRvFpjSXhH7IM5l",
+	noushin: "NZiuR1C6kVMSWHG27sIM",
+	koku: "ugCty5z6GlAbXhgvP0zz",
+	molly: "NIPHfiR4kB4aHfvaKvYb",
+	Kaylin: "X49lnpAfzUKIGC8dsrpV",
+	niki: "Okp1kfPgMQ81kjya7BBo",
+	aasha: "rxvktZTNrsQlsGIpOQGz",
+	grace: "ycvyTVVIzO2xfIGZC7tZ",
+	gabrielle: "XLjWd2QoaSR6q14cMbkN",
+	"sami real": "O4cGUVdAocn0z4EpQ9yF",
+	raven: "NySnOmeQIeaUH8egRnrQ",
+	kayla: "fI4LiKng8DlpjWJyDcsj",
+	mariaCF: "hdRfHwXmbkQgRE2dNURj",
+	jenna: "C2BkQxlGNzBn7WD2bqfR",
+	henna: "yA5sg1jAeFs7jFtteRx8",
+	Katherine: "0zUZ5qUGb8wympsfJH8d",
+	linh: "WxqqAhUiswIRQNTBz2a5", // diana voice id
+	miara: "v1IIiVAN4yJaGycxWmjU", // lilirose voice id
+	madison: "NL5yDL1ccYeWsAKmxP3r", // raina voice id
+	aria: "nWqudYCkXMd4lfMUlT44", // mia voice id
 };
 
 const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
@@ -55,6 +87,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	isCompact = false,
 	isGenerating: externalIsGenerating,
 	user: propUser,
+	onVoiceChanged,
 }) => {
 	const [isGenerating, setIsGenerating] = useState(false);
 	const actualIsGenerating =
@@ -71,6 +104,15 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	const { user: contextUser } = useAuth();
 	const user = propUser ?? contextUser;
 	const isPremium = !!user?.isPremium;
+	const [isRecording, setIsRecording] = useState(false);
+	const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+		null
+	);
+	const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
+	const [isProcessingVoiceChange, setIsProcessingVoiceChange] = useState(false);
+	const [voiceChangedAudioUrl, setVoiceChangedAudioUrl] = useState<
+		string | null
+	>(null);
 
 	const handleGenerateVoice = async () => {
 		if (!message.trim()) {
@@ -235,6 +277,75 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 		}
 	};
 
+	// Start recording
+	const startRecording = async () => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			const recorder = new MediaRecorder(stream);
+			const chunks: BlobPart[] = [];
+			recorder.ondataavailable = (e) => {
+				if (e.data.size > 0) chunks.push(e.data);
+			};
+			recorder.onstop = () => {
+				const blob = new Blob(chunks, { type: "audio/mp3" });
+				setRecordedAudio(blob);
+				stream.getTracks().forEach((track) => track.stop());
+			};
+			setMediaRecorder(recorder);
+			recorder.start();
+			setIsRecording(true);
+		} catch (err) {
+			toast({
+				title: "Microphone Error",
+				description: "Could not access microphone.",
+				variant: "destructive",
+			});
+		}
+	};
+
+	// Stop recording
+	const stopRecording = () => {
+		if (mediaRecorder && isRecording) {
+			mediaRecorder.stop();
+			setIsRecording(false);
+			setMediaRecorder(null);
+		}
+	};
+
+	// When recordedAudio is set, send to voice changer
+	useEffect(() => {
+		const processVoiceChange = async () => {
+			if (recordedAudio && selectedVoice) {
+				setIsProcessingVoiceChange(true);
+				try {
+					const voiceId =
+						VOICE_ID_MAP[selectedVoice.toLowerCase()] || selectedVoice;
+					const data = await api.voiceChanger(recordedAudio, voiceId);
+					const audioBlob = new Blob(
+						[Uint8Array.from(atob(data.audioBase64), (c) => c.charCodeAt(0))],
+						{ type: data.mimetype }
+					);
+					const url = URL.createObjectURL(audioBlob);
+					setVoiceChangedAudioUrl(url);
+					toast({
+						title: "Voice Changed!",
+						description: "Your voice has been transformed.",
+					});
+					if (onVoiceChanged) onVoiceChanged();
+				} catch (err: any) {
+					toast({
+						title: "Voice Changer Error",
+						description: err.message,
+						variant: "destructive",
+					});
+				}
+				setIsProcessingVoiceChange(false);
+			}
+		};
+		processVoiceChange();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recordedAudio]);
+
 	// Cleanup audio URL when component unmounts
 	React.useEffect(() => {
 		return () => {
@@ -376,6 +487,26 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 								)}
 							</motion.div>
 						)}
+						<div className="mt-4 flex flex-col gap-2">
+							<Button
+								variant="whispr-primary"
+								className="w-full"
+								onClick={isRecording ? stopRecording : startRecording}
+								disabled={isProcessingVoiceChange}
+							>
+								{isRecording ? "Stop Recording" : "Record & Change Voice"}
+							</Button>
+							{isProcessingVoiceChange && (
+								<div className="text-center text-xs text-muted-foreground">
+									Processing voice change...
+								</div>
+							)}
+							{voiceChangedAudioUrl && (
+								<div className="mt-2">
+									<CustomAudioPlayer audioUrl={voiceChangedAudioUrl} />
+								</div>
+							)}
+						</div>
 					</CardContent>
 				</Card>
 			</div>

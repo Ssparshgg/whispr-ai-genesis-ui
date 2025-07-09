@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, Download, History, Loader2 } from "lucide-react";
+import { Play, Pause, Download, History, Loader2, Mic } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -212,7 +212,15 @@ const VoiceHistory = ({
 									<Badge variant="outline" className="text-xs">
 										{item.type}
 									</Badge>
-									<span className="font-medium text-sm">{item.voiceName}</span>
+									<div className="flex items-center gap-2">
+										{item.type === "voice-changed" ? (
+											<Mic className="w-5 h-5 text-primary" />
+										) : (
+											<span className="font-medium text-sm">
+												{item.voiceName}
+											</span>
+										)}
+									</div>
 								</div>
 								<div className="flex items-center gap-1">
 									<Button

@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://second.anshtyagi.me/api";
+const API_BASE_URL = "http://localhost:5001/api";
 
 export { API_BASE_URL };
 // private
@@ -349,6 +349,28 @@ export const api = {
 			body: JSON.stringify(payload),
 		});
 		return response.json();
+	},
+
+	// Voice Changer API
+	async voiceChanger(audioBlob: Blob, voiceId: string) {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+		const formData = new FormData();
+		formData.append("audio", audioBlob, "recording.mp3");
+		formData.append("voiceId", voiceId);
+		const response = await fetch(`${API_BASE_URL}/voice-changer`, {
+			method: "POST",
+			body: formData,
+			headers: {
+				Authorization: `Bearer ${token}`,
+				// Do NOT set Content-Type when using FormData; browser will set it correctly
+			},
+		});
+		const data = await response.json();
+		if (!data.success) throw new Error(data.message || "Voice changer failed");
+		return data.data;
 	},
 };
 

@@ -426,6 +426,7 @@ const GenerateVoicePage = () => {
 							onGenerateClick={handleGenerateVoice}
 							isGenerating={isGenerating}
 							user={user}
+							onVoiceChanged={() => setRefreshHistory((prev) => prev + 1)}
 						/>
 
 						{/* Generated Audio Player */}
