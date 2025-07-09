@@ -52,7 +52,8 @@ const voices = [
 const GenerateVoicePage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { logout, user } = useAuth();
+	const { logout, user: authUser, refreshUser } = useAuth();
+	const [user, setUser] = useState(authUser);
 	const { toast } = useToast();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
@@ -112,6 +113,24 @@ const GenerateVoicePage = () => {
 			}
 		};
 	}, [audioUrl]);
+
+	// Fetch latest user profile on mount and map is_premium to isPremium locally
+	useEffect(() => {
+		const fetchProfile = async () => {
+			if (typeof refreshUser === "function") {
+				await refreshUser();
+			}
+			const response = await api.getProfile();
+			if (response.success && response.user) {
+				setUser({
+					...response.user,
+					isPremium:
+						response.user.isPremium ?? response.user.is_premium ?? false,
+				});
+			}
+		};
+		fetchProfile();
+	}, []);
 
 	// Handle logout
 	const handleLogout = () => {
@@ -406,6 +425,7 @@ const GenerateVoicePage = () => {
 							isCompact={true}
 							onGenerateClick={handleGenerateVoice}
 							isGenerating={isGenerating}
+							user={user}
 						/>
 
 						{/* Generated Audio Player */}

@@ -33,6 +33,7 @@ interface GenerateVoiceWidgetProps {
 	onGenerateClick?: (voice: string, text: string) => void;
 	isCompact?: boolean;
 	isGenerating?: boolean;
+	user?: any;
 }
 
 const lockedVoiceImages: Record<string, string> = {
@@ -53,6 +54,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	onGenerateClick,
 	isCompact = false,
 	isGenerating: externalIsGenerating,
+	user: propUser,
 }) => {
 	const [isGenerating, setIsGenerating] = useState(false);
 	const actualIsGenerating =
@@ -66,7 +68,9 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 	const navigate = useNavigate();
 	const { toast } = useToast();
-	const { user } = useAuth();
+	const { user: contextUser } = useAuth();
+	const user = propUser ?? contextUser;
+	const isPremium = !!user?.isPremium;
 
 	const handleGenerateVoice = async () => {
 		if (!message.trim()) {
@@ -467,182 +471,217 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 							))}
 						</div>
 						<div className="mt-4">
-							<label className="block text-sm font-medium mb-2">
-								Choose from 150 Voice Models
-							</label>
-							<select
-								className="w-full p-2 border border-border/50 rounded-lg bg-input/50 focus:border-primary/50 transition-colors"
-								value={selectedVoice || ""}
-								onChange={(e) => setSelectedVoice(e.target.value)}
-							>
-								<option value="">-- Select a Voice Model --</option>
-								<optgroup label="Classic & Soft">
-									<option value="Emily">Emily </option>
-									<option value="Sarah">Sarah </option>
-									<option value="Jessica">Jessica </option>
-									<option value="Rachel">Rachel </option>
-									<option value="Hannah">Hannah </option>
-									<option value="Katie">Katie </option>
-									<option value="Lauren">Lauren </option>
-									<option value="Emma">Emma </option>
-									<option value="Megan">Megan </option>
-									<option value="Natalie">Natalie </option>
-									<option value="Nicole">Nicole </option>
-									<option value="Amber">Amber </option>
-									<option value="Amy">Amy </option>
-									<option value="Rebecca">Rebecca </option>
-									<option value="Claire">Claire </option>
-									<option value="Samantha">Samantha </option>
-									<option value="Julia">Julia </option>
-									<option value="Grace">Grace </option>
-									<option value="Allison">Allison </option>
-									<option value="Molly">Molly </option>
-								</optgroup>
-								<optgroup label="Trendy / Instagram Baddie Vibes">
-									<option value="Kayla">Kayla</option>
-									<option value="Ava">Ava</option>
-									<option value="Bella">Bella</option>
-									<option value="Chloe">Chloe</option>
-									<option value="Zoey">Zoey</option>
-									<option value="Hailey">Hailey</option>
-									<option value="Lexi">Lexi</option>
-									<option value="Kylie">Kylie</option>
-									<option value="Skylar">Skylar</option>
-									<option value="Madison">Madison</option>
-									<option value="Brielle">Brielle</option>
-									<option value="Savannah">Savannah</option>
-									<option value="Alana">Alana</option>
-									<option value="Jada">Jada</option>
-									<option value="Gia">Gia</option>
-									<option value="Talia">Talia</option>
-									<option value="Sienna">Sienna</option>
-									<option value="Presley">Presley</option>
-									<option value="Eliana">Eliana</option>
-									<option value="Mila">Mila</option>
-								</optgroup>
-								<optgroup label="Girl-Next-Door Energy">
-									<option value="Paige">Paige </option>
-									<option value="Brooke">Brooke </option>
-									<option value="Jenna">Jenna </option>
-									<option value="Lily">Lily </option>
-									<option value="Maya">Maya </option>
-									<option value="Autumn">Autumn </option>
-									<option value="Sydney">Sydney </option>
-									<option value="Casey">Casey </option>
-									<option value="Morgan">Morgan </option>
-									<option value="Carly">Carly </option>
-									<option value="Tessa">Tessa </option>
-									<option value="Bailey">Bailey </option>
-									<option value="Riley">Riley </option>
-									<option value="Kendall">Kendall</option>
-									<option value="Sierra">Sierra </option>
-									<option value="Harper">Harper </option>
-									<option value="Delaney">Delaney</option>
-									<option value="Josie">Josie </option>
-									<option value="Quinn">Quinn </option>
-									<option value="Reese">Reese </option>
-								</optgroup>
-								<optgroup label="Playful & Flirty">
-									<option value="Daisy">Daisy </option>
-									<option value="Lola">Lola </option>
-									<option value="Poppy">Poppy </option>
-									<option value="Ruby">Ruby </option>
-									<option value="Ivy">Ivy </option>
-									<option value="Eden">Eden </option>
-									<option value="Lacey">Lacey </option>
-									<option value="Sadie">Sadie </option>
-									<option value="Nia">Nia </option>
-									<option value="Kira">Kira </option>
-									<option value="Zara">Zara </option>
-									<option value="Nova">Nova </option>
-									<option value="Piper">Piper </option>
-									<option value="Callie">Callie </option>
-									<option value="Indie">Indie </option>
-									<option value="Marlowe">Marlowe </option>
-									<option value="Elsie">Elsie </option>
-									<option value="Winnie">Winnie </option>
-									<option value="Skye">Skye </option>
-									<option value="Blair">Blair </option>
-								</optgroup>
-								<optgroup label="High-Class / Clean Vibes">
-									<option value="Charlotte">Charlotte</option>
-									<option value="Vivian">Vivian</option>
-									<option value="Audrey">Audrey</option>
-									<option value="Elle">Elle </option>
-									<option value="Evelyn">Evelyn</option>
-									<option value="Josephine">Josephine</option>
-									<option value="Eloise">Eloise</option>
-									<option value="Thea">Thea </option>
-									<option value="Celine">Celine</option>
-									<option value="Margot">Margot</option>
-									<option value="Celeste">Celeste</option>
-									<option value="Isla">Isla </option>
-									<option value="Colette">Colette</option>
-									<option value="Nora">Nora </option>
-									<option value="Adeline">Adeline</option>
-									<option value="Beatrice">Beatrice</option>
-									<option value="Georgia">Georgia</option>
-									<option value="Hazel">Hazel</option>
-									<option value="Camilla">Camilla</option>
-									<option value="Willa">Willa</option>
-								</optgroup>
-								<optgroup label="Spicy & Confident">
-									<option value="Carmen">Carmen </option>
-									<option value="Alessia">Alessia </option>
-									<option value="Sabrina">Sabrina </option>
-									<option value="Bianca">Bianca </option>
-									<option value="Giselle">Giselle </option>
-									<option value="Natalia">Natalia </option>
-									<option value="Desiree">Desiree </option>
-									<option value="Carmen">Carmen </option>
-									<option value="Sloane">Sloane </option>
-									<option value="Raven">Raven </option>
-									<option value="Kiana">Kiana </option>
-									<option value="Zaria">Zaria </option>
-									<option value="Phoenix">Phoenix </option>
-									<option value="Leilani">Leilani </option>
-									<option value="Noelle">Noelle </option>
-									<option value="Esme">Esme </option>
-									<option value="Amaya">Amaya </option>
-									<option value="Brianna">Brianna </option>
-									<option value="Tori">Tori </option>
-									<option value="Vienna">Vienna </option>
-								</optgroup>
-								<optgroup label="AI / Fictional Vibe-Friendly">
-									<option value="Aria">Aria</option>
-									<option value="Lyra">Lyra</option>
-									<option value="Elara">Elara</option>
-									<option value="Nyla">Nyla</option>
-									<option value="Nova">Nova</option>
-									<option value="Kaia">Kaia</option>
-									<option value="Azura">Azura</option>
-									<option value="Veda">Veda</option>
-									<option value="Luma">Luma</option>
-									<option value="Solene">Solene</option>
-									<option value="Ember">Ember</option>
-									<option value="Zephyra">Zephyra</option>
-									<option value="Alina">Alina</option>
-									<option value="Ophelia">Ophelia</option>
-									<option value="Seraphina">Seraphina</option>
-									<option value="Aerin">Aerin</option>
-									<option value="Freya">Freya</option>
-									<option value="Calista">Calista</option>
-									<option value="Thalia">Thalia</option>
-									<option value="Juniper">Juniper</option>
-								</optgroup>
-								<optgroup label="Short & Catchy">
-									<option value="Ava">Ava </option>
-									<option value="Mia">Mia </option>
-									<option value="Liv">Liv </option>
-									<option value="Gia">Gia </option>
-									<option value="Zoe">Zoe </option>
-									<option value="Lux">Lux </option>
-									<option value="Nia">Nia </option>
-									<option value="Lia">Lia </option>
-									<option value="Faye">Faye </option>
-									<option value="Eve">Eve </option>
-								</optgroup>
-							</select>
+							{!isPremium ? (
+								<div className="relative group">
+									<label className="block text-sm font-medium mb-2 opacity-60 cursor-not-allowed flex items-center">
+										<svg
+											className="w-4 h-4 text-primary mr-1"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="2"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M12 17v.01M12 7v4m0 4h.01M17 21H7a2 2 0 01-2-2V7a2 2 0 012-2h3.28a2 2 0 011.44.59l.72.72a2 2 0 001.44.59H17a2 2 0 012 2v12a2 2 0 01-2 2z"
+											/>
+										</svg>
+										Choose from 150 Voice Models
+									</label>
+									<div className="relative">
+										<select
+											className="w-full p-2 border border-border/50 rounded-lg bg-input/50 focus:border-primary/50 transition-colors opacity-60 cursor-not-allowed pointer-events-none"
+											value={selectedVoice || ""}
+											disabled
+										>
+											<option value="">-- Select a Voice Model --</option>
+										</select>
+										<span className="absolute left-1/2 -top-8 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+											Only for premium users
+										</span>
+									</div>
+								</div>
+							) : (
+								<React.Fragment>
+									<label className="block text-sm font-medium mb-2">
+										Choose from 150 Voice Models
+									</label>
+									<select
+										className="w-full p-2 border border-border/50 rounded-lg bg-input/50 focus:border-primary/50 transition-colors"
+										value={selectedVoice || ""}
+										onChange={(e) => setSelectedVoice(e.target.value)}
+									>
+										<option value="">-- Select a Voice Model --</option>
+										<optgroup label="Classic & Soft">
+											<option value="Emily">Emily </option>
+											<option value="Sarah">Sarah </option>
+											<option value="Jessica">Jessica </option>
+											<option value="Rachel">Rachel </option>
+											<option value="Hannah">Hannah </option>
+											<option value="Katie">Katie </option>
+											<option value="Lauren">Lauren </option>
+											<option value="Emma">Emma </option>
+											<option value="Megan">Megan </option>
+											<option value="Natalie">Natalie </option>
+											<option value="Nicole">Nicole </option>
+											<option value="Amber">Amber </option>
+											<option value="Amy">Amy </option>
+											<option value="Rebecca">Rebecca </option>
+											<option value="Claire">Claire </option>
+											<option value="Samantha">Samantha </option>
+											<option value="Julia">Julia </option>
+											<option value="Grace">Grace </option>
+											<option value="Allison">Allison </option>
+											<option value="Molly">Molly </option>
+										</optgroup>
+										<optgroup label="Trendy / Instagram Baddie Vibes">
+											<option value="Kayla">Kayla</option>
+											<option value="Ava">Ava</option>
+											<option value="Bella">Bella</option>
+											<option value="Chloe">Chloe</option>
+											<option value="Zoey">Zoey</option>
+											<option value="Hailey">Hailey</option>
+											<option value="Lexi">Lexi</option>
+											<option value="Kylie">Kylie</option>
+											<option value="Skylar">Skylar</option>
+											<option value="Madison">Madison</option>
+											<option value="Brielle">Brielle</option>
+											<option value="Savannah">Savannah</option>
+											<option value="Alana">Alana</option>
+											<option value="Jada">Jada</option>
+											<option value="Gia">Gia</option>
+											<option value="Talia">Talia</option>
+											<option value="Sienna">Sienna</option>
+											<option value="Presley">Presley</option>
+											<option value="Eliana">Eliana</option>
+											<option value="Mila">Mila</option>
+										</optgroup>
+										<optgroup label="Girl-Next-Door Energy">
+											<option value="Paige">Paige </option>
+											<option value="Brooke">Brooke </option>
+											<option value="Jenna">Jenna </option>
+											<option value="Lily">Lily </option>
+											<option value="Maya">Maya </option>
+											<option value="Autumn">Autumn </option>
+											<option value="Sydney">Sydney </option>
+											<option value="Casey">Casey </option>
+											<option value="Morgan">Morgan </option>
+											<option value="Carly">Carly </option>
+											<option value="Tessa">Tessa </option>
+											<option value="Bailey">Bailey </option>
+											<option value="Riley">Riley </option>
+											<option value="Kendall">Kendall</option>
+											<option value="Sierra">Sierra </option>
+											<option value="Harper">Harper </option>
+											<option value="Delaney">Delaney</option>
+											<option value="Josie">Josie </option>
+											<option value="Quinn">Quinn </option>
+											<option value="Reese">Reese </option>
+										</optgroup>
+										<optgroup label="Playful & Flirty">
+											<option value="Daisy">Daisy </option>
+											<option value="Lola">Lola </option>
+											<option value="Poppy">Poppy </option>
+											<option value="Ruby">Ruby </option>
+											<option value="Ivy">Ivy </option>
+											<option value="Eden">Eden </option>
+											<option value="Lacey">Lacey </option>
+											<option value="Sadie">Sadie </option>
+											<option value="Nia">Nia </option>
+											<option value="Kira">Kira </option>
+											<option value="Zara">Zara </option>
+											<option value="Nova">Nova </option>
+											<option value="Piper">Piper </option>
+											<option value="Callie">Callie </option>
+											<option value="Indie">Indie </option>
+											<option value="Marlowe">Marlowe </option>
+											<option value="Elsie">Elsie </option>
+											<option value="Winnie">Winnie </option>
+											<option value="Skye">Skye </option>
+											<option value="Blair">Blair </option>
+										</optgroup>
+										<optgroup label="High-Class / Clean Vibes">
+											<option value="Charlotte">Charlotte</option>
+											<option value="Vivian">Vivian</option>
+											<option value="Audrey">Audrey</option>
+											<option value="Elle">Elle </option>
+											<option value="Evelyn">Evelyn</option>
+											<option value="Josephine">Josephine</option>
+											<option value="Eloise">Eloise</option>
+											<option value="Thea">Thea </option>
+											<option value="Celine">Celine</option>
+											<option value="Margot">Margot</option>
+											<option value="Celeste">Celeste</option>
+											<option value="Isla">Isla </option>
+											<option value="Colette">Colette</option>
+											<option value="Nora">Nora </option>
+											<option value="Adeline">Adeline</option>
+											<option value="Beatrice">Beatrice</option>
+											<option value="Georgia">Georgia</option>
+											<option value="Hazel">Hazel</option>
+											<option value="Camilla">Camilla</option>
+											<option value="Willa">Willa</option>
+										</optgroup>
+										<optgroup label="Spicy & Confident">
+											<option value="Carmen">Carmen </option>
+											<option value="Alessia">Alessia </option>
+											<option value="Sabrina">Sabrina </option>
+											<option value="Bianca">Bianca </option>
+											<option value="Giselle">Giselle </option>
+											<option value="Natalia">Natalia </option>
+											<option value="Desiree">Desiree </option>
+											<option value="Carmen">Carmen </option>
+											<option value="Sloane">Sloane </option>
+											<option value="Raven">Raven </option>
+											<option value="Kiana">Kiana </option>
+											<option value="Zaria">Zaria </option>
+											<option value="Phoenix">Phoenix </option>
+											<option value="Leilani">Leilani </option>
+											<option value="Noelle">Noelle </option>
+											<option value="Esme">Esme </option>
+											<option value="Amaya">Amaya </option>
+											<option value="Brianna">Brianna </option>
+											<option value="Tori">Tori </option>
+											<option value="Vienna">Vienna </option>
+										</optgroup>
+										<optgroup label="AI / Fictional Vibe-Friendly">
+											<option value="Aria">Aria</option>
+											<option value="Lyra">Lyra</option>
+											<option value="Elara">Elara</option>
+											<option value="Nyla">Nyla</option>
+											<option value="Nova">Nova</option>
+											<option value="Kaia">Kaia</option>
+											<option value="Azura">Azura</option>
+											<option value="Veda">Veda</option>
+											<option value="Luma">Luma</option>
+											<option value="Solene">Solene</option>
+											<option value="Ember">Ember</option>
+											<option value="Zephyra">Zephyra</option>
+											<option value="Alina">Alina</option>
+											<option value="Ophelia">Ophelia</option>
+											<option value="Seraphina">Seraphina</option>
+											<option value="Aerin">Aerin</option>
+											<option value="Freya">Freya</option>
+											<option value="Calista">Calista</option>
+											<option value="Thalia">Thalia</option>
+											<option value="Juniper">Juniper</option>
+										</optgroup>
+										<optgroup label="Short & Catchy">
+											<option value="Ava">Ava </option>
+											<option value="Mia">Mia </option>
+											<option value="Liv">Liv </option>
+											<option value="Gia">Gia </option>
+											<option value="Zoe">Zoe </option>
+											<option value="Lux">Lux </option>
+											<option value="Nia">Nia </option>
+											<option value="Lia">Lia </option>
+											<option value="Faye">Faye </option>
+											<option value="Eve">Eve </option>
+										</optgroup>
+									</select>
+								</React.Fragment>
+							)}
 						</div>
 					</CardContent>
 				</Card>

@@ -75,7 +75,7 @@ const Index = () => {
 		{
 			name: "Sasha",
 			type: "Seductive",
-			image: "/lovable-uploads/premium1.png",
+			image: "/kyly.jpg",
 			personality: "Seductive & Mysterious",
 			quote: "Let me whisper secrets in your ear...",
 			audioFile: "/premium1.mp3",
@@ -83,7 +83,7 @@ const Index = () => {
 		{
 			name: "Jade",
 			type: "Sultry",
-			image: "/lovable-uploads/premium2.png",
+			image: "/sydney.jpg",
 			personality: "Sultry & Bold",
 			quote: "You can't resist my voice...",
 			audioFile: "/premium2.mp3",
@@ -91,6 +91,31 @@ const Index = () => {
 	]);
 	const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 	const { toast } = useToast();
+
+	const [isPremium, setIsPremium] = useState<boolean | null>(
+		user?.isPremium ?? null
+	);
+
+	useEffect(() => {
+		const fetchProfile = async () => {
+			if (isAuthenticated) {
+				try {
+					const response = await api.getProfile();
+					if (response.success && response.user) {
+						setIsPremium(!!response.user.is_premium);
+					} else {
+						setIsPremium(false);
+					}
+				} catch (error) {
+					setIsPremium(false);
+				}
+			} else {
+				setIsPremium(false);
+			}
+		};
+		fetchProfile();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAuthenticated]);
 
 	const lockedVoiceImages: Record<string, string> = {
 		Sweet: "/sydney.jpg",
@@ -635,24 +660,87 @@ const Index = () => {
 											))}
 										</div>
 										<div className="mt-4">
-											<Button
-												variant="whispr-primary"
-												className="w-full flex items-center justify-center gap-2"
-												onClick={() => setShowVoiceDropdown((v) => !v)}
-											>
-												<span className="sm:hidden">Unlock with premium</span>
-												<span className="hidden sm:inline">
-													Unlock 150+ Voice Models with Premium
-												</span>
-												<ChevronDown className="w-4 h-4" />
-											</Button>
-											{showVoiceDropdown && (
-												<div
-													className="mt-2 w-full max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
-													ref={voiceDropdownRef}
+											{isPremium ? (
+												<Button
+													variant="whispr-primary"
+													className="w-full flex items-center justify-center gap-2"
+													onClick={() => navigate("/generate-voice")}
 												>
-													{/* ...dropdown content, same as before... */}
-												</div>
+													<span className="sm:hidden">Try 150+ Voices</span>
+													<span className="hidden sm:inline">
+														Try 150+ Voices
+													</span>
+												</Button>
+											) : (
+												<>
+													<Button
+														variant="whispr-primary"
+														className="w-full flex items-center justify-center gap-2"
+														onClick={() => setShowVoiceDropdown((v) => !v)}
+													>
+														<span className="sm:hidden">
+															Unlock with premium
+														</span>
+														<span className="hidden sm:inline">
+															Unlock 150+ Voice Models with Premium
+														</span>
+														<ChevronDown className="w-4 h-4" />
+													</Button>
+													{showVoiceDropdown && (
+														<div
+															className="absolute right-0 top-full mt-2 w-full sm:w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+															ref={voiceDropdownRef}
+														>
+															<div className="flex gap-2 mb-4 flex-wrap">
+																{categories.map((cat) => (
+																	<Button
+																		key={cat}
+																		variant={
+																			selectedVoiceFilter === cat
+																				? "whispr-primary"
+																				: "outline"
+																		}
+																		className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
+																		onClick={() => setSelectedVoiceFilter(cat)}
+																	>
+																		{cat}
+																	</Button>
+																))}
+															</div>
+															{groupedMockVoices
+																.filter(
+																	(g) =>
+																		selectedVoiceFilter === "All" ||
+																		g.category === selectedVoiceFilter
+																)
+																.map((group) => (
+																	<div key={group.category} className="mb-2">
+																		<div className="font-semibold text-primary mb-1 text-sm pl-1">
+																			{group.category}
+																		</div>
+																		<div className="grid grid-cols-4 gap-2">
+																			{group.voices.map((voice) => (
+																				<div
+																					key={voice.name}
+																					className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent`}
+																				>
+																					<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
+																						{voice.avatar}
+																						<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
+																							<Lock className="w-3 h-3 text-primary" />
+																						</span>
+																					</div>
+																					<span className="text-xs font-medium truncate w-full text-center">
+																						{voice.name}
+																					</span>
+																				</div>
+																			))}
+																		</div>
+																	</div>
+																))}
+														</div>
+													)}
+												</>
 											)}
 										</div>
 									</div>
@@ -750,12 +838,16 @@ const Index = () => {
 														alt={`Locked ${type}`}
 														className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover filter blur-[0.5px] brightness-90 border-2 border-primary/30"
 													/>
-													<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
-														<Lock className="w-3 h-3 text-primary" />
-													</span>
-													<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
-														Click to unlock
-													</span>
+													{!isPremium && (
+														<>
+															<span className="absolute bottom-0 right-0 bg-background rounded-full p-0.5 border border-primary/30">
+																<Lock className="w-3 h-3 text-primary" />
+															</span>
+															<span className="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+																Click to unlock
+															</span>
+														</>
+													)}
 												</motion.div>
 											))}
 										</div>
@@ -811,78 +903,87 @@ const Index = () => {
 
 										{/* Dropdown trigger below the four models */}
 										<div className="mt-4 relative flex items-center">
-											<Button
-												variant="whispr-primary"
-												className="w-full flex items-center justify-center gap-2"
-												onClick={() => setShowVoiceDropdown((v) => !v)}
-											>
-												<span className="sm:hidden">Unlock with premium</span>
-												<span className="hidden sm:inline">
-													Unlock 150+ Voice Models with Premium
-												</span>
-												<ChevronDown className="w-4 h-4" />
-											</Button>
-											{showVoiceDropdown && (
-												<div
-													className="absolute right-0 top-full mt-2 w-full sm:w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
-													ref={voiceDropdownRef}
+											{isPremium ? (
+												<Button
+													variant="whispr-primary"
+													className="w-full flex items-center justify-center gap-2"
+													onClick={() => navigate("/generate-voice")}
 												>
-													<div className="flex gap-2 mb-4 flex-wrap">
-														{categories.map((cat) => (
-															<Button
-																key={cat}
-																variant={
-																	selectedVoiceFilter === cat
-																		? "whispr-primary"
-																		: "outline"
-																}
-																className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
-																onClick={() => setSelectedVoiceFilter(cat)}
-															>
-																{cat}
-															</Button>
-														))}
-													</div>
-													{groupedMockVoices
-														.filter(
-															(g) =>
-																selectedVoiceFilter === "All" ||
-																g.category === selectedVoiceFilter
-														)
-														.map((group) => (
-															<div key={group.category} className="mb-2">
-																<div className="font-semibold text-primary mb-1 text-sm pl-1">
-																	{group.category}
-																</div>
-																<div className="grid grid-cols-4 gap-2">
-																	{group.voices.map((voice) => (
-																		<div
-																			key={voice.name}
-																			className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent ${
-																				selectedVoice === voice.name
-																					? "border-primary bg-primary/10"
-																					: ""
-																			}`}
-																			onClick={() => {
-																				setSelectedVoice(voice.name);
-																				setShowVoiceDropdown(false);
-																			}}
-																		>
-																			<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
-																				{voice.avatar}
-																				<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
-																					<Lock className="w-3 h-3 text-primary" />
-																				</span>
-																			</div>
-																			<span className="text-xs font-medium truncate w-full text-center">
-																				{voice.name}
-																			</span>
-																		</div>
-																	))}
-																</div>
+													<span className="sm:hidden">Try 150+ Voices</span>
+													<span className="hidden sm:inline">
+														Try 150+ Voices
+													</span>
+												</Button>
+											) : (
+												<>
+													<Button
+														variant="whispr-primary"
+														className="w-full flex items-center justify-center gap-2"
+														onClick={() => setShowVoiceDropdown((v) => !v)}
+													>
+														<span className="sm:hidden">
+															Unlock with premium
+														</span>
+														<span className="hidden sm:inline">
+															Unlock 150+ Voice Models with Premium
+														</span>
+														<ChevronDown className="w-4 h-4" />
+													</Button>
+													{showVoiceDropdown && (
+														<div
+															className="absolute right-0 top-full mt-2 w-full sm:w-96 max-h-80 overflow-y-auto bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-4 z-50"
+															ref={voiceDropdownRef}
+														>
+															<div className="flex gap-2 mb-4 flex-wrap">
+																{categories.map((cat) => (
+																	<Button
+																		key={cat}
+																		variant={
+																			selectedVoiceFilter === cat
+																				? "whispr-primary"
+																				: "outline"
+																		}
+																		className="rounded-full text-xs px-3 py-1.5 h-auto border-border/30 hover:border-primary/50 transition-all"
+																		onClick={() => setSelectedVoiceFilter(cat)}
+																	>
+																		{cat}
+																	</Button>
+																))}
 															</div>
-														))}
-												</div>
+															{groupedMockVoices
+																.filter(
+																	(g) =>
+																		selectedVoiceFilter === "All" ||
+																		g.category === selectedVoiceFilter
+																)
+																.map((group) => (
+																	<div key={group.category} className="mb-2">
+																		<div className="font-semibold text-primary mb-1 text-sm pl-1">
+																			{group.category}
+																		</div>
+																		<div className="grid grid-cols-4 gap-2">
+																			{group.voices.map((voice) => (
+																				<div
+																					key={voice.name}
+																					className={`flex flex-col items-center p-2 rounded-lg cursor-pointer transition hover:bg-primary/10 border border-transparent`}
+																				>
+																					<div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-lg font-bold text-primary mb-1 border border-primary/20 relative">
+																						{voice.avatar}
+																						<span className="absolute bottom-1 right-1 bg-background rounded-full p-0.5 border border-primary/30">
+																							<Lock className="w-3 h-3 text-primary" />
+																						</span>
+																					</div>
+																					<span className="text-xs font-medium truncate w-full text-center">
+																						{voice.name}
+																					</span>
+																				</div>
+																			))}
+																		</div>
+																	</div>
+																))}
+														</div>
+													)}
+												</>
 											)}
 										</div>
 									</div>
@@ -1276,7 +1377,7 @@ const Index = () => {
 							</motion.div>
 						))}
 						{/* Premium Dropdown for Premium Users */}
-						{user?.isPremium ? (
+						{isPremium ? (
 							<div className="relative">
 								<Button
 									variant="whispr-primary"
@@ -1423,40 +1524,47 @@ const Index = () => {
 									whileHover={{ scale: 1.02 }}
 									className="group"
 								>
-									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden opacity-80 cursor-not-allowed">
+									<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card relative overflow-hidden opacity-80">
 										<div className="aspect-square rounded-xl overflow-hidden mb-4 relative">
 											<img
 												src={lockedVoiceImages[selectedVoiceFilter]}
-												alt={`Locked ${selectedVoiceFilter}`}
-												className="w-full h-full object-cover filter blur-[2px] brightness-75"
+												alt={`${selectedVoiceFilter} Voice`}
+												className={`w-full h-full object-cover ${
+													!isPremium ? "filter blur-[2px] brightness-75" : ""
+												}`}
 											/>
-											{/* Lock icon overlay */}
-											<div className="absolute bottom-2 right-2 bg-background rounded-full p-1 border border-primary/30">
-												<Lock className="h-5 w-5 text-primary" />
-											</div>
 										</div>
 										<div className="text-center">
 											<CardTitle className="text-lg mb-1 flex items-center justify-center gap-2">
-												<Lock className="h-4 w-4 text-primary" />
-												Locked {selectedVoiceFilter} Voice
+												{selectedVoiceFilter} Voice
 											</CardTitle>
 											<p className="text-sm text-muted-foreground mb-2">
-												Unlock this stunning {selectedVoiceFilter.toLowerCase()}{" "}
-												voice by upgrading your plan.
+												Enjoy with premium
 											</p>
 											<Badge variant="outline" className="text-xs mb-3">
 												{selectedVoiceFilter}
 											</Badge>
 										</div>
 										<CardFooter className="relative z-10 p-4 pt-0 flex gap-2">
-											<Button
-												variant="whispr-primary"
-												size="sm"
-												className="flex-1 opacity-80 cursor-not-allowed"
-												disabled
-											>
-												<Lock className="h-4 w-4 mr-2" /> Locked
-											</Button>
+											{isPremium ? (
+												<Button
+													variant="whispr-primary"
+													size="sm"
+													className="flex-1"
+													onClick={() => navigate("/generate-voice")}
+												>
+													Generate Now
+												</Button>
+											) : (
+												<Button
+													variant="whispr-primary"
+													size="sm"
+													className="flex-1 opacity-80 cursor-not-allowed"
+													disabled
+												>
+													{selectedVoiceFilter}
+												</Button>
+											)}
 										</CardFooter>
 									</Card>
 								</motion.div>
@@ -1500,7 +1608,25 @@ const Index = () => {
 					<Tabs defaultValue="monthly" className="w-full max-w-6xl mx-auto">
 						<TabsList className="grid w-full grid-cols-2 mb-12 max-w-md mx-auto">
 							<TabsTrigger value="monthly">Monthly Plans</TabsTrigger>
-							<TabsTrigger value="credits">Buy Credits</TabsTrigger>
+							<div className="relative group inline-block">
+								<TabsTrigger
+									value="credits"
+									disabled={!isPremium}
+									className={!isPremium ? "cursor-not-allowed opacity-60" : ""}
+								>
+									{!isPremium && (
+										<span className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center">
+											<Lock className="w-4 h-4 text-primary mr-1" />
+										</span>
+									)}
+									<span className={!isPremium ? "pl-6" : ""}>Buy Credits</span>
+								</TabsTrigger>
+								{!isPremium && (
+									<span className="absolute left-1/2 -top-8 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+										Only for premium users
+									</span>
+								)}
+							</div>
 						</TabsList>
 
 						<TabsContent value="monthly">
@@ -1674,15 +1800,29 @@ const Index = () => {
 										<CardFooter className="relative z-10">
 											<Button
 												variant="whispr-primary"
-												className="w-full"
-												onClick={() =>
-													handleStripeCheckout({
-														price: 69,
-														plan: "Pro Creator",
-													})
+												className={`w-full ${
+													!isPremium
+														? "cursor-not-allowed opacity-60 relative group"
+														: ""
+												}`}
+												onClick={
+													isPremium
+														? () =>
+																handleStripeCheckout({
+																	price: 69,
+																	plan: "Pro Creator",
+																})
+														: undefined
 												}
+												disabled={!isPremium}
 											>
+												{!isPremium && <Lock className="w-4 h-4 mr-2" />}
 												Subscribe Now
+												{!isPremium && (
+													<span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+														Only for premium users
+													</span>
+												)}
 											</Button>
 										</CardFooter>
 									</Card>
