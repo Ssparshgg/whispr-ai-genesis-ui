@@ -1518,7 +1518,7 @@ const Index = () => {
 												Perfect for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$1
+												$29
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
@@ -1618,7 +1618,7 @@ const Index = () => {
 												Most popular for content creators
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$1
+												$69
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
@@ -1701,7 +1701,7 @@ const Index = () => {
 												Perfect for agencies and teams
 											</CardDescription>
 											<div className="text-4xl font-bold">
-												$1
+												$149
 												<span className="text-lg text-muted-foreground">
 													/month
 												</span>
