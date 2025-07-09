@@ -372,6 +372,41 @@ export const api = {
 		if (!data.success) throw new Error(data.message || "Voice changer failed");
 		return data.data;
 	},
+
+	// Voice Cloning API
+	async cloneVoice(audioBlob: Blob | File) {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
+		const formData = new FormData();
+		formData.append("audio", audioBlob, "voice-sample.mp3");
+
+		const response = await fetch(`${API_BASE_URL}/clone-voice`, {
+			method: "POST",
+			body: formData,
+			headers: {
+				Authorization: `Bearer ${token}`,
+				// Do NOT set Content-Type when using FormData; browser will set it correctly
+			},
+		});
+
+		const data = await response.json();
+
+		// Handle authentication errors
+		if (!response.ok || !data.success) {
+			if (
+				(response.status === 401 || response.status === 403) &&
+				(data.message === "Invalid token" || data.message === "User not found")
+			) {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+			}
+		}
+
+		return data;
+	},
 };
 
 // Authentication utility functions

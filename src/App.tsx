@@ -17,6 +17,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import CheckoutPage from "./pages/Checkout";
+import VoiceClonePage from "./pages/VoiceClonePage";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,14 @@ const App = () => (
 						<Route path="/terms" element={<Terms />} />
 						<Route path="/privacy" element={<Privacy />} />
 						<Route path="/checkout" element={<CheckoutPage />} />
+						<Route
+							path="/clone"
+							element={
+								<ProtectedRoute>
+									<VoiceClonePage />
+								</ProtectedRoute>
+							}
+						/>
 						{/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
 						<Route path="*" element={<NotFound />} />
 					</Routes>
