@@ -1800,29 +1800,15 @@ const Index = () => {
 										<CardFooter className="relative z-10">
 											<Button
 												variant="whispr-primary"
-												className={`w-full ${
-													!isPremium
-														? "cursor-not-allowed opacity-60 relative group"
-														: ""
-												}`}
-												onClick={
-													isPremium
-														? () =>
-																handleStripeCheckout({
-																	price: 69,
-																	plan: "Pro Creator",
-																})
-														: undefined
+												className="w-full"
+												onClick={() =>
+													handleStripeCheckout({
+														price: 69,
+														plan: "Pro Creator",
+													})
 												}
-												disabled={!isPremium}
 											>
-												{!isPremium && <Lock className="w-4 h-4 mr-2" />}
 												Subscribe Now
-												{!isPremium && (
-													<span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
-														Only for premium users
-													</span>
-												)}
 											</Button>
 										</CardFooter>
 									</Card>
