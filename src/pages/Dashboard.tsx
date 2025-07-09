@@ -258,7 +258,7 @@ const Dashboard = () => {
 								</div>
 								<p className="text-sm text-muted-foreground">
 									{stats.plan === "Premium"
-										? "Unlimited voice generation"
+										? "Feel the buzz!"
 										: "Limited voice generation"}
 								</p>
 							</CardContent>

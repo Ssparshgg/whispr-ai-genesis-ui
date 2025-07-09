@@ -1575,7 +1575,7 @@ const Index = () => {
 												variant="outline"
 												className="w-full"
 												onClick={() =>
-													handleStripeCheckout({ price: 1, plan: "Creator" })
+													handleStripeCheckout({ price: 29, plan: "Creator" })
 												}
 											>
 												Get Started
@@ -1677,7 +1677,7 @@ const Index = () => {
 												className="w-full"
 												onClick={() =>
 													handleStripeCheckout({
-														price: 1,
+														price: 69,
 														plan: "Pro Creator",
 													})
 												}
@@ -1759,7 +1759,7 @@ const Index = () => {
 												variant="outline"
 												className="w-full"
 												onClick={() =>
-													handleStripeCheckout({ price: 1, plan: "Agency" })
+													handleStripeCheckout({ price: 149, plan: "Agency" })
 												}
 											>
 												Contact Sales
@@ -1773,12 +1773,14 @@ const Index = () => {
 						<TabsContent value="credits">
 							<div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 								{[
-									{ name: "Starter Pack", credits: 35, price: 1 },
-									{ name: "Basic Pack", credits: 75, price: 1 },
-									{ name: "Standard Pack", credits: 175, price: 1 },
-									{ name: "Plus Pack", credits: 500, price: 1 },
-									{ name: "Pro Pack", credits: 1200, price: 1 },
-									{ name: "Elite Pack", credits: 2700, price: 1 },
+									{ name: "Starter Pack", credits: 35, price: 5 },
+									{ name: "Basic Pack", credits: 75, price: 10 },
+									{ name: "Standard Pack", credits: 175, price: 20 },
+									{ name: "Plus Pack", credits: 500, price: 50 },
+									{ name: "Pro Pack", credits: 1200, price: 100 },
+									{ name: "Elite Pack", credits: 2700, price: 200 },
+									{ name: "Ultra Pack", credits: 7000, price: 500 },
+									{ name: "Ultimate Pack", credits: 15000, price: 1000 },
 								].map((pack, index) => (
 									<motion.div
 										key={pack.name}
