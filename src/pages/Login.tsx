@@ -52,7 +52,7 @@ const Login = () => {
 	};
 
 	const handleBackToHome = () => {
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	return (

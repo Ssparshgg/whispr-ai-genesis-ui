@@ -399,7 +399,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 									className="relative group cursor-pointer"
 									whileHover={{ scale: 1.08 }}
 									onClick={() => {
-										navigate("/");
+										navigate("/waitlist");
 										setTimeout(() => {
 											const el = document.getElementById("pricing");
 											if (el) {

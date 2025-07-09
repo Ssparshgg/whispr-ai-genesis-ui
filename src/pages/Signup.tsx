@@ -76,7 +76,7 @@ const Signup = () => {
 	};
 
 	const handleBackToHome = () => {
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	const handleInputChange = (field: string, value: string) => {

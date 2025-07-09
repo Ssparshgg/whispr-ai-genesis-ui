@@ -135,12 +135,12 @@ const GenerateVoicePage = () => {
 	// Handle logout
 	const handleLogout = () => {
 		logout();
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	// Handle home navigation
 	const handleHome = () => {
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	// Handle dashboard navigation

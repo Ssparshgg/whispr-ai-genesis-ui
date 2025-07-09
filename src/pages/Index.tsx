@@ -171,7 +171,7 @@ const Index = () => {
 	// Handle logout
 	const handleLogout = () => {
 		logout();
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	// Handle generate voice from widget

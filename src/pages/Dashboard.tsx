@@ -21,12 +21,12 @@ const Dashboard = () => {
 	// Handle logout
 	const handleLogout = () => {
 		logout();
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	// Handle home navigation
 	const handleHome = () => {
-		navigate("/");
+		navigate("/waitlist");
 	};
 
 	// Handle generate voice navigation
