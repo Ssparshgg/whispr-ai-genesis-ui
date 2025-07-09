@@ -380,16 +380,36 @@ export const api = {
 			throw new Error("No token found");
 		}
 
+		let ext = "mp3";
+		if (audioBlob.type === "audio/webm") ext = "webm";
+		else if (audioBlob.type === "audio/wav") ext = "wav";
+
 		const formData = new FormData();
-		formData.append("audio", audioBlob, "voice-sample.mp3");
+		formData.append("audio", audioBlob, `voice-sample.${ext}`);
 
 		const response = await fetch(`${API_BASE_URL}/clone-voice`, {
 			method: "POST",
 			body: formData,
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		const data = await response.json();
+		return data;
+	},
+
+	async generateClonedVoice(voiceId: string, text: string) {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			throw new Error("No token found");
+		}
+
+		const response = await fetch(`${API_BASE_URL}/generate-cloned-voice`, {
+			method: "POST",
 			headers: {
+				"Content-Type": "application/json",
 				Authorization: `Bearer ${token}`,
-				// Do NOT set Content-Type when using FormData; browser will set it correctly
 			},
+			body: JSON.stringify({ voiceId, text }),
 		});
 
 		const data = await response.json();
@@ -403,6 +423,7 @@ export const api = {
 				localStorage.removeItem("token");
 				localStorage.removeItem("user");
 			}
+			throw new Error(data.message || "Failed to generate cloned voice");
 		}
 
 		return data;
