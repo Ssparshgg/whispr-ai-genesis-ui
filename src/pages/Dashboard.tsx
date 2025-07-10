@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, Home, Mic, Crown, Zap, History } from "lucide-react";
+import { Mic, Crown, Zap, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
+import { DashboardLayout } from "@/components/DashboardLayout";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
@@ -17,17 +18,6 @@ const Dashboard = () => {
 		voicesGenerated: 0,
 	});
 	const [isLoading, setIsLoading] = useState(true);
-
-	// Handle logout
-	const handleLogout = () => {
-		logout();
-		navigate("/waitlist");
-	};
-
-	// Handle home navigation
-	const handleHome = () => {
-		navigate("/waitlist");
-	};
 
 	// Handle generate voice navigation
 	const handleGenerateVoice = () => {
@@ -117,71 +107,8 @@ const Dashboard = () => {
 	}, [user]);
 
 	return (
-		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-			{/* Background Effects */}
-			<div className="absolute inset-0 bg-gradient-to-br from-whispr-purple/10 via-transparent to-whispr-purple-dark/10" />
-			<motion.div
-				animate={{ scale: [1, 1.2, 1], rotate: [0, 10, 0] }}
-				transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-			/>
-			<motion.div
-				animate={{ scale: [1.2, 1, 1.2], rotate: [0, -10, 0] }}
-				transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-			/>
-
-			{/* Header */}
-			<header className="border-b border-border/20 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-				<div className="container mx-auto px-4 py-4">
-					<div className="flex items-center justify-between">
-						<div className="flex items-center space-x-4">
-							<motion.div
-								initial={{ x: -50, opacity: 0 }}
-								animate={{ x: 0, opacity: 1 }}
-								className="flex items-center space-x-2 cursor-pointer"
-								onClick={handleHome}
-							>
-								<motion.div
-									animate={{ rotate: [0, 15, -15, 0] }}
-									transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-								>
-									<img
-										src="/logo.jpg"
-										alt="Seducely AI Logo"
-										className="h-8 w-8 rounded-full object-cover"
-									/>
-								</motion.div>
-								<span className="text-xl sm:text-2xl font-bold">
-									Seducely AI
-								</span>
-							</motion.div>
-						</div>
-
-						<div className="flex items-center space-x-2 sm:space-x-4">
-							<Button
-								variant="ghost"
-								onClick={handleHome}
-								className="text-xs sm:text-sm px-2 sm:px-4"
-							>
-								<Home className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-								<span className="hidden sm:inline">Home</span>
-							</Button>
-							<Button
-								variant="ghost"
-								onClick={handleLogout}
-								className="text-xs sm:text-sm px-2 sm:px-4"
-							>
-								<LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-								<span className="hidden sm:inline">Logout</span>
-							</Button>
-						</div>
-					</div>
-				</div>
-			</header>
-
-			{/* Main Content */}
-			<main className="relative z-10 container mx-auto px-4 py-8">
+		<DashboardLayout>
+			<main className="container mx-auto px-4 py-8">
 				{/* Welcome Section */}
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
@@ -315,11 +242,11 @@ const Dashboard = () => {
 					<Button
 						variant="outline"
 						size="lg"
-						onClick={handleHome}
+						onClick={() => navigate("/clone")}
 						className="flex items-center gap-2"
 					>
-						<Home className="h-5 w-5" />
-						Back to Home
+						<Crown className="h-5 w-5" />
+						Clone Voice
 					</Button>
 				</motion.div>
 
@@ -337,7 +264,7 @@ const Dashboard = () => {
 									You've run out of credits! Upgrade to Premium for unlimited
 									voice generation.
 								</p>
-								<Button variant="outline" onClick={handleHome} className="mt-4">
+								<Button variant="outline" onClick={() => navigate("/waitlist")} className="mt-4">
 									Upgrade Plan
 								</Button>
 							</CardContent>
@@ -345,7 +272,7 @@ const Dashboard = () => {
 					</motion.div>
 				)}
 			</main>
-		</div>
+		</DashboardLayout>
 	);
 };
 

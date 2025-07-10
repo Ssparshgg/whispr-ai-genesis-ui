@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, Home, Menu, X, BarChart3 } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GenerateVoiceWidget from "@/components/GenerateVoiceWidget";
 import VoiceHistory from "@/components/VoiceHistory";
 import CustomAudioPlayer from "@/components/CustomAudioPlayer";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { DashboardLayout } from "@/components/DashboardLayout";
 
 const voices = [
 	{
@@ -50,9 +51,8 @@ const voices = [
 ];
 
 const GenerateVoicePage = () => {
-	const navigate = useNavigate();
 	const location = useLocation();
-	const { logout, user: authUser, refreshUser } = useAuth();
+	const { user: authUser, refreshUser } = useAuth();
 	const [user, setUser] = useState(authUser);
 	const { toast } = useToast();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
@@ -132,21 +132,6 @@ const GenerateVoicePage = () => {
 		fetchProfile();
 	}, []);
 
-	// Handle logout
-	const handleLogout = () => {
-		logout();
-		navigate("/waitlist");
-	};
-
-	// Handle home navigation
-	const handleHome = () => {
-		navigate("/waitlist");
-	};
-
-	// Handle dashboard navigation
-	const handleDashboard = () => {
-		navigate("/dashboard");
-	};
 
 	// Toggle history panel (only on mobile)
 	const toggleHistory = () => {
@@ -288,8 +273,6 @@ const GenerateVoicePage = () => {
 							description: "Please log in again to continue.",
 							variant: "destructive",
 						});
-						logout();
-						navigate("/login");
 					} else {
 						toast({
 							title: "Generation Failed",
@@ -309,98 +292,31 @@ const GenerateVoicePage = () => {
 				setIsGenerating(false);
 			}
 		},
-		[voices, user, toast, logout, navigate]
+		[voices, user, toast]
 	);
 
 	return (
-		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-			{/* Background Effects */}
-			<div className="absolute inset-0 bg-gradient-to-br from-whispr-purple/10 via-transparent to-whispr-purple-dark/10" />
-			<motion.div
-				animate={{ scale: [1, 1.2, 1], rotate: [0, 10, 0] }}
-				transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-			/>
-			<motion.div
-				animate={{ scale: [1.2, 1, 1.2], rotate: [0, -10, 0] }}
-				transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-			/>
-
-			{/* Header */}
-			<header className="border-b border-border/20 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-				<div className="container mx-auto px-4 py-4">
-					<div className="flex items-center justify-between">
-						<div className="flex items-center space-x-4">
-							<motion.div
-								initial={{ x: -50, opacity: 0 }}
-								animate={{ x: 0, opacity: 1 }}
-								className="flex items-center space-x-2 cursor-pointer"
-								onClick={handleHome}
-							>
-								<motion.div
-									animate={{ rotate: [0, 15, -15, 0] }}
-									transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-								>
-									<img
-										src="/logo.jpg"
-										alt="Seducely AI Logo"
-										className="h-8 w-8 rounded-full object-cover"
-									/>
-								</motion.div>
-								<span className="text-xl sm:text-2xl font-bold">
-									Seducely AI
-								</span>
-							</motion.div>
-
-							{/* Hamburger Menu - only on mobile */}
-							{isMobile && (
-								<Button
-									variant="ghost"
-									onClick={toggleHistory}
-									className="lg:hidden"
-								>
-									{historyOpen ? (
-										<X className="h-4 w-4" />
-									) : (
-										<Menu className="h-4 w-4" />
-									)}
-								</Button>
-							)}
-						</div>
-
-						<div className="flex items-center space-x-2 sm:space-x-4">
-							<Button
-								variant="ghost"
-								onClick={handleDashboard}
-								className="text-xs sm:text-sm px-2 sm:px-4"
-							>
-								<BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-								<span className="hidden sm:inline">Dashboard</span>
-							</Button>
-							<Button
-								variant="ghost"
-								onClick={handleHome}
-								className="text-xs sm:text-sm px-2 sm:px-4"
-							>
-								<Home className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-								<span className="hidden sm:inline">Home</span>
-							</Button>
-							<Button
-								variant="ghost"
-								onClick={handleLogout}
-								className="text-xs sm:text-sm px-2 sm:px-4"
-							>
-								<LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-								<span className="hidden sm:inline">Logout</span>
-							</Button>
-						</div>
-					</div>
+		<DashboardLayout>
+			{/* Mobile History Toggle */}
+			{isMobile && (
+				<div className="p-4 border-b border-border/20">
+					<Button
+						variant="ghost"
+						onClick={toggleHistory}
+						className="w-full justify-between"
+					>
+						<span>Voice History</span>
+						{historyOpen ? (
+							<X className="h-4 w-4" />
+						) : (
+							<Menu className="h-4 w-4" />
+						)}
+					</Button>
 				</div>
-			</header>
+			)}
 
 			{/* Main Content with Sidebar Layout */}
-			<div className="relative z-10 flex h-[calc(100vh-80px)]">
+			<div className="flex h-[calc(100vh-160px)]">
 				{/* Left Sidebar - Generate Voice Widget */}
 				<motion.div
 					initial={false}
@@ -473,7 +389,7 @@ const GenerateVoicePage = () => {
 					</motion.div>
 				)}
 			</div>
-		</div>
+		</DashboardLayout>
 	);
 };
 
