@@ -469,12 +469,6 @@ const Index = () => {
 									</span>
 								)}
 							</motion.button>
-							{/* Discord Link */}
-							{/* <motion.a ...> ... </motion.a> */}
-							{/* Instagram Link */}
-							{/* <motion.a ...> ... </motion.a> */}
-							{/* Facebook Link */}
-							{/* <motion.a ...> ... </motion.a> */}
 						</nav>
 
 						<div className="flex items-center space-x-2 sm:space-x-4">

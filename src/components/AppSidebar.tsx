@@ -1,4 +1,4 @@
-import { BarChart3, Mic, Copy } from "lucide-react";
+import { BarChart3, Mic, Copy, Crown } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
 	Sidebar,
@@ -79,13 +79,21 @@ export function AppSidebar() {
 									</NavLink>
 								);
 							})}
-							{/* New Button Below Clone Voice */}
-							<button
+							{/* New Card Below Clone Voice */}
+							<div
 								onClick={handleSidebarPricingClick}
-								className="mt-2 w-full py-3 rounded-xl text-lg font-semibold shadow-purple bg-gradient-to-r from-primary via-purple-500 to-primary text-white hover:shadow-glow transition-all duration-300"
+								className={`group cursor-pointer rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-background/80
+      shadow-md hover:shadow-xl transition-all duration-200
+      p-6 flex flex-col items-center text-center relative w-full mt-2`}
+								tabIndex={0}
+								role="button"
+								aria-disabled={false}
 							>
-								{isPremium ? "Buy Credits" : "Buy Premium/Credits"}
-							</button>
+								<Crown className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+								<h3 className="text-xl font-bold text-primary mb-1">
+									{isPremium ? "Buy Credits" : "Buy Premium/Credits"}
+								</h3>
+							</div>
 						</div>
 					</SidebarGroupContent>
 				</SidebarGroup>

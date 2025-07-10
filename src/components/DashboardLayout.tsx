@@ -44,7 +44,7 @@ export function DashboardLayout({
 	};
 
 	const handleHome = () => {
-		navigate("/waitlist");
+		navigate("/dashboard");
 	};
 
 	return (
