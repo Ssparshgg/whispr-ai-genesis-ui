@@ -20,6 +20,7 @@ interface Voice {
 	quote: string;
 	image: string;
 	personality: string;
+	audioFile?: string; // Added audioFile property
 }
 
 interface GenerateVoiceWidgetProps {
@@ -35,6 +36,8 @@ interface GenerateVoiceWidgetProps {
 	isGenerating?: boolean;
 	user?: any;
 	onVoiceChanged?: () => void; // <--- add this
+	onAudioGenerated?: (audioUrl: string, audioData: any) => void;
+	onVoiceChangedAudio?: (audioUrl: string) => void;
 }
 
 const lockedVoiceImages: Record<string, string> = {
@@ -88,6 +91,8 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 	isGenerating: externalIsGenerating,
 	user: propUser,
 	onVoiceChanged,
+	onAudioGenerated,
+	onVoiceChangedAudio,
 }) => {
 	const [isGenerating, setIsGenerating] = useState(false);
 	const actualIsGenerating =
@@ -162,6 +167,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						const url = URL.createObjectURL(audioBlob);
 						setAudioUrl(url);
 						setGeneratedAudio(response.data);
+						if (onAudioGenerated) onAudioGenerated(url, response.data);
 
 						// Show success toast
 						toast({
@@ -199,6 +205,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 						const url = URL.createObjectURL(audioBlob);
 						setAudioUrl(url);
 						setGeneratedAudio(data.data);
+						if (onAudioGenerated) onAudioGenerated(url, data.data);
 
 						// Show success toast
 						toast({
@@ -327,6 +334,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 					);
 					const url = URL.createObjectURL(audioBlob);
 					setVoiceChangedAudioUrl(url);
+					if (onVoiceChangedAudio) onVoiceChangedAudio(url);
 					toast({
 						title: "Voice Changed!",
 						description: "Your voice has been transformed.",
@@ -458,7 +466,6 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 										}}
 									/>
 								</div>
-
 								{/* Generated Model Image */}
 								{generatedAudio && selectedVoiceData && (
 									<motion.div
@@ -598,6 +605,21 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 											</div>
 										)}
 									</Button>
+									{voice.audioFile && (
+										<Button
+											variant="ghost"
+											size="icon"
+											className="mt-2"
+											onClick={(e) => {
+												e.stopPropagation();
+												const audio = new Audio(voice.audioFile);
+												audio.play();
+											}}
+											aria-label={`Preview ${voice.name}`}
+										>
+											<Mic className="h-5 w-5 text-primary" />
+										</Button>
+									)}
 								</motion.div>
 							))}
 						</div>

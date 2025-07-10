@@ -179,7 +179,7 @@ const VoiceHistory = ({
 	}
 
 	return (
-		<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full">
+		<Card className="bg-card/50 backdrop-blur border-border/20 shadow-card h-full flex flex-col">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					<History className="h-5 w-5" />
@@ -189,7 +189,7 @@ const VoiceHistory = ({
 					</Badge>
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+			<CardContent className="space-y-4 max-h-full flex-1 overflow-y-auto overflow-x-hidden break-words">
 				{historyItems.length === 0 ? (
 					<div className="text-center py-8">
 						<History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />

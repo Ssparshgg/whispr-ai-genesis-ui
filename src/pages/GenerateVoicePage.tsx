@@ -20,6 +20,7 @@ const voices = [
 		quote: "Let me take care of you with my sweet voice...",
 		image: "/lovable-uploads/14409e85-31c6-4734-9111-93f71150b711.png",
 		personality: "Sweet & Caring",
+		audioFile: "/sweet.mp3",
 	},
 	{
 		name: "Miara",
@@ -29,6 +30,7 @@ const voices = [
 		quote: "I'll make your day brighter with my cute voice...",
 		image: "/lovable-uploads/8f3d2a00-ac1a-4dc9-beaa-22ce697945f3.png",
 		personality: "Cute & Playful",
+		audioFile: "/cute.mp3",
 	},
 	{
 		name: "Madison",
@@ -38,6 +40,7 @@ const voices = [
 		quote: "Ready to hear what confidence sounds like?",
 		image: "/lovable-uploads/2f12a378-da34-4abd-8eab-18404ff65ac3.png",
 		personality: "Confident & Alluring",
+		audioFile: "/confident.mp3",
 	},
 	{
 		name: "Aria",
@@ -47,6 +50,7 @@ const voices = [
 		quote: "Let's go on an adventure together...",
 		image: "/lovable-uploads/53504ad3-684a-409f-a9ab-4cf6045e0388.png",
 		personality: "Free & Adventurous",
+		audioFile: "/adventure.mp3",
 	},
 ];
 
@@ -73,6 +77,10 @@ const GenerateVoicePage = () => {
 		text: string;
 	} | null>(null);
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
+	// Add state for voiceChangedAudioUrl
+	const [voiceChangedAudioUrl, setVoiceChangedAudioUrl] = useState<
+		string | null
+	>(null);
 
 	// Check for navigation state and pre-fill the form
 	useEffect(() => {
@@ -131,7 +139,6 @@ const GenerateVoicePage = () => {
 		};
 		fetchProfile();
 	}, []);
-
 
 	// Toggle history panel (only on mobile)
 	const toggleHistory = () => {
@@ -316,7 +323,7 @@ const GenerateVoicePage = () => {
 			)}
 
 			{/* Main Content with Sidebar Layout */}
-			<div className="flex h-[calc(100vh-160px)]">
+			<div className="flex h-[calc(100vh-120px)]">
 				{/* Left Sidebar - Generate Voice Widget */}
 				<motion.div
 					initial={false}
@@ -329,7 +336,7 @@ const GenerateVoicePage = () => {
 						historyOpen && isMobile ? "hidden" : "block"
 					}`}
 				>
-					<div className="p-6 h-full overflow-y-auto">
+					<div className="p-6 h-full">
 						<GenerateVoiceWidget
 							voices={voices}
 							selectedVoice={selectedVoice}
@@ -338,35 +345,47 @@ const GenerateVoicePage = () => {
 							setMessage={setMessage}
 							isTyping={isTyping}
 							setIsTyping={setIsTyping}
-							isCompact={true}
-							onGenerateClick={handleGenerateVoice}
-							isGenerating={isGenerating}
 							user={user}
 							onVoiceChanged={() => setRefreshHistory((prev) => prev + 1)}
+							onAudioGenerated={(url, data) => {
+								console.log("Audio generated (GenerateVoicePage):", url, data);
+								setAudioUrl(url);
+								setGeneratedAudio(data);
+								setVoiceChangedAudioUrl(null);
+							}}
+							onVoiceChangedAudio={(url) => {
+								setVoiceChangedAudioUrl(url);
+								setAudioUrl(null);
+								setGeneratedAudio(null);
+							}}
 						/>
-
-						{/* Generated Audio Player */}
-						{generatedAudio && audioUrl && (
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								className="mt-6"
-							>
-								<CustomAudioPlayer
-									audioUrl={audioUrl}
-									filename={generatedAudio.filename}
-									onDownload={handleDownload}
-									generatedVoiceData={{
-										voiceName: generatedAudio.voiceName,
-										text: generatedAudio.text,
-										image: voices.find(
-											(v) => v.name === generatedAudio.voiceName
-										)?.image,
-									}}
-								/>
-							</motion.div>
-						)}
+						{/* Place CustomAudioPlayer below the widget, not inside it */}
 					</div>
+					{/* Below the widget, render CustomAudioPlayer for either generatedAudio/audioUrl or voiceChangedAudioUrl */}
+					{audioUrl || voiceChangedAudioUrl ? (
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							className="px-6 pb-6"
+						>
+							<CustomAudioPlayer
+								audioUrl={voiceChangedAudioUrl || audioUrl!}
+								filename={generatedAudio?.filename}
+								onDownload={handleDownload}
+								generatedVoiceData={
+									generatedAudio
+										? {
+												voiceName: generatedAudio.voiceName,
+												text: generatedAudio.text,
+												image: voices.find(
+													(v) => v.name === generatedAudio.voiceName
+												)?.image,
+										  }
+										: undefined
+								}
+							/>
+						</motion.div>
+					) : null}
 				</motion.div>
 
 				{/* Right Panel - Voice History */}
@@ -378,9 +397,9 @@ const GenerateVoicePage = () => {
 							opacity: 1,
 						}}
 						transition={{ duration: 0.3, ease: "easeInOut" }}
-						className="bg-background/30 backdrop-blur"
+						className="bg-background/30 backdrop-blur h-full"
 					>
-						<div className="p-6 h-full">
+						<div className="p-6 h-full max-h-full overflow-y-auto">
 							<VoiceHistory
 								isMobile={isMobile}
 								refreshTrigger={refreshHistory}

@@ -439,6 +439,28 @@ const Index = () => {
 									transition={{ duration: 0.3 }}
 								/>
 							</motion.button>
+							<motion.button
+								onClick={() => isPremium && navigate("/clone")}
+								className={`
+									flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200
+									relative group
+									bg-gradient-to-r from-whispr-purple via-primary to-primary text-white shadow-lg ring-2 ring-primary/30
+									hover:shadow-xl hover:scale-105
+									${!isPremium ? "" : ""}
+								`}
+								style={{ minWidth: 140 }}
+								disabled={!isPremium}
+								whileHover={{ scale: 1.07 }}
+							>
+								<span>Clone Voice</span>
+								{!isPremium && <Lock className="h-4 w-4 ml-1 text-white/80" />}
+								{/* Tooltip for free users */}
+								{!isPremium && (
+									<span className="absolute left-1/2 top-full mt-2 -translate-x-1/2 bg-background text-primary text-xs rounded px-2 py-1 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap">
+										Premium users only
+									</span>
+								)}
+							</motion.button>
 							{/* Discord Link */}
 							{/* <motion.a ...> ... </motion.a> */}
 							{/* Instagram Link */}

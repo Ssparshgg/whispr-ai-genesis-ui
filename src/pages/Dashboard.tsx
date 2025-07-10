@@ -8,6 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+} from "@/components/ui/tooltip";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
@@ -18,6 +25,7 @@ const Dashboard = () => {
 		voicesGenerated: 0,
 	});
 	const [isLoading, setIsLoading] = useState(true);
+	const isMobile = useIsMobile();
 
 	// Handle generate voice navigation
 	const handleGenerateVoice = () => {
@@ -107,7 +115,7 @@ const Dashboard = () => {
 	}, [user]);
 
 	return (
-		<DashboardLayout>
+		<DashboardLayout defaultSidebarOpen={!isMobile}>
 			<main className="container mx-auto px-4 py-8">
 				{/* Welcome Section */}
 				<motion.div
@@ -222,55 +230,147 @@ const Dashboard = () => {
 					</motion.div>
 				</div>
 
-				{/* Action Buttons */}
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.4 }}
-					className="flex flex-col sm:flex-row gap-4 justify-center"
-				>
-					<Button
-						variant="whispr-primary"
-						size="lg"
-						onClick={handleGenerateVoice}
-						className="flex items-center gap-2"
-						disabled={stats.credits <= 0}
-					>
-						<Mic className="h-5 w-5" />
-						{stats.credits > 0 ? "Generate New Voice" : "No Credits Available"}
-					</Button>
-					<Button
-						variant="outline"
-						size="lg"
-						onClick={() => navigate("/clone")}
-						className="flex items-center gap-2"
-					>
-						<Crown className="h-5 w-5" />
-						Clone Voice
-					</Button>
-				</motion.div>
-
-				{/* Credit Warning */}
+				{/* Out of Credits Alert - with margin above and below */}
 				{stats.credits <= 0 && (
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.5 }}
-						className="mt-6 text-center"
+						className="my-8 flex justify-center" // <-- margin above and below
 					>
-						<Card className="bg-yellow-500/10 border-yellow-500/20 max-w-md mx-auto">
-							<CardContent className="pt-6">
-								<p className="text-yellow-600 dark:text-yellow-400">
-									You've run out of credits! Upgrade to Premium for unlimited
-									voice generation.
-								</p>
-								<Button variant="outline" onClick={() => navigate("/waitlist")} className="mt-4">
-									Upgrade Plan
-								</Button>
-							</CardContent>
-						</Card>
+						<Alert
+							className={`
+							max-w-xl w-full
+							border-2 border-primary/40
+							bg-gradient-to-br from-whispr-purple/20 to-background/80
+							shadow-lg
+							relative
+							overflow-hidden
+						`}
+						>
+							{/* Animated Glow */}
+							<motion.div
+								className="absolute inset-0 pointer-events-none rounded-lg"
+								style={{ zIndex: 0 }}
+								animate={{
+									boxShadow: [
+										"0 0 24px 8px rgba(128, 90, 213, 0.25)",
+										"0 0 32px 12px rgba(128, 90, 213, 0.45)",
+										"0 0 24px 8px rgba(128, 90, 213, 0.25)",
+									],
+								}}
+								transition={{
+									duration: 2.5,
+									repeat: Infinity,
+									repeatType: "loop",
+									ease: "easeInOut",
+								}}
+							/>
+							<div className="relative z-10">
+								<AlertTitle className="text-lg font-bold flex items-center gap-2 text-primary">
+									<span role="img" aria-label="warning">
+										⚡
+									</span>
+									You've run out of credits!
+								</AlertTitle>
+								<AlertDescription className="mt-2 text-base text-foreground">
+									Please upgrade to{" "}
+									<span className="font-semibold text-primary">Premium</span>{" "}
+									for unlimited voice generation.
+								</AlertDescription>
+							</div>
+						</Alert>
 					</motion.div>
 				)}
+
+				{/* Feature Cards */}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ delay: 0.4 }}
+					className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8"
+				>
+					{/* Generate New Voice Card with Tooltip on the left */}
+					<div className="relative flex items-center">
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<div className="absolute -left-8 top-1/2 -translate-y-1/2 z-20">
+									<div className="w-3 h-3 bg-purple-600 rounded-full border-2 border-white shadow-lg" />
+								</div>
+							</TooltipTrigger>
+							<TooltipContent side="left" className="bg-purple-700 text-white">
+								<span className="font-semibold">Text to voice = 1 credit</span>
+								<br />
+								<span className="font-semibold">Voice changer = 5 credits</span>
+							</TooltipContent>
+						</Tooltip>
+						<div
+							onClick={handleGenerateVoice}
+							className={`
+								group cursor-pointer rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-background/80
+								shadow-md hover:shadow-xl transition-all duration-200
+								p-6 flex flex-col items-center text-center relative w-full
+								${stats.credits <= 0 ? "opacity-60 pointer-events-none" : ""}
+							`}
+							tabIndex={0}
+							role="button"
+							aria-disabled={stats.credits <= 0}
+						>
+							<Mic className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+							<h3 className="text-xl font-bold text-primary mb-1">
+								Generate New Voice
+							</h3>
+							<p className="text-muted-foreground text-base mb-2">
+								Instantly create lifelike AI voices from your text. Perfect for
+								content, narration, and more.
+							</p>
+							{stats.credits <= 0 && (
+								<span className="text-sm text-destructive font-semibold mt-2">
+									No credits available
+								</span>
+							)}
+						</div>
+					</div>
+
+					{/* Clone Voice Card with Tooltip on the right */}
+					<div className="relative flex items-center">
+						<div
+							onClick={() => navigate("/clone")}
+							className={`
+								group cursor-pointer rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-background/80
+								shadow-md hover:shadow-xl transition-all duration-200
+								p-6 flex flex-col items-center text-center relative w-full
+							`}
+							tabIndex={0}
+							role="button"
+						>
+							<Crown className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+							<h3 className="text-xl font-bold text-primary mb-1">
+								Clone Voice
+							</h3>
+							<p className="text-muted-foreground text-base mb-2">
+								Upload a sample and create a custom AI voice that sounds just
+								like you or anyone else.
+							</p>
+						</div>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<div className="absolute -right-8 top-1/2 -translate-y-1/2 z-20">
+									<div className="w-3 h-3 bg-purple-600 rounded-full border-2 border-white shadow-lg" />
+								</div>
+							</TooltipTrigger>
+							<TooltipContent side="right" className="bg-purple-700 text-white">
+								<span className="font-semibold">
+									Cloning Voice = 10 credits
+								</span>
+								<br />
+								<span className="font-semibold">
+									text to cloned voice = 2 credits
+								</span>
+							</TooltipContent>
+						</Tooltip>
+					</div>
+				</motion.div>
 			</main>
 		</DashboardLayout>
 	);
