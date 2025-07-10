@@ -1227,12 +1227,18 @@ const Index = () => {
 								<div className="relative">
 									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-										<div className="relative z-10 text-center space-y-4">
-											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-												<User className="h-8 w-8 text-primary" />
-											</div>
-											<p className="text-muted-foreground">Video Coming Soon</p>
-										</div>
+										<video
+											className="relative z-10 w-full h-full object-cover rounded-xl"
+											src="/text.mp4"
+											autoPlay
+											loop
+											muted
+											playsInline
+											poster="/logo.jpg"
+											style={{ maxHeight: "100%", maxWidth: "100%" }}
+										>
+											Your browser does not support the video tag.
+										</video>
 									</div>
 								</div>
 							</motion.div>
@@ -1254,16 +1260,16 @@ const Index = () => {
 										<div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center">
 											<span className="text-white font-bold text-lg">2</span>
 										</div>
-										<h3 className="text-3xl font-bold">Create Your Message</h3>
+										<h3 className="text-3xl font-bold">Clone your voice</h3>
 									</div>
 									<h3 className="text-3xl font-bold hidden lg:block">
-										Create Your Message
+										Clone your voice
 									</h3>
-									<p className="text-lg text-muted-foreground">
-										Write your custom message or choose from our pre-written
-										templates. Our AI will transform your text into
-										natural-sounding, engaging voice notes that captivate your
-										audience.
+									<p className="text-lg text-muted-foreground lg:ml-12">
+										Clone your voice with just 10seconds of voice recording or
+										file upload, Seducely AI will make a clone of your voice
+										within few seconds then use any text on your generated voice
+										and enjoy.
 									</p>
 									<div className="flex gap-4">
 										<Button
@@ -1280,12 +1286,18 @@ const Index = () => {
 								<div className="lg:order-1 relative">
 									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-										<div className="relative z-10 text-center space-y-4">
-											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-												<Pen className="h-8 w-8 text-primary" />
-											</div>
-											<p className="text-muted-foreground">Video Coming Soon</p>
-										</div>
+										<video
+											className="relative z-10 w-full h-full object-cover rounded-xl"
+											src="/clone.mp4"
+											autoPlay
+											loop
+											muted
+											playsInline
+											poster="/logo.jpg"
+											style={{ maxHeight: "100%", maxWidth: "100%" }}
+										>
+											Your browser does not support the video tag.
+										</video>
 									</div>
 								</div>
 							</motion.div>
@@ -1334,14 +1346,14 @@ const Index = () => {
 									</div>
 								</div>
 								<div className="relative">
-									<div className="aspect-video bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
+									<div className="aspect-[1817/835] bg-card/50 backdrop-blur border border-border/20 rounded-xl shadow-card flex items-center justify-center overflow-hidden relative">
 										<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-										<div className="relative z-10 text-center space-y-4">
-											<div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-												<Share className="h-8 w-8 text-primary" />
-											</div>
-											<p className="text-muted-foreground">Video Coming Soon</p>
-										</div>
+										<img
+											src="/website.png"
+											alt="Website Preview"
+											className="relative z-10 w-full h-full object-contain rounded-xl border border-border"
+											style={{ maxHeight: '100%', maxWidth: '100%' }}
+										/>
 									</div>
 								</div>
 							</motion.div>
