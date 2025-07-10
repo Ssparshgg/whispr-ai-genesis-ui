@@ -44,6 +44,9 @@ const VoiceClonePage: React.FC = () => {
 	const [ttsText, setTtsText] = useState("");
 	const [audioBase64, setAudioBase64] = useState<string | null>(null);
 	const [isGenerating, setIsGenerating] = useState(false);
+	const [isPremium, setIsPremium] = useState<boolean | null>(
+		user?.isPremium ?? null
+	);
 
 	const audioRecorder = useRef<AudioRecorder>({
 		mediaRecorder: null,
@@ -65,6 +68,26 @@ const VoiceClonePage: React.FC = () => {
 			}
 		};
 	}, []);
+
+	useEffect(() => {
+		const fetchProfile = async () => {
+			if (user) {
+				try {
+					const response = await api.getProfile();
+					if (response.success && response.user) {
+						setIsPremium(!!response.user.is_premium);
+					} else {
+						setIsPremium(false);
+					}
+				} catch (error) {
+					setIsPremium(false);
+				}
+			} else {
+				setIsPremium(false);
+			}
+		};
+		fetchProfile();
+	}, [user]);
 
 	const startCountdown = () => {
 		setCountdown(3);
@@ -484,9 +507,9 @@ const VoiceClonePage: React.FC = () => {
 
 									<Button
 										onClick={handleCloneVoice}
-										disabled={!consentGiven || isCloning}
+										disabled={!consentGiven || isCloning || !isPremium}
 										size="lg"
-										className="w-full"
+										className="w-full relative"
 									>
 										{isCloning ? (
 											<>
@@ -497,6 +520,11 @@ const VoiceClonePage: React.FC = () => {
 											<>
 												<AudioWaveform className="h-5 w-5 mr-2" />
 												Clone My Voice
+												{!isPremium && (
+													<span className="absolute left-1/2 top-full mt-2 -translate-x-1/2 bg-background text-primary text-xs rounded px-2 py-1 shadow-lg opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap">
+														Premium users only
+													</span>
+												)}
 											</>
 										)}
 									</Button>
@@ -527,7 +555,15 @@ const VoiceClonePage: React.FC = () => {
 										});
 										return;
 									}
-
+									if (!isPremium) {
+										toast({
+											title: "Premium Feature",
+											description:
+												"Generating audio with your cloned voice is available for premium users only.",
+											variant: "destructive",
+										});
+										return;
+									}
 									setIsGenerating(true);
 									setAudioBase64(null);
 									try {
