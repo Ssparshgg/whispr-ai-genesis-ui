@@ -21,11 +21,13 @@ interface VoiceHistoryItem {
 interface VoiceHistoryProps {
 	isMobile?: boolean;
 	refreshTrigger?: number;
+	customHistoryItems?: VoiceHistoryItem[];
 }
 
 const VoiceHistory = ({
 	isMobile = false,
 	refreshTrigger = 0,
+	customHistoryItems,
 }: VoiceHistoryProps) => {
 	const [historyItems, setHistoryItems] = useState<VoiceHistoryItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -37,8 +39,13 @@ const VoiceHistory = ({
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (customHistoryItems) {
+			setHistoryItems(customHistoryItems);
+			setIsLoading(false);
+			return;
+		}
 		fetchHistory();
-	}, [refreshTrigger]);
+	}, [refreshTrigger, customHistoryItems]);
 
 	const fetchHistory = async () => {
 		try {

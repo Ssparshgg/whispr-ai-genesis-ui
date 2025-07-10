@@ -11,6 +11,9 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const items = [
 	{ title: "Dashboard", url: "/dashboard", icon: BarChart3 },
@@ -22,8 +25,28 @@ export function AppSidebar() {
 	const { state } = useSidebar();
 	const location = useLocation();
 	const currentPath = location.pathname;
+	const { user, refreshUser } = useAuth();
+	const isPremium = !!user?.isPremium;
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		refreshUser();
+	}, []);
 
 	const isActive = (path: string) => currentPath === path;
+
+	const handleSidebarPricingClick = () => {
+		if (currentPath === "/waitlist") {
+			// Dispatch a custom event to trigger handleNavClick in Index
+			window.dispatchEvent(new CustomEvent("scroll-to-pricing"));
+		} else {
+			navigate("/waitlist");
+			// After navigation, trigger the scroll event
+			setTimeout(() => {
+				window.dispatchEvent(new CustomEvent("scroll-to-pricing"));
+			}, 300);
+		}
+	};
 
 	return (
 		<Sidebar
@@ -56,6 +79,13 @@ export function AppSidebar() {
 									</NavLink>
 								);
 							})}
+							{/* New Button Below Clone Voice */}
+							<button
+								onClick={handleSidebarPricingClick}
+								className="mt-2 w-full py-3 rounded-xl text-lg font-semibold shadow-purple bg-gradient-to-r from-primary via-purple-500 to-primary text-white hover:shadow-glow transition-all duration-300"
+							>
+								{isPremium ? "Buy Credits" : "Buy Premium/Credits"}
+							</button>
 						</div>
 					</SidebarGroupContent>
 				</SidebarGroup>

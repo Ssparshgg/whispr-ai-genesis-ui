@@ -323,7 +323,13 @@ const GenerateVoicePage = () => {
 			)}
 
 			{/* Main Content with Sidebar Layout */}
-			<div className="flex h-[calc(100vh-120px)]">
+			<div
+				className={
+					isMobile
+						? "flex flex-col overflow-y-auto min-h-[calc(100vh-120px)]"
+						: "flex h-[calc(100vh-120px)]"
+				}
+			>
 				{/* Left Sidebar - Generate Voice Widget */}
 				<motion.div
 					initial={false}
@@ -336,7 +342,7 @@ const GenerateVoicePage = () => {
 						historyOpen && isMobile ? "hidden" : "block"
 					}`}
 				>
-					<div className="p-6 h-full">
+					<div className={isMobile ? "p-6" : "p-6 h-full"}>
 						<GenerateVoiceWidget
 							voices={voices}
 							selectedVoice={selectedVoice}

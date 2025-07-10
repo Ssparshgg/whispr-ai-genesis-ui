@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CustomAudioPlayer from "@/components/CustomAudioPlayer";
+import VoiceHistory from "@/components/VoiceHistory";
 
 interface AudioRecorder {
 	mediaRecorder: MediaRecorder | null;
@@ -49,6 +50,7 @@ const VoiceClonePage: React.FC = () => {
 		stream: null,
 	});
 	const recordingInterval = useRef<NodeJS.Timeout | null>(null);
+	const historyRef = useRef<HTMLDivElement | null>(null);
 
 	// Cleanup on unmount
 	useEffect(() => {
@@ -255,7 +257,11 @@ const VoiceClonePage: React.FC = () => {
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => navigate("/generate-voice")}
+							onClick={() => {
+								if (historyRef.current) {
+									historyRef.current.scrollIntoView({ behavior: "smooth" });
+								}
+							}}
 							className="text-primary border-primary/30 hover:bg-primary/10"
 						>
 							Go to Voice History
@@ -567,6 +573,16 @@ const VoiceClonePage: React.FC = () => {
 								<div className="mt-6">
 									<CustomAudioPlayer
 										audioUrl={`data:audio/mp3;base64,${audioBase64}`}
+										filename="cloned-voice.mp3"
+										onDownload={() => {
+											// Create a link and trigger download
+											const link = document.createElement("a");
+											link.href = `data:audio/mp3;base64,${audioBase64}`;
+											link.download = "cloned-voice.mp3";
+											document.body.appendChild(link);
+											link.click();
+											document.body.removeChild(link);
+										}}
 									/>
 								</div>
 							)}
@@ -574,7 +590,47 @@ const VoiceClonePage: React.FC = () => {
 					)}
 				</div>
 			</div>
+			{/* Voice History for cloned voices only */}
+			<div className="mt-12" ref={historyRef}>
+				<FilteredClonedVoiceHistory />
+			</div>
 		</div>
+	);
+};
+
+const FilteredClonedVoiceHistory = () => {
+	const [refreshTrigger, setRefreshTrigger] = useState(0);
+	const [isMobile, setIsMobile] = useState(false);
+	const [filteredHistory, setFilteredHistory] = useState([]);
+
+	useEffect(() => {
+		// Check if mobile
+		setIsMobile(window.innerWidth <= 768);
+		const handleResize = () => setIsMobile(window.innerWidth <= 768);
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
+	useEffect(() => {
+		const fetchHistory = async () => {
+			const response = await api.getVoiceHistory();
+			if (response.success) {
+				const filtered = response.history.filter(
+					(item: any) => item.type === "cloned"
+				);
+				setFilteredHistory(filtered);
+			}
+		};
+		fetchHistory();
+	}, [refreshTrigger]);
+
+	// Pass filteredHistory as a prop to VoiceHistory by extending it to accept items
+	return (
+		<VoiceHistory
+			isMobile={isMobile}
+			refreshTrigger={refreshTrigger}
+			customHistoryItems={filteredHistory}
+		/>
 	);
 };
 

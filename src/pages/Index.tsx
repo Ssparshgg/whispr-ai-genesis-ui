@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
 	Mic,
@@ -63,6 +63,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { isAuthenticated, logout, user } = useAuth();
 	const [selectedVoice, setSelectedVoice] = useState("Linh");
 	const [message, setMessage] = useState("");
@@ -342,6 +343,13 @@ const Index = () => {
 			});
 		}
 	};
+
+	useEffect(() => {
+		const scrollToPricing = () => handleNavClick("pricing");
+		window.addEventListener("scroll-to-pricing", scrollToPricing);
+		return () =>
+			window.removeEventListener("scroll-to-pricing", scrollToPricing);
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -1605,7 +1613,7 @@ const Index = () => {
 					className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
 				/>
 
-				<div className="container mx-auto relative z-10">
+				<div className="container mx-auto relative z-10" id="pricing">
 					<div className="text-center mb-16">
 						<h2 className="text-4xl font-bold mb-4">
 							Simple, Credit-Based Pricing
@@ -1631,18 +1639,7 @@ const Index = () => {
 						<TabsList className="grid w-full grid-cols-2 mb-12 max-w-md mx-auto">
 							<TabsTrigger value="monthly">Monthly Plans</TabsTrigger>
 							<div className="relative group inline-block">
-								<TabsTrigger
-									value="credits"
-									disabled={!isPremium}
-									className={!isPremium ? "cursor-not-allowed opacity-60" : ""}
-								>
-									{!isPremium && (
-										<span className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center">
-											<Lock className="w-4 h-4 text-primary mr-1" />
-										</span>
-									)}
-									<span className={!isPremium ? "pl-6" : ""}>Buy Credits</span>
-								</TabsTrigger>
+								<TabsTrigger value="credits">Buy Credits</TabsTrigger>
 								{!isPremium && (
 									<span className="absolute left-1/2 -top-8 -translate-x-1/2 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
 										Only for premium users
@@ -1819,7 +1816,7 @@ const Index = () => {
 												))}
 											</ul>
 										</CardContent>
-										<CardFooter className="relative z-10">
+										<CardFooter>
 											<Button
 												variant="whispr-primary"
 												className="w-full"
@@ -1960,19 +1957,29 @@ const Index = () => {
 												</p>
 											</CardContent>
 											<CardFooter className="p-0">
-												<Button
-													variant="whispr-primary"
-													className="w-full text-sm"
-													onClick={() =>
-														handleStripeCheckout({
-															price: pack.price,
-															credits: pack.credits,
-															plan: pack.name,
-														})
-													}
-												>
-													Buy Now
-												</Button>
+												<div className="relative group w-full">
+													<Button
+														variant="whispr-primary"
+														className="w-full text-sm"
+														onClick={() =>
+															handleStripeCheckout({
+																price: pack.price,
+																credits: pack.credits,
+																plan: pack.name,
+															})
+														}
+														disabled={!isPremium}
+														tabIndex={isPremium ? 0 : -1}
+														aria-disabled={!isPremium}
+													>
+														Buy Now
+													</Button>
+													{!isPremium && (
+														<span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-10 whitespace-nowrap bg-background/90 text-xs text-primary px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity z-20">
+															Only for premium users
+														</span>
+													)}
+												</div>
 											</CardFooter>
 										</Card>
 									</motion.div>
