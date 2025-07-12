@@ -385,7 +385,7 @@ const GenerateVoiceWidget: React.FC<GenerateVoiceWidgetProps> = ({
 							</Badge>
 						</CardTitle>
 					</CardHeader>
-					<CardContent className="space-y-6 relative z-10">
+					<CardContent className="space-y-6 relative z-10 max-h-[70vh] overflow-y-auto">
 						{/* Text Input Section */}
 						<div className="space-y-3">
 							<label className="text-sm font-medium">
