@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Mic, Eye, EyeOff, ArrowLeft, User, Mail, Lock } from "lucide-react";
@@ -29,6 +29,18 @@ const Signup = () => {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	useEffect(() => {
+		const script = document.createElement("script");
+		script.async = true;
+		script.type = "text/javascript";
+		script.src =
+			"https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=4w2Uu4KxS4";
+		document.body.appendChild(script);
+		return () => {
+			document.body.removeChild(script);
+		};
+	}, []);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
