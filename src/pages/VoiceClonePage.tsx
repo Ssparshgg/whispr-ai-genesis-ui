@@ -651,9 +651,20 @@ const FilteredClonedVoiceHistory = () => {
 		const fetchHistory = async () => {
 			const response = await api.getVoiceHistory();
 			if (response.success) {
-				const filtered = response.history.filter(
-					(item: any) => item.type === "cloned"
-				);
+				const filtered = response.history
+					.filter((item: any) => item.type === "cloned")
+					.map((item: any) => ({
+						id: item.id,
+						voiceName: item.voiceName,
+						text: item.text,
+						audioUrl:
+							item.audioUrl && item.audioUrl.startsWith("http")
+								? item.audioUrl
+								: `https://second.anshtyagi.me${item.audioUrl}`,
+						createdAt: new Date(item.createdAt).toLocaleString(),
+						duration: item.duration,
+						type: item.type,
+					}));
 				setFilteredHistory(filtered);
 			}
 		};
