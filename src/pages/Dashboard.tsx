@@ -372,6 +372,43 @@ const Dashboard = () => {
 					</div>
 				</motion.div>
 			</main>
+			{/* Footer */}
+			<footer className="mt-8">
+				<div className="container mx-auto">
+					<div className="flex flex-col md:flex-row justify-between items-center gap-4">
+						<div className="flex items-center space-x-2">
+							<div className="w-6 h-6 rounded-full overflow-hidden border border-primary/20">
+								<img
+									src="/logo.jpg"
+									alt="Seducely AI Logo"
+									className="w-full h-full object-cover"
+								/>
+							</div>
+							<span className="font-bold">© 2025 Seducely AI</span>
+						</div>
+						<div className="flex items-center gap-6 text-sm">
+							<button
+								onClick={() => navigate("/terms")}
+								className="hover:text-primary transition-colors"
+							>
+								Terms of Service
+							</button>
+							<button
+								onClick={() => navigate("/privacy")}
+								className="hover:text-primary transition-colors"
+							>
+								Privacy Policy
+							</button>
+							<a
+								href="mailto:support@seducely.ai"
+								className="hover:text-primary transition-colors"
+							>
+								Support
+							</a>
+						</div>
+					</div>
+				</div>
+			</footer>
 		</DashboardLayout>
 	);
 };
