@@ -2,6 +2,14 @@ import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
 
+declare global {
+	interface Window {
+		Rewardful?: {
+			referral?: string;
+		};
+	}
+}
+
 const ProductDisplay = () => (
 	<section>
 		<div className="product">
@@ -17,7 +25,13 @@ const ProductDisplay = () => (
 		<form
 			onSubmit={async (e) => {
 				e.preventDefault();
-				const data = await api.createCheckoutSession({});
+				// Get Rewardful referral ID if present
+				const referral =
+					window.Rewardful && window.Rewardful.referral
+						? window.Rewardful.referral
+						: null;
+
+				const data = await api.createCheckoutSession({ referral }); // Pass referral
 				if (data.url) {
 					window.location = data.url;
 				}
